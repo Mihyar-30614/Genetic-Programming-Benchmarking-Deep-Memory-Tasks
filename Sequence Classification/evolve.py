@@ -1,3 +1,16 @@
+"""
+This is an example of sequence classification using NEAT-Python.
+
+Example Input:
+    sequence = [1.0, 0.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0, 0.0]
+    Stack_output = [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, -1.0]
+    
+Example Output:
+    stack_push = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0]
+    stack_pop = [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]
+    classification = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0]
+"""
+
 from __future__ import division, print_function
 import neat
 import visualize
@@ -46,19 +59,35 @@ def eval_genome(genome, config):
         random_noise = random.randint(10, 20)
         sequence = generate_data(depth, noise)
         expected_output = generate_output(sequence)
-        output = []
-        stack_output = 0
+        classification = []
+        counter = 0
         net.reset()
 
         for seq in sequence:
-            temp = net.activate(seq, stack_output)
-            stack_pop = round(temp[0])
-            stack_push = round(temp[1])
+            # If stack is empty then 0, else the value on top of stack
+            stack_output = MEMORY[counter] if counter > 0 else 0
+
+            temp = net.activate([seq, stack_output])
+
+            stack_push = round(temp[0])
+            stack_pop = round(temp[1])
+
+            # If Pop and not Push remove the top of stack
+            # If Push and not Pop Add sequence to stack
+            # Else keep stack as is
+            if stack_pop == 1 and stack_push == 0:
+                counter -= 1
+                MEMORY.pop()
+            elif stack_pop == 0 and stack_push == 1:
+                counter += 1
+                MEMORY.append(seq)
+
+            # Network output added for fitness evaluate
             outdata = temp[2]
             outdata = -1.0 if outdata < 0.5 else 1.0
-            output.append(outdata)
+            classification.append(outdata)
             
-        error += compute_fitness(output, expected_output)
+        error += compute_fitness(classification, expected_output)
             
     total_error = error / num_tests
     return total_error
