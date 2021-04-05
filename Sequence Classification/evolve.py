@@ -51,6 +51,9 @@ def compute_fitness(output_data, expected_data):
             error += 1.0
     return 1.0 - (error * 100) / len(output_data)
 
+def network_simulator(sequence, stack, mode):
+    return 
+
 def eval_genome(genome, config):
     net = neat.nn.RecurrentNetwork.create(genome, config)
     error = 0.0
