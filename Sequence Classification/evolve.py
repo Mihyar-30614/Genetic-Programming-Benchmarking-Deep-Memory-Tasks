@@ -52,7 +52,33 @@ def compute_fitness(output_data, expected_data):
     return 1.0 - (error * 100) / len(output_data)
 
 def network_simulator(sequence, stack, mode):
-    return 
+    
+    if mode == "PERFECT":
+        # produce perfect output
+        push = 0
+        pop = 0
+        classification = 1 if stack >= 0 else -1
+        
+        if sequence != 0 and stack == 0:
+        # if sequence not zero and stack is zero then push
+            push = 1
+            pop = 0
+        elif sequence != 0 and stack != 0:
+        # if sequence not zero and stack is not zero then 
+        # (if sequence equal to stack then push otherwise pop)
+            if sequence == stack:
+                push = 1
+                pop = 0
+            else:
+                push = 0
+                pop = 1  
+    else:
+        # produce random output
+        push = random.choice([0,1])
+        pop = random.choice([0,1])
+        classification = random.choice([-1,1])
+        
+    return [push, pop, classification]
 
 def eval_genome(genome, config):
     net = neat.nn.RecurrentNetwork.create(genome, config)
