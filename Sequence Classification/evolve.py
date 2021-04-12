@@ -26,7 +26,7 @@ noise = 10
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
 num_generations = 1000
-MEMORY = []
+
 
 def generate_data(depth, noise):
     sequence = []
@@ -85,14 +85,14 @@ def network_simulator(sequence, stack, mode):
 
 
 def run_simulator():
-    error = 0.0
-    num_tests = 2
+    error = 0.0    
     for _ in range(num_tests):
         # Create a random sequence, and feed it to the network (Write)
         random_noise = random.randint(10, 20)
         sequence = generate_data(depth, noise)
         expected_output = generate_output(sequence)
         classification = []
+        MEMORY = []
         counter = 0
 
 
@@ -136,6 +136,7 @@ def eval_genome(genome, config):
         sequence = generate_data(depth, noise)
         expected_output = generate_output(sequence)
         classification = []
+        MEMORY = []
         counter = 0
         net.reset()
 
@@ -194,5 +195,5 @@ def run():
 
 
 if __name__ == "__main__":
-    # run()
-    run_simulator()
+    run()
+    # run_simulator()
