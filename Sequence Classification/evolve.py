@@ -49,9 +49,8 @@ def compute_fitness(output_data, expected_data):
     for indata, outdata in zip(output_data, expected_data):
         if outdata != indata: 
             error += 1.0
-        # print("InData: {!s} OutData: {!s} Error: {!s}".format(indata, outdata, error))
-    # print("length: {!s} ".format(len(output_data)))
-    return 100.0 - ((error * 100) / len(output_data))
+    fitness = 100.0 - ((error * 100) / len(output_data))
+    return fitness
 
 def network_simulator(sequence, stack, mode):
     
@@ -85,7 +84,7 @@ def network_simulator(sequence, stack, mode):
 
 
 def run_simulator():
-    error = 0.0    
+    total_fitness = 0.0    
     for _ in range(num_tests):
         # Create a random sequence, and feed it to the network (Write)
         random_noise = random.randint(10, 20)
@@ -95,12 +94,13 @@ def run_simulator():
         MEMORY = []
         counter = 0
 
-
-        for seq in sequence:
+        print('\tsequence {0}'.format(sequence))
+        correct = True
+        for I in range(len(sequence)):
             # If stack is empty then 0, else the value on top of stack
             stack_output = MEMORY[counter-1] if counter > 0 else 0
 
-            temp = network_simulator(seq, stack_output, "PERFECT")
+            temp = network_simulator(sequence[I], stack_output, "PERFECT")
             stack_push = round(temp[0])
             stack_pop = round(temp[1])
 
@@ -109,27 +109,24 @@ def run_simulator():
                 MEMORY.pop()
             elif stack_pop == 0 and stack_push == 1:
                 counter += 1
-                MEMORY.append(seq)
+                MEMORY.append(sequence[I])
 
             # Network output added for fitness evaluate
             outdata = temp[2]
             outdata = -1.0 if outdata < 0.5 else 1.0
             classification.append(outdata)
             
-        error += compute_fitness(classification, expected_output)
+            print("\texpected {} got {} Memory {}".format(expected_output[I], outdata, MEMORY))
+        fitness = compute_fitness(classification, expected_output)
+        total_fitness += fitness
+        correct = correct and fitness == 100
+        print("OK" if correct else "FAIL")
 
-        print("Input:\n", sequence)
-        print("Output:\n", classification)
-        print("Expected:\n", expected_output)
-        print("Total Fitness:\n", error)
-            
-    total_error = error / num_tests
-    print("Final Fitness:\n", total_error)
-    return total_error
+    return total_fitness / num_tests
 
 def eval_genome(genome, config):
     net = neat.nn.RecurrentNetwork.create(genome, config)
-    error = 0.0
+    fitness = 0.0
     for _ in range(num_tests):
         # Create a random sequence, and feed it to the network (Write)
         random_noise = random.randint(10, 20)
@@ -145,7 +142,6 @@ def eval_genome(genome, config):
             stack_output = MEMORY[counter -1] if counter > 0 else 0
 
             temp = net.activate([seq, stack_output])
-
             stack_push = round(temp[0])
             stack_pop = round(temp[1])
 
@@ -153,8 +149,9 @@ def eval_genome(genome, config):
             # If Push and not Pop Add sequence to stack
             # Else keep stack as is
             if stack_pop == 1 and stack_push == 0:
-                counter -= 1
-                MEMORY.pop()
+                if len(MEMORY) > 0:
+                    counter -= 1
+                    MEMORY.pop()
             elif stack_pop == 0 and stack_push == 1:
                 counter += 1
                 MEMORY.append(seq)
@@ -164,10 +161,10 @@ def eval_genome(genome, config):
             outdata = -1.0 if outdata < 0.5 else 1.0
             classification.append(outdata)
             
-        error += compute_fitness(classification, expected_output)
+        fitness += compute_fitness(classification, expected_output)
             
-    total_error = error / num_tests
-    return total_error
+    total_fitness = fitness / num_tests
+    return total_fitness
 
 def run():
     # Determine path to configuration file.
@@ -193,7 +190,52 @@ def run():
     winner_net = neat.nn.RecurrentNetwork.create(winner, config)
     num_correct = 0
 
+    for n in range(num_tests):
+        print('\nRun {0} output:'.format(n))
+
+        sequence = generate_data(depth, noise)
+        expected_output = generate_output(sequence)
+        classification = []
+        MEMORY = []
+        counter = 0
+        winner_net.reset()
+
+        print('\tsequence {0}'.format(sequence))
+        correct = True
+        for I in range(len(sequence)):
+            # If stack is empty then 0, else the value on top of stack
+            stack_output = MEMORY[counter -1] if counter > 0 else 0
+
+            temp = winner_net.activate([sequence[I], stack_output])
+            stack_push = round(temp[0])
+            stack_pop = round(temp[1])
+
+            # If Pop and not Push remove the top of stack
+            # If Push and not Pop Add sequence to stack
+            # Else keep stack as is
+            if stack_pop == 1 and stack_push == 0:
+                if len(MEMORY) > 0:
+                    counter -= 1
+                    MEMORY.pop()
+            elif stack_pop == 0 and stack_push == 1:
+                counter += 1
+                MEMORY.append(sequence[I])
+
+            # Network output added for fitness evaluate
+            outdata = temp[2]
+            outdata = -1.0 if outdata < 0.5 else 1.0
+            classification.append(outdata)
+
+            print("\texpected {} got {} Memory {}".format(expected_output[I], outdata, MEMORY))
+        
+        fitness = compute_fitness(classification, expected_output)
+        correct = correct and fitness == 100
+        print("OK" if correct else "FAIL")
+        num_correct += 1 if correct else 0
+
+    print("{0} of {1} correct {2:.2f}%".format(num_correct, num_tests, 100.0 * num_correct / num_tests))
+
 
 if __name__ == "__main__":
-    run()
-    # run_simulator()
+    # run()
+    run_simulator()
