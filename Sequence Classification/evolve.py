@@ -99,6 +99,7 @@ def run_simulator():
         for I in range(len(sequence)):
             # If stack is empty then 0, else the value on top of stack
             stack_output = MEMORY[counter-1] if counter > 0 else 0
+            action = "NONE"
 
             temp = network_simulator(sequence[I], stack_output, "PERFECT")
             stack_push = round(temp[0])
@@ -106,9 +107,11 @@ def run_simulator():
 
             if stack_pop == 1 and stack_push == 0:
                 counter -= 1
+                action = "POP"
                 MEMORY.pop()
             elif stack_pop == 0 and stack_push == 1:
                 counter += 1
+                action = "PUSH"
                 MEMORY.append(sequence[I])
 
             # Network output added for fitness evaluate
@@ -116,7 +119,7 @@ def run_simulator():
             outdata = -1.0 if outdata < 0.5 else 1.0
             classification.append(outdata)
             
-            print("\texpected {} got {} Memory {}".format(expected_output[I], outdata, MEMORY))
+            print("\texpected {} got {} Action {} Memory {}".format(expected_output[I], outdata, action, MEMORY))
         fitness = compute_fitness(classification, expected_output)
         total_fitness += fitness
         correct = correct and fitness == 100
@@ -205,6 +208,7 @@ def run():
         for I in range(len(sequence)):
             # If stack is empty then 0, else the value on top of stack
             stack_output = MEMORY[counter -1] if counter > 0 else 0
+            action = "NONE"
 
             temp = winner_net.activate([sequence[I], stack_output])
             stack_push = round(temp[0])
@@ -216,9 +220,11 @@ def run():
             if stack_pop == 1 and stack_push == 0:
                 if len(MEMORY) > 0:
                     counter -= 1
+                    action = "POP"
                     MEMORY.pop()
             elif stack_pop == 0 and stack_push == 1:
                 counter += 1
+                action = "PUSH"
                 MEMORY.append(sequence[I])
 
             # Network output added for fitness evaluate
@@ -226,7 +232,7 @@ def run():
             outdata = -1.0 if outdata < 0.5 else 1.0
             classification.append(outdata)
 
-            print("\texpected {} got {} Memory {}".format(expected_output[I], outdata, MEMORY))
+            print("\texpected {} got {} Action {} Memory {}".format(expected_output[I], outdata, action, MEMORY))
         
         fitness = compute_fitness(classification, expected_output)
         correct = correct and fitness == 100
@@ -237,5 +243,5 @@ def run():
 
 
 if __name__ == "__main__":
-    # run()
-    run_simulator()
+    run()
+    # run_simulator()
