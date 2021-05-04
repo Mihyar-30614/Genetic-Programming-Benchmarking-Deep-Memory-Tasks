@@ -18,6 +18,7 @@ import numpy as np
 import random
 import multiprocessing
 import os
+import pickle
 
 # Number of (1, -1) in a sequence
 depth = 4
@@ -26,6 +27,7 @@ noise = 10
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
 num_generations = 1000
+gneralize = False
 
 
 def generate_data(depth, noise):
@@ -88,7 +90,7 @@ def run_simulator():
     for _ in range(num_tests):
         # Create a random sequence, and feed it to the network (Write)
         random_noise = random.randint(10, 20)
-        sequence = generate_data(depth, noise)
+        sequence = generate_data(depth, random_noise)
         expected_output = generate_output(sequence)
         classification = []
         MEMORY = []
@@ -132,8 +134,10 @@ def eval_genome(genome, config):
     fitness = 0.0
     for _ in range(num_tests):
         # Create a random sequence, and feed it to the network (Write)
-        random_noise = random.randint(10, 20)
-        sequence = generate_data(depth, noise)
+        random_noise  = noise
+        if gneralize:
+            random_noise = random.randint(10, 20)
+        sequence = generate_data(depth, random_noise)
         expected_output = generate_output(sequence)
         classification = []
         MEMORY = []
@@ -190,58 +194,14 @@ def run():
     # Show output of the most fit genome against a random input.
     print('\nBest genome:\n{!s}'.format(winner))
     print('\nOutput:')
-    winner_net = neat.nn.RecurrentNetwork.create(winner, config)
-    num_correct = 0
 
-    for n in range(num_tests):
-        print('\nRun {0} output:'.format(n))
-
-        sequence = generate_data(depth, noise)
-        expected_output = generate_output(sequence)
-        classification = []
-        MEMORY = []
-        counter = 0
-        winner_net.reset()
-
-        print('\tsequence {0}'.format(sequence))
-        correct = True
-        for I in range(len(sequence)):
-            # If stack is empty then 0, else the value on top of stack
-            stack_output = MEMORY[counter -1] if counter > 0 else 0
-            action = "NONE"
-
-            temp = winner_net.activate([sequence[I], stack_output])
-            stack_push = round(temp[0])
-            stack_pop = round(temp[1])
-
-            # If Pop and not Push remove the top of stack
-            # If Push and not Pop Add sequence to stack
-            # Else keep stack as is
-            if stack_pop == 1 and stack_push == 0:
-                if len(MEMORY) > 0:
-                    counter -= 1
-                    action = "POP"
-                    MEMORY.pop()
-            elif stack_pop == 0 and stack_push == 1:
-                counter += 1
-                action = "PUSH"
-                MEMORY.append(sequence[I])
-
-            # Network output added for fitness evaluate
-            outdata = temp[2]
-            outdata = -1.0 if outdata < 0.5 else 1.0
-            classification.append(outdata)
-
-            print("\texpected {} got {} Action {} Memory {}".format(expected_output[I], outdata, action, MEMORY))
-        
-        fitness = compute_fitness(classification, expected_output)
-        correct = correct and fitness == 100
-        print("OK" if correct else "FAIL")
-        num_correct += 1 if correct else 0
-
-    print("{0} of {1} correct {2:.2f}%".format(num_correct, num_tests, 100.0 * num_correct / num_tests))
+    # Save the winner
+    with open('champion-gnome', 'wb') as f:
+        pickle.dump(winner, f)
 
 
 if __name__ == "__main__":
+    
+    # Run Training
     run()
     # run_simulator()
