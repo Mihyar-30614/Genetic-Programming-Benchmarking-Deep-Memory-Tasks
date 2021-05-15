@@ -12,7 +12,6 @@ depth = 4
 noise = 10
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
-num_generations = 1000
 
 def generate_data(depth, noise):
     sequence = []
@@ -60,9 +59,9 @@ def run(config, winner):
             stack_output = MEMORY[counter -1] if counter > 0 else 0
             action = "NONE"
 
-            temp = winner_net.activate([sequence[I], stack_output])
-            stack_push = round(temp[0])
-            stack_pop = round(temp[1])
+            outdata = winner_net.activate([sequence[I], stack_output])
+            stack_push = round(outdata[0])
+            stack_pop = round(outdata[1])
 
             # If Pop and not Push remove the top of stack
             # If Push and not Pop Add sequence to stack
@@ -78,11 +77,11 @@ def run(config, winner):
                 MEMORY.append(sequence[I])
 
             # Network output added for fitness evaluate
-            outdata = temp[2]
-            outdata = -1.0 if outdata < 0.5 else 1.0
-            classification.append(outdata)
+            output = outdata[2]
+            output = -1.0 if output < 0.5 else 1.0
+            classification.append(output)
 
-            print("\texpected {} got {} Action {} Memory {}".format(expected_output[I], outdata, action, MEMORY))
+            print("\texpected {} got {} Action {} Memory {}".format(expected_output[I], output, action, MEMORY))
         
         fitness = compute_fitness(classification, expected_output)
         correct = correct and fitness == 100

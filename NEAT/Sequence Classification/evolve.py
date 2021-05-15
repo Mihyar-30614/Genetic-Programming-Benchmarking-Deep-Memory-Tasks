@@ -108,9 +108,9 @@ def run_simulator():
             stack_output = MEMORY[counter-1] if counter > 0 else 0
             action = "NONE"
 
-            temp = network_simulator(sequence[I], stack_output, "PERFECT")
-            stack_push = round(temp[0])
-            stack_pop = round(temp[1])
+            outdata = network_simulator(sequence[I], stack_output, "PERFECT")
+            stack_push = round(outdata[0])
+            stack_pop = round(outdata[1])
 
             if stack_pop == 1 and stack_push == 0:
                 counter -= 1
@@ -122,12 +122,12 @@ def run_simulator():
                 MEMORY.append(sequence[I])
 
             # Network output added for fitness evaluate
-            outdata = temp[2]
-            outdata = -1.0 if outdata < 0.5 else 1.0
-            classification.append(outdata)
+            output = outdata[2]
+            output = -1.0 if output < 0.5 else 1.0
+            classification.append(output)
 
             print("\texpected {} got {} Action {} Memory {}".format(
-                expected_output[I], outdata, action, MEMORY))
+                expected_output[I], output, action, MEMORY))
         fitness = compute_fitness(classification, expected_output)
         total_fitness += fitness
         correct = correct and fitness == 100
@@ -157,9 +157,9 @@ def eval_genome(genome, config):
             # If stack is empty then 0, else the value on top of stack
             stack_output = MEMORY[counter - 1] if counter > 0 else 0
 
-            temp = net.activate([seq, stack_output])
-            stack_push = round(temp[0])
-            stack_pop = round(temp[1])
+            outdata = net.activate([seq, stack_output])
+            stack_push = round(outdata[0])
+            stack_pop = round(outdata[1])
 
             # If Pop and not Push remove the top of stack
             # If Push and not Pop Add sequence to stack
@@ -173,9 +173,9 @@ def eval_genome(genome, config):
                 MEMORY.append(seq)
 
             # Network output added for fitness evaluate
-            outdata = temp[2]
-            outdata = -1.0 if outdata < 0.5 else 1.0
-            classification.append(outdata)
+            output = outdata[2]
+            output = -1.0 if output < 0.5 else 1.0
+            classification.append(output)
 
         fitness = compute_fitness(classification, expected_output)
         total_fitness += fitness
@@ -203,7 +203,6 @@ def run():
 
     # Show output of the most fit genome against a random input.
     print('\nBest genome:\n{!s}'.format(winner))
-    print('\nOutput:')
 
     # Save the winner
     with open('champion-gnome', 'wb') as f:
