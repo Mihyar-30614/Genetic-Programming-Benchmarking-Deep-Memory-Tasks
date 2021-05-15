@@ -1,3 +1,15 @@
+"""
+This is an example of Copy Task using NEAT-Python (1-bit).
+
+Example Input:
+    for sequence length of 3, Write delim is in first position, Read delim is in second position.
+    Sample Input = [[1.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 1.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+    
+Example Output:
+    Abstracted output, if NEAT guess the command right the stack will be correct. This is why we only care about commands.
+    Sample Output = [[0.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [0.0, 0.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0]]
+"""
+
 from __future__ import division, print_function
 
 import multiprocessing
