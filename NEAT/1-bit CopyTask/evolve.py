@@ -21,7 +21,7 @@ import random
 import pickle
 
 # length of the test sequence.
-length = 3
+length = 10
 # number of bits used
 bits = 1
 # num_tests is the number of random examples each network is tested against.
@@ -91,7 +91,7 @@ def run_simulator():
     for _ in range(num_tests):
         # Create a random sequence, and feed it to the network (Write)
         if generalize:
-            length = random.randint(1, 3)
+            length = random.randint(5, 10)
         sequence = generate_data(length)
         expected_output = generate_output(length)
         output, MEMORY = [], []

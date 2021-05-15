@@ -7,7 +7,7 @@ import numpy as np
 import pickle
 
 # length of the test sequence.
-length = 3
+length = 5
 # number of bits used
 bits = 1
 # num_tests is the number of random examples each network is tested against.
@@ -79,7 +79,7 @@ def run(config, winner):
 
             # Network output added for fitness evaluate
             output.append(outdata)
-
+            outdata = np.around(np.array(outdata)).tolist()
             print("\texpected {} got {} Action {} Memory {}".format(
                 expected_output[I], outdata, action, MEMORY))
 
