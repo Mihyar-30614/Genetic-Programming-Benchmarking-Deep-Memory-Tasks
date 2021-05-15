@@ -76,11 +76,13 @@ def network_simulator(sequence, stack, mode):
             else:
                 push = 0
                 pop = 1  
-    else:
+    elif mode == "RANDOM":
         # produce random output
         push = random.choice([0,1])
         pop = random.choice([0,1])
         classification = random.choice([-1,1])
+    else:
+        raise ValueError("Unknown Mode")
         
     return [push, pop, classification]
 
