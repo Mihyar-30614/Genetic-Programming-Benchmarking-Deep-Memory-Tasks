@@ -127,7 +127,7 @@ def run_simulator():
         correct = correct and fitness == 100
         print("OK" if correct else "FAIL")
 
-    return total_fitness / num_tests
+    print("Total Fitness: {}".format(total_fitness/num_tests))
 
 def eval_genome(genome, config):
     net = neat.nn.RecurrentNetwork.create(genome, config)
