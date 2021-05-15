@@ -38,6 +38,7 @@ def generate_data(depth, noise):
         sequence.append(random.choice((-1.0, 1.0)))
     return sequence
 
+
 def generate_output(data):
     retval = []
     counter = 0
@@ -46,49 +47,51 @@ def generate_output(data):
         retval.append(-1 if counter < 0 else 1)
     return retval
 
+
 def compute_fitness(output_data, expected_data):
     error = 0.0
     for indata, outdata in zip(output_data, expected_data):
-        if outdata != indata: 
+        if outdata != indata:
             error += 1.0
     fitness = 100.0 - ((error * 100) / len(output_data))
     return fitness
 
+
 def network_simulator(sequence, stack, mode):
-    
+
     if mode == "PERFECT":
         # produce perfect output
         push = 0
         pop = 0
         classification = 1 if stack >= 0 else -1
-        
+
         if sequence != 0 and stack == 0:
-        # if sequence not zero and stack is zero then push
+            # if sequence not zero and stack is zero then push
             push = 1
             pop = 0
             classification = sequence
         elif sequence != 0 and stack != 0:
-        # if sequence not zero and stack is not zero then 
-        # (if sequence equal to stack then push otherwise pop)
+            # if sequence not zero and stack is not zero then
+            # (if sequence equal to stack then push otherwise pop)
             if sequence == stack:
                 push = 1
                 pop = 0
             else:
                 push = 0
-                pop = 1  
+                pop = 1
     elif mode == "RANDOM":
         # produce random output
-        push = random.choice([0,1])
-        pop = random.choice([0,1])
-        classification = random.choice([-1,1])
+        push = random.choice([0, 1])
+        pop = random.choice([0, 1])
+        classification = random.choice([-1, 1])
     else:
         raise ValueError("Unknown Mode")
-        
+
     return [push, pop, classification]
 
 
 def run_simulator():
-    total_fitness = 0.0    
+    total_fitness = 0.0
     for _ in range(num_tests):
         # Create a random sequence, and feed it to the network (Write)
         random_noise = random.randint(10, 20)
@@ -122,21 +125,25 @@ def run_simulator():
             outdata = temp[2]
             outdata = -1.0 if outdata < 0.5 else 1.0
             classification.append(outdata)
-            
-            print("\texpected {} got {} Action {} Memory {}".format(expected_output[I], outdata, action, MEMORY))
+
+            print("\texpected {} got {} Action {} Memory {}".format(
+                expected_output[I], outdata, action, MEMORY))
         fitness = compute_fitness(classification, expected_output)
         total_fitness += fitness
         correct = correct and fitness == 100
+
+        print("Fitness: {}".format(fitness))
         print("OK" if correct else "FAIL")
 
     print("Total Fitness: {}".format(total_fitness/num_tests))
 
+
 def eval_genome(genome, config):
     net = neat.nn.RecurrentNetwork.create(genome, config)
-    fitness = 0.0
+    total_fitness = 0.0
     for _ in range(num_tests):
         # Create a random sequence, and feed it to the network (Write)
-        random_noise  = noise
+        random_noise = noise
         if gneralize:
             random_noise = random.randint(10, 20)
         sequence = generate_data(depth, random_noise)
@@ -148,7 +155,7 @@ def eval_genome(genome, config):
 
         for seq in sequence:
             # If stack is empty then 0, else the value on top of stack
-            stack_output = MEMORY[counter -1] if counter > 0 else 0
+            stack_output = MEMORY[counter - 1] if counter > 0 else 0
 
             temp = net.activate([seq, stack_output])
             stack_push = round(temp[0])
@@ -169,11 +176,12 @@ def eval_genome(genome, config):
             outdata = temp[2]
             outdata = -1.0 if outdata < 0.5 else 1.0
             classification.append(outdata)
-            
-        fitness += compute_fitness(classification, expected_output)
-            
-    total_fitness = fitness / num_tests
-    return total_fitness
+
+        fitness = compute_fitness(classification, expected_output)
+        total_fitness += fitness
+
+    return total_fitness / num_tests
+
 
 def run():
     # Determine path to configuration file.
@@ -203,7 +211,7 @@ def run():
 
 
 if __name__ == "__main__":
-    
+
     # Run Training
     run()
     # run_simulator()
