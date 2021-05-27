@@ -61,8 +61,6 @@ pset.addPrimitive(protectedDiv, [float, float], float)
 
 # logic operators
 # Define a new if-then-else function
-
-
 def if_then_else(input, output1, output2):
     if input:
         return output1
@@ -84,8 +82,7 @@ creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
 toolbox = base.Toolbox()
 toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=2)
-toolbox.register("individual", tools.initIterate,
-                 creator.Individual, toolbox.expr)
+toolbox.register("individual", tools.initIterate,creator.Individual, toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 toolbox.register("compile", gp.compile, pset=pset)
 
