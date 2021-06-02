@@ -3,6 +3,7 @@ import itertools
 import operator
 import random
 import numpy
+import pickle
 
 from sklearn.model_selection import train_test_split
 from deap import gp
@@ -33,68 +34,70 @@ def eval_function(individual):
     tree3 = toolbox.compile(expr=individual[2])  # f3(x)
 
     # Evaluate the sum of correctly identified
-    result1 = sum(tree1(*indata) == labels_train for indata in data_train)
-    result2 = sum(tree2(*indata) == labels_train for indata in data_train)
-    result3 = sum(tree3(*indata) == labels_train for indata in data_train)
-    total = result1 + result2 + result3
+    total = []
+    for i in range(len(data_train)):
+        arg1 = tree1(*data_train[i])
+        arg2 = tree2(*data_train[i])
+        arg3 = tree3(*data_train[i])
+        pos = numpy.argmax([arg1, arg2, arg3])
+        total.append((pos == labels_train[i])) 
 
-    return total,
+    return sum(total),
 
-
-def evolve(pop_list, toolbox, cxpb, mutpb, ngen, stats=None, hof_list=None, verbose=__debug__):
-
-    pop1 = pop_list[0]
-    pop2 = pop_list[1]
-    pop3 = pop_list[2]
-
-    hof1 = hof_list[0]
-    hof2 = hof_list[1]
-    hof3 = hof_list[2]
-
+def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, halloffame=None, verbose=__debug__):
+    
     logbook1 = tools.Logbook()
     logbook2 = tools.Logbook()
     logbook3 = tools.Logbook()
 
+    logbook1.header = ['gen', 'nevals'] + (stats.fields if stats else [])
+    logbook2.header = ['gen', 'nevals'] + (stats.fields if stats else [])
+    logbook3.header = ['gen', 'nevals'] + (stats.fields if stats else [])
+
+    population1 = population_list[0]
+    population2 = population_list[1]
+    population3 = population_list[2]
+
+    halloffame1 = halloffame[0]
+    halloffame2 = halloffame[1]
+    halloffame3 = halloffame[2]
+
     # Evaluate the individuals with an invalid fitness
-    invalid_ind1 = [ind for ind in pop1 if not ind.fitness.valid]
-    invalid_ind2 = [ind for ind in pop2 if not ind.fitness.valid]
-    invalid_ind3 = [ind for ind in pop3 if not ind.fitness.valid]
-    
+    invalid_ind1 = [ind for ind in population1 if not ind.fitness.valid]
+    invalid_ind2 = [ind for ind in population2 if not ind.fitness.valid]
+    invalid_ind3 = [ind for ind in population3 if not ind.fitness.valid]
+
     # we need to zip the 3 individuals and pass it to the eval_function,
     # represented here as "toolbox.evaluate". The returned list of cost is then evaluated for each of the individuals.
-    fitnesse1 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-    for ind, fit in zip(invalid_ind1, fitnesse1):
+    fitnesses1 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
+    for ind, fit in zip(invalid_ind1, fitnesses1):
         ind.fitness.values = fit
 
-    fitnesse2 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-    for ind, fit in zip(invalid_ind2, fitnesse2):
+    fitnesses2 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
+    for ind, fit in zip(invalid_ind2, fitnesses2):
         ind.fitness.values = fit
 
-    fitnesse3 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-    for ind, fit in zip(invalid_ind3, fitnesse3):
+    fitnesses3 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
+    for ind, fit in zip(invalid_ind3, fitnesses3):
         ind.fitness.values = fit
 
-    hof1.update(pop1)
-    hof2.update(pop2)
-    hof3.update(pop3)
+    if halloffame is not None:
+        halloffame1.update(population1)
+        halloffame2.update(population2)
+        halloffame3.update(population3)
 
-    record1 = stats.compile(pop1) if stats else {}
-    record2 = stats.compile(pop2) if stats else {}
-    record3 = stats.compile(pop3) if stats else {}
-
-    logbook1.record(gen=0, no_of_evals=len(invalid_ind1), **record1)
-    logbook2.record(gen=0, no_of_evals=len(invalid_ind2), **record2)
-    logbook3.record(gen=0, no_of_evals=len(invalid_ind3), **record3)
+    record1 = stats.compile(population1) if stats else {}
+    logbook1.record(gen=0, nevals=len(invalid_ind1), **record1)
 
     if verbose:
-        print(logbook1.stream, logbook2.stream, logbook3.stream)
+        print(logbook1.stream)
 
     # Begin the generational process
     for gen in range(1, ngen + 1):
         # Select the next generation individuals
-        offspring1 = toolbox.select(pop1, len(pop1))
-        offspring2 = toolbox.select(pop2, len(pop2))
-        offspring3 = toolbox.select(pop3, len(pop3))
+        offspring1 = toolbox.select(population1, len(population1))
+        offspring2 = toolbox.select(population2, len(population2))
+        offspring3 = toolbox.select(population3, len(population3))
 
         # Vary the pool of individuals
         offspring1 = algorithms.varAnd(offspring1, toolbox, cxpb, mutpb)
@@ -103,49 +106,39 @@ def evolve(pop_list, toolbox, cxpb, mutpb, ngen, stats=None, hof_list=None, verb
 
         # Evaluate the individuals with an invalid fitness
         invalid_ind1 = [ind for ind in offspring1 if not ind.fitness.valid]
+        fitnesses1 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
+        for ind, fit in zip(invalid_ind1, fitnesses1):
+            ind.fitness.values = fit
+
         invalid_ind2 = [ind for ind in offspring2 if not ind.fitness.valid]
+        fitnesses2 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
+        for ind, fit in zip(invalid_ind2, fitnesses2):
+            ind.fitness.values = fit
+
         invalid_ind3 = [ind for ind in offspring3 if not ind.fitness.valid]
-
-        fitness1 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-        for ind, fit in zip(invalid_ind1, fitness1):
-            ind.fitness.values = fit
-
-        fitness2 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-        for ind, fit in zip(invalid_ind2, fitness2):
-            ind.fitness.values = fit
-
-        fitness3 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-        for ind, fit in zip(invalid_ind3, fitness3):
+        fitnesses3 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
+        for ind, fit in zip(invalid_ind3, fitnesses3):
             ind.fitness.values = fit
 
         # Update the hall of fame with the generated individuals
-        hof1.update(offspring1)
-        hof2.update(offspring2)
-        hof3.update(offspring3)
+        if halloffame is not None:
+            halloffame1.update(offspring1)
+            halloffame2.update(offspring2)
+            halloffame3.update(offspring3)
 
         # Replace the current population by the offspring
-        pop1[:] = offspring1
-        pop2[:] = offspring2
-        pop3[:] = offspring3
+        population1[:] = offspring1
+        population2[:] = offspring2
+        population3[:] = offspring3
 
         # Append the current generation statistics to the logbook
-        record1 = stats.compile(pop1) if stats else {}
-        record2 = stats.compile(pop2) if stats else {}
-        record3 = stats.compile(pop3) if stats else {}
-
-        test = stats.compile(pop1)
-        print('Record: {}'.format(test))
-        
-        logbook1.record(gen=gen, no_of_evals=len(invalid_ind1), **record1)
-        logbook2.record(gen=gen, no_of_evals=len(invalid_ind2), **record2)
-        logbook3.record(gen=gen, no_of_evals=len(invalid_ind3), **record3)
+        record1 = stats.compile(population1) if stats else {}
+        logbook1.record(gen=gen, nevals=len(invalid_ind1), **record1)
 
         if verbose:
-            print(logbook1.stream, logbook2.stream, logbook3.stream)
+            print(logbook1.stream)
 
-    pop = [pop1, pop2, pop3]
-    log = [logbook1, logbook2, logbook3]
-    return pop, log
+    return [population1, population2, population3], [logbook1, logbook2, logbook3]
 
 
 # defined a new primitive set for strongly typed GP
@@ -155,8 +148,6 @@ pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, 4), float, "IN")
 pset.addPrimitive(operator.and_, [bool, bool], bool)
 pset.addPrimitive(operator.or_, [bool, bool], bool)
 pset.addPrimitive(operator.not_, [bool], bool)
-pset.addPrimitive(operator.add, [float, float], float)
-pset.addPrimitive(operator.sub, [float, float], float)
 pset.addPrimitive(operator.mul, [float, float], float)
 pset.addPrimitive(operator.lt, [float, float], bool)
 pset.addPrimitive(operator.eq, [float, float], bool)
@@ -172,7 +163,7 @@ creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
 toolbox = base.Toolbox()
-toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=3, max_=5, type_=bool)
+toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=3, max_=5)
 toolbox.register("compile", gp.compile, pset=pset)
 toolbox.register("evaluate", eval_function)
 toolbox.register("select", tools.selTournament, tournsize=7)
@@ -192,7 +183,7 @@ toolbox.register("population1", tools.initRepeat, list, toolbox.individual1)
 toolbox.register("population2", tools.initRepeat, list, toolbox.individual2)
 toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 
-pop1 = toolbox.population1(n=300)
+pop1 = toolbox.population1(n=10)
 pop2 = toolbox.population2(n=300)
 pop3 = toolbox.population3(n=300)
 
@@ -214,10 +205,25 @@ if __name__ == "__main__":
         data, labels, test_size=0.20, random_state=1)
 
     stats = tools.Statistics(key=lambda ind: ind.fitness.values)
-    pop_list = [pop1, pop2, pop3]
+    stats.register("avg", numpy.mean, axis=0)
+    stats.register("std", numpy.std, axis=0)
+    stats.register("min", numpy.min, axis=0)
+    stats.register("max", numpy.max, axis=0)
+    pop_list = numpy.array([pop1, pop2, pop3], dtype=object)
     hof_list = [hof1, hof2, hof3]
-    cxpb = 0.5
-    mutpb = 0.4
-    ngen = 40
-    pop, log = evolve(pop_list, toolbox, cxpb, mutpb, ngen, stats=stats, hof_list=hof_list, verbose=True)
-    
+    cxpb, mutpb, ngen = 0.5, 0.4, 50
+    pop, log = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, stats, hof_list, verbose=True)
+
+    print("First Output Best individual fitness: %s" % (hof1[0].fitness))
+    print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
+    print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
+
+    # Save the winner
+    with open('output1', 'wb') as f:
+        pickle.dump(hof1[0], f)
+
+    with open('output2', 'wb') as f:
+        pickle.dump(hof2[0], f)
+        
+    with open('output3', 'wb') as f:
+        pickle.dump(hof3[0], f)
