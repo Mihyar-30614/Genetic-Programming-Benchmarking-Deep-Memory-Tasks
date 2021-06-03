@@ -6,6 +6,9 @@ import numpy
 import pickle
 
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
 from deap import gp
 from deap import tools
 from deap import base
@@ -209,9 +212,9 @@ if __name__ == "__main__":
     stats.register("std", numpy.std, axis=0)
     stats.register("min", numpy.min, axis=0)
     stats.register("max", numpy.max, axis=0)
-    pop_list = numpy.array([pop1, pop2, pop3], dtype=object)
+    pop_list = [pop1, pop2, pop3]
     hof_list = [hof1, hof2, hof3]
-    cxpb, mutpb, ngen = 0.5, 0.4, 50
+    cxpb, mutpb, ngen = 0.5, 0.4, 40
     pop, log = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, stats, hof_list, verbose=True)
 
     print("First Output Best individual fitness: %s" % (hof1[0].fitness))
@@ -227,3 +230,33 @@ if __name__ == "__main__":
         
     with open('output3', 'wb') as f:
         pickle.dump(hof3[0], f)
+
+
+    '''
+    Running Test on unseen data and checking results
+    '''
+
+    print("\n==================")
+    print("Begin Testing ....")
+    print("==================\n")
+    # Transform the tree expression in a callable function
+    tree1 = toolbox.compile(expr=hof1[0])
+    tree2 = toolbox.compile(expr=hof2[0])
+    tree3 = toolbox.compile(expr=hof3[0])
+
+    # Evaluate the sum of correctly identified
+    predictions = []
+    for i in range(len(data_validation)):
+        arg1 = tree1(*data_validation[i])
+        arg2 = tree2(*data_validation[i])
+        arg3 = tree3(*data_validation[i])
+        pos = numpy.argmax([arg1, arg2, arg3])
+        # predictions.append((pos == labels_validation[i]))
+        predictions.append(pos)
+
+    # Evaluate predictions
+    accuracy = accuracy_score(labels_validation, predictions)
+    print("Accuracy: {}".format(accuracy))
+    print(classification_report(labels_validation, predictions))
+    print("Predictions: \n{}".format(predictions))
+    print("labels: \n{}".format(labels_validation))
