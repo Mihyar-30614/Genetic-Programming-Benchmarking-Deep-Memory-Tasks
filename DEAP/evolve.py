@@ -259,7 +259,7 @@ if __name__ == "__main__":
     cxpb, mutpb, ngen = 0.5, 0.4, 50
     pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
-    print("First Output Best individual fitness: %s" % (hof1[0].fitness))
+    print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
     print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
     print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
 
