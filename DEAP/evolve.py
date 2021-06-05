@@ -2,7 +2,7 @@ import json
 import itertools
 import operator
 import random
-import numpy
+import numpy as np
 import pickle
 
 from sklearn.model_selection import train_test_split
@@ -29,6 +29,46 @@ def if_then_else(input, output1, output2):
     else:
         return output2
 
+# Calculate statistics
+def calc_stats(output1, output2, output3):
+    record = {}
+
+    # Calculate stats for first output
+    output1_avg = np.around(np.mean(output1, axis=0), 2)
+    output1_std = np.around(np.std(output1, axis=0), 2)
+    output1_min = np.around(np.min(output1, axis=0), 2)
+    output1_max = np.around(np.max(output1, axis=0), 2)
+
+    # Calculate stats for second output
+    output2_avg = np.around(np.mean(output2, axis=0), 2)
+    output2_std = np.around(np.std(output2, axis=0), 2)
+    output2_min = np.around(np.min(output2, axis=0), 2)
+    output2_max = np.around(np.max(output2, axis=0), 2)
+
+    # Calculate stats for third output
+    output3_avg = np.around(np.mean(output3, axis=0), 2)
+    output3_std = np.around(np.std(output3, axis=0), 2)
+    output3_min = np.around(np.min(output3, axis=0), 2)
+    output3_max = np.around(np.max(output3, axis=0), 2)
+
+    # Update record
+    record.update({
+        'avg1': output1_avg,
+        'std1': output1_std,
+        'min1': output1_min,
+        'max1': output1_max,
+        'avg2': output2_avg,
+        'std2': output2_std,
+        'min2': output2_min,
+        'max2': output2_max,
+        'avg3': output3_avg,
+        'std3': output3_std,
+        'min3': output3_min,
+        'max3': output3_max,
+    })
+
+    return record
+
 
 def eval_function(individual):
     # Transform the tree expression in a callable function
@@ -42,20 +82,13 @@ def eval_function(individual):
         arg1 = tree1(*data_train[i])
         arg2 = tree2(*data_train[i])
         arg3 = tree3(*data_train[i])
-        pos = numpy.argmax([arg1, arg2, arg3])
-        total.append((pos == labels_train[i])) 
+        pos = np.argmax([arg1, arg2, arg3])
+        total.append((pos == labels_train[i]))
 
-    return sum(total),
+    return sum(total)/len(data_train),
+
 
 def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, halloffame=None, verbose=__debug__):
-    
-    logbook1 = tools.Logbook()
-    logbook2 = tools.Logbook()
-    logbook3 = tools.Logbook()
-
-    logbook1.header = ['gen', 'nevals'] + (stats.fields if stats else [])
-    logbook2.header = ['gen', 'nevals'] + (stats.fields if stats else [])
-    logbook3.header = ['gen', 'nevals'] + (stats.fields if stats else [])
 
     population1 = population_list[0]
     population2 = population_list[1]
@@ -72,29 +105,37 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
 
     # we need to zip the 3 individuals and pass it to the eval_function,
     # represented here as "toolbox.evaluate". The returned list of cost is then evaluated for each of the individuals.
+    fitness1 = []
     fitnesses1 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
     for ind, fit in zip(invalid_ind1, fitnesses1):
         ind.fitness.values = fit
+        fitness1.append(fit)
 
+    fitness2 = []
     fitnesses2 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
     for ind, fit in zip(invalid_ind2, fitnesses2):
         ind.fitness.values = fit
+        fitness2.append(fit)
 
+    fitness3 = []
     fitnesses3 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
     for ind, fit in zip(invalid_ind3, fitnesses3):
         ind.fitness.values = fit
+        fitness3.append(fit)
 
     if halloffame is not None:
         halloffame1.update(population1)
         halloffame2.update(population2)
         halloffame3.update(population3)
 
-    record1 = stats.compile(population1) if stats else {}
-    logbook1.record(gen=0, nevals=len(invalid_ind1), **record1)
+    record = calc_stats(fitness1, fitness2, fitness3)
+    header = ['Gen'] + list(record.keys())
+    values = [0] + list(record.values())
 
     if verbose:
-        print(logbook1.stream)
-
+        print(*header, sep='\t')
+        print(*values, sep='\t')
+    
     # Begin the generational process
     for gen in range(1, ngen + 1):
         # Select the next generation individuals
@@ -108,20 +149,26 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         offspring3 = algorithms.varAnd(offspring3, toolbox, cxpb, mutpb)
 
         # Evaluate the individuals with an invalid fitness
+        fitness1 = []
         invalid_ind1 = [ind for ind in offspring1 if not ind.fitness.valid]
         fitnesses1 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
         for ind, fit in zip(invalid_ind1, fitnesses1):
             ind.fitness.values = fit
+            fitness1.append(fit)
 
+        fitness2 = []
         invalid_ind2 = [ind for ind in offspring2 if not ind.fitness.valid]
         fitnesses2 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
         for ind, fit in zip(invalid_ind2, fitnesses2):
             ind.fitness.values = fit
+            fitness2.append(fit)
 
+        fitness3 = []
         invalid_ind3 = [ind for ind in offspring3 if not ind.fitness.valid]
         fitnesses3 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
         for ind, fit in zip(invalid_ind3, fitnesses3):
             ind.fitness.values = fit
+            fitness3.append(fit)
 
         # Update the hall of fame with the generated individuals
         if halloffame is not None:
@@ -135,13 +182,13 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         population3[:] = offspring3
 
         # Append the current generation statistics to the logbook
-        record1 = stats.compile(population1) if stats else {}
-        logbook1.record(gen=gen, nevals=len(invalid_ind1), **record1)
+        record = calc_stats(fitness1, fitness2, fitness3)
+        values = [gen] + list(record.values())
 
         if verbose:
-            print(logbook1.stream)
+            print(*values, sep='\t')
 
-    return [population1, population2, population3], [logbook1, logbook2, logbook3]
+    return [population1, population2, population3]
 
 
 # defined a new primitive set for strongly typed GP
@@ -186,9 +233,9 @@ toolbox.register("population1", tools.initRepeat, list, toolbox.individual1)
 toolbox.register("population2", tools.initRepeat, list, toolbox.individual2)
 toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 
-pop1 = toolbox.population1(n=10)
-pop2 = toolbox.population2(n=300)
-pop3 = toolbox.population3(n=300)
+pop1 = toolbox.population1(n=100)
+pop2 = toolbox.population2(n=100)
+pop3 = toolbox.population3(n=100)
 
 hof1 = tools.HallOfFame(1)
 hof2 = tools.HallOfFame(1)
@@ -207,15 +254,10 @@ if __name__ == "__main__":
     data_train, data_validation, labels_train, labels_validation = train_test_split(
         data, labels, test_size=0.20, random_state=1)
 
-    stats = tools.Statistics(key=lambda ind: ind.fitness.values)
-    stats.register("avg", numpy.mean, axis=0)
-    stats.register("std", numpy.std, axis=0)
-    stats.register("min", numpy.min, axis=0)
-    stats.register("max", numpy.max, axis=0)
     pop_list = [pop1, pop2, pop3]
     hof_list = [hof1, hof2, hof3]
-    cxpb, mutpb, ngen = 0.5, 0.4, 40
-    pop, log = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, stats, hof_list, verbose=True)
+    cxpb, mutpb, ngen = 0.5, 0.4, 50
+    pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
     print("First Output Best individual fitness: %s" % (hof1[0].fitness))
     print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
@@ -227,10 +269,9 @@ if __name__ == "__main__":
 
     with open('output2', 'wb') as f:
         pickle.dump(hof2[0], f)
-        
+
     with open('output3', 'wb') as f:
         pickle.dump(hof3[0], f)
-
 
     '''
     Running Test on unseen data and checking results
@@ -250,7 +291,7 @@ if __name__ == "__main__":
         arg1 = tree1(*data_validation[i])
         arg2 = tree2(*data_validation[i])
         arg3 = tree3(*data_validation[i])
-        pos = numpy.argmax([arg1, arg2, arg3])
+        pos = np.argmax([arg1, arg2, arg3])
         # predictions.append((pos == labels_validation[i]))
         predictions.append(pos)
 
