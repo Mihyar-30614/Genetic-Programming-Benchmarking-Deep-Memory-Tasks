@@ -188,6 +188,9 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         if verbose:
             print(*values, sep='\t')
 
+        if record['max1'] > fitness_threshold and record['max2'] > fitness_threshold and record['max3'] > fitness_threshold:
+            break
+
     return [population1, population2, population3]
 
 
@@ -256,7 +259,7 @@ if __name__ == "__main__":
 
     pop_list = [pop1, pop2, pop3]
     hof_list = [hof1, hof2, hof3]
-    cxpb, mutpb, ngen = 0.5, 0.4, 50
+    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 100, 0.95
     pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
     print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
