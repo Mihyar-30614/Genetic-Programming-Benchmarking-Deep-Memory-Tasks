@@ -109,19 +109,19 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
     fitnesses1 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
     for ind, fit in zip(invalid_ind1, fitnesses1):
         ind.fitness.values = fit
-        fitness1.append(fit)
+        fitness1.append(fit[0])
 
     fitness2 = []
     fitnesses2 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
     for ind, fit in zip(invalid_ind2, fitnesses2):
         ind.fitness.values = fit
-        fitness2.append(fit)
+        fitness2.append(fit[0])
 
     fitness3 = []
     fitnesses3 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
     for ind, fit in zip(invalid_ind3, fitnesses3):
         ind.fitness.values = fit
-        fitness3.append(fit)
+        fitness3.append(fit[0])
 
     if halloffame is not None:
         halloffame1.update(population1)
