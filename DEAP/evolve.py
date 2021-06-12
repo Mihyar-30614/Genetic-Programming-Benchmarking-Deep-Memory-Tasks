@@ -236,9 +236,10 @@ toolbox.register("population1", tools.initRepeat, list, toolbox.individual1)
 toolbox.register("population2", tools.initRepeat, list, toolbox.individual2)
 toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 
-pop1 = toolbox.population1(n=100)
-pop2 = toolbox.population2(n=100)
-pop3 = toolbox.population3(n=100)
+pop_number = 100
+pop1 = toolbox.population1(n=pop_number)
+pop2 = toolbox.population2(n=pop_number)
+pop3 = toolbox.population3(n=pop_number)
 
 hof1 = tools.HallOfFame(1)
 hof2 = tools.HallOfFame(1)
