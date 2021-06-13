@@ -38,18 +38,21 @@ def calc_stats(output1, output2, output3):
     output1_std = np.around(np.std(output1, axis=0), 2)
     output1_min = np.around(np.min(output1, axis=0), 2)
     output1_max = np.around(np.max(output1, axis=0), 2)
+    output1_length = len(output1)
 
     # Calculate stats for second output
     output2_avg = np.around(np.mean(output2, axis=0), 2)
     output2_std = np.around(np.std(output2, axis=0), 2)
     output2_min = np.around(np.min(output2, axis=0), 2)
     output2_max = np.around(np.max(output2, axis=0), 2)
+    output2_length = len(output2)
 
     # Calculate stats for third output
     output3_avg = np.around(np.mean(output3, axis=0), 2)
     output3_std = np.around(np.std(output3, axis=0), 2)
     output3_min = np.around(np.min(output3, axis=0), 2)
     output3_max = np.around(np.max(output3, axis=0), 2)
+    output3_length = len(output3)
 
     # Update record
     record.update({
@@ -57,14 +60,17 @@ def calc_stats(output1, output2, output3):
         'std1': output1_std,
         'min1': output1_min,
         'max1': output1_max,
+        'len1': output1_length,
         'avg2': output2_avg,
         'std2': output2_std,
         'min2': output2_min,
         'max2': output2_max,
+        'len2': output2_length,
         'avg3': output3_avg,
         'std3': output3_std,
         'min3': output3_min,
         'max3': output3_max,
+        'len3': output3_length
     })
 
     return record
@@ -123,6 +129,7 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         ind.fitness.values = fit
         fitness3.append(fit[0])
 
+
     if halloffame is not None:
         halloffame1.update(population1)
         halloffame2.update(population2)
@@ -170,6 +177,7 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
             ind.fitness.values = fit
             fitness3.append(fit)
 
+
         # Update the hall of fame with the generated individuals
         if halloffame is not None:
             halloffame1.update(offspring1)
@@ -195,7 +203,7 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
 
 
 # defined a new primitive set for strongly typed GP
-pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, 4), float, "IN")
+pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, 4), float)
 
 # boolean operators
 pset.addPrimitive(operator.and_, [bool, bool], bool)
@@ -236,10 +244,10 @@ toolbox.register("population1", tools.initRepeat, list, toolbox.individual1)
 toolbox.register("population2", tools.initRepeat, list, toolbox.individual2)
 toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 
-pop_number = 100
-pop1 = toolbox.population1(n=pop_number)
-pop2 = toolbox.population2(n=pop_number)
-pop3 = toolbox.population3(n=pop_number)
+pop_size = 100
+pop1 = toolbox.population1(n=pop_size)
+pop2 = toolbox.population2(n=pop_size)
+pop3 = toolbox.population3(n=pop_size)
 
 hof1 = tools.HallOfFame(1)
 hof2 = tools.HallOfFame(1)
