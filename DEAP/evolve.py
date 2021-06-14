@@ -93,7 +93,54 @@ def eval_function(individual):
 
     return sum(total)/len(data_train),
 
+'''
+Psudo code for how this algorithm works:
+N = population size
+population1 = [tree1, tree2, ..., treeN]
+population2 = [tree1, tree2, ..., treeN]
+population3 = [tree1, tree2, ..., treeN]
 
+New trees have invalid fitness
+invalid_ind1 = [invalid_tree1, invalid_tree2, ..., invalid_treeN]
+invalid_ind2 = [invalid_tree1, invalid_tree2, ..., invalid_treeN]
+invalid_ind3 = [invalid_tree1, invalid_tree2, ..., invalid_treeN]
+
+for I = 1 to N
+    evaluate_fitness(invalid_ind1[I], invalid_ind2[I], invalid_ind3[I])
+Next I
+
+Pick the best tree fitness and assign it to Hall Of Fame for each invalid_ind.
+
+For each generation evolving include:
+* Select the next generation individuals (select entire population):
+    offspring1 = select(population1, len(population1))
+    offspring2 = select(population2, len(population2))
+    offspring3 = select(population3, len(population3))
+
+* Vary the pool of individuals:
+    offspring_population = clone(parent_population)
+    For I = 1 to len(offspring_population)
+        If mate_probability then
+            child1, child2 = mate(offspring_population[I], offspring_population[I+1])
+            offspring_population[I] = child1
+            offspring_population[I+1] = child2
+        End
+    Next I
+    For I = 1 to len(offspring_population)
+        If mutate_probability then
+            mutate_child = mutate(offspring_population[I])
+            offspring_population[I] = mutate_child
+        End
+    Next I
+    return offspring_population
+    
+* Select new trees with invalid fittness then (number of invalid tree != N):
+    for I = 1 to N
+        evaluate_fitness(invalid_ind1[I], invalid_ind2[I], invalid_ind3[I])
+    Next I
+* Update the hall of fame with the generated individuals.
+* Replace the current population with the offspring.
+'''
 def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, halloffame=None, verbose=__debug__):
 
     population1 = population_list[0]
@@ -184,7 +231,7 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
             halloffame2.update(offspring2)
             halloffame3.update(offspring3)
 
-        # Replace the current population by the offspring
+        # Replace the current population with the offspring
         population1[:] = offspring1
         population2[:] = offspring2
         population3[:] = offspring3
@@ -195,6 +242,10 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
 
         if verbose:
             print(*values, sep='\t')
+            # print("==================================================================")
+            # print("offspring1_len: {}\t offspring2_len: {}\t offspring3_len: {}".format(len(offspring1), len(offspring2), len(offspring3)))
+            # print("invalid_ind1: {}\t invalid_ind2: {}\t invalid_ind3: {}".format(len(invalid_ind1), len(invalid_ind2), len(invalid_ind3)))
+            # print("==================================================================")
 
         if record['max1'] > fitness_threshold and record['max2'] > fitness_threshold and record['max3'] > fitness_threshold:
             break
