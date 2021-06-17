@@ -30,47 +30,23 @@ def if_then_else(input, output1, output2):
         return output2
 
 # Calculate statistics
-def calc_stats(output1, output2, output3):
+def calc_stats(output):
     record = {}
 
     # Calculate stats for first output
-    output1_avg = np.around(np.mean(output1, axis=0), 2)
-    output1_std = np.around(np.std(output1, axis=0), 2)
-    output1_min = np.around(np.min(output1, axis=0), 2)
-    output1_max = np.around(np.max(output1, axis=0), 2)
-    output1_length = len(output1)
-
-    # Calculate stats for second output
-    output2_avg = np.around(np.mean(output2, axis=0), 2)
-    output2_std = np.around(np.std(output2, axis=0), 2)
-    output2_min = np.around(np.min(output2, axis=0), 2)
-    output2_max = np.around(np.max(output2, axis=0), 2)
-    output2_length = len(output2)
-
-    # Calculate stats for third output
-    output3_avg = np.around(np.mean(output3, axis=0), 2)
-    output3_std = np.around(np.std(output3, axis=0), 2)
-    output3_min = np.around(np.min(output3, axis=0), 2)
-    output3_max = np.around(np.max(output3, axis=0), 2)
-    output3_length = len(output3)
+    output_avg = np.around(np.mean(output, axis=0), 2)
+    output_std = np.around(np.std(output, axis=0), 2)
+    output_min = np.around(np.min(output, axis=0), 2)
+    output_max = np.around(np.max(output, axis=0), 2)
+    output_length = len(output)
 
     # Update record
     record.update({
-        'avg1': output1_avg,
-        'std1': output1_std,
-        'min1': output1_min,
-        'max1': output1_max,
-        'len1': output1_length,
-        'avg2': output2_avg,
-        'std2': output2_std,
-        'min2': output2_min,
-        'max2': output2_max,
-        'len2': output2_length,
-        'avg3': output3_avg,
-        'std3': output3_std,
-        'min3': output3_min,
-        'max3': output3_max,
-        'len3': output3_length
+        'avg': output_avg,
+        'std': output_std,
+        'min': output_min,
+        'max': output_max,
+        'len': output_length,
     })
 
     return record
@@ -158,31 +134,20 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
 
     # we need to zip the 3 individuals and pass it to the eval_function,
     # represented here as "toolbox.evaluate". The returned list of cost is then evaluated for each of the individuals.
-    fitness1 = []
-    fitnesses1 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-    for ind, fit in zip(invalid_ind1, fitnesses1):
-        ind.fitness.values = fit
-        fitness1.append(fit[0])
-
-    fitness2 = []
-    fitnesses2 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-    for ind, fit in zip(invalid_ind2, fitnesses2):
-        ind.fitness.values = fit
-        fitness2.append(fit[0])
-
-    fitness3 = []
-    fitnesses3 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-    for ind, fit in zip(invalid_ind3, fitnesses3):
-        ind.fitness.values = fit
-        fitness3.append(fit[0])
-
+    fitness = []
+    fitnesses = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
+    for ind1, ind2, ind3, fit in zip(invalid_ind1,invalid_ind2, invalid_ind3, fitnesses):
+        ind1.fitness.values = fit
+        ind2.fitness.values = fit
+        ind3.fitness.values = fit
+        fitness.append(fit[0])
 
     if halloffame is not None:
         halloffame1.update(population1)
         halloffame2.update(population2)
         halloffame3.update(population3)
 
-    record = calc_stats(fitness1, fitness2, fitness3)
+    record = calc_stats(fitness)
     header = ['Gen'] + list(record.keys())
     values = [0] + list(record.values())
 
@@ -203,27 +168,17 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         offspring3 = algorithms.varAnd(offspring3, toolbox, cxpb, mutpb)
 
         # Evaluate the individuals with an invalid fitness
-        fitness1 = []
+        fitness = []
         invalid_ind1 = [ind for ind in offspring1 if not ind.fitness.valid]
-        fitnesses1 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-        for ind, fit in zip(invalid_ind1, fitnesses1):
-            ind.fitness.values = fit
-            fitness1.append(fit)
-
-        fitness2 = []
         invalid_ind2 = [ind for ind in offspring2 if not ind.fitness.valid]
-        fitnesses2 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-        for ind, fit in zip(invalid_ind2, fitnesses2):
-            ind.fitness.values = fit
-            fitness2.append(fit)
-
-        fitness3 = []
         invalid_ind3 = [ind for ind in offspring3 if not ind.fitness.valid]
-        fitnesses3 = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-        for ind, fit in zip(invalid_ind3, fitnesses3):
-            ind.fitness.values = fit
-            fitness3.append(fit)
 
+        fitnesses = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
+        for ind1, ind2, ind3, fit in zip(invalid_ind1, invalid_ind2, invalid_ind3, fitnesses):
+            ind1.fitness.values = fit
+            ind2.fitness.values = fit
+            ind3.fitness.values = fit
+            fitness.append(fit)
 
         # Update the hall of fame with the generated individuals
         if halloffame is not None:
@@ -237,17 +192,13 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         population3[:] = offspring3
 
         # Append the current generation statistics to the logbook
-        record = calc_stats(fitness1, fitness2, fitness3)
+        record = calc_stats(fitness)
         values = [gen] + list(record.values())
 
         if verbose:
             print(*values, sep='\t')
-            # print("==================================================================")
-            # print("offspring1_len: {}\t offspring2_len: {}\t offspring3_len: {}".format(len(offspring1), len(offspring2), len(offspring3)))
-            # print("invalid_ind1: {}\t invalid_ind2: {}\t invalid_ind3: {}".format(len(invalid_ind1), len(invalid_ind2), len(invalid_ind3)))
-            # print("==================================================================")
 
-        if record['max1'] > fitness_threshold and record['max2'] > fitness_threshold and record['max3'] > fitness_threshold:
+        if record['max'] > fitness_threshold:
             break
 
     return [population1, population2, population3]
