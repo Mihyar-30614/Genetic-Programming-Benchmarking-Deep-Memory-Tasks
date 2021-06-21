@@ -179,8 +179,8 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         if verbose:
             print(*values, sep='\t')
 
-        if record['max'] >= fitness_threshold:
-            break
+        # if record['max'] >= fitness_threshold:
+        #     break
 
     return [population1, population2]
 
@@ -217,7 +217,7 @@ toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
-# Create 3 Individuals (3 outputs)
+# Create 2 Individuals (2 outputs)
 toolbox.register("individual1", tools.initIterate,creator.Individual, toolbox.expr)
 toolbox.register("individual2", tools.initIterate,creator.Individual, toolbox.expr)
 
