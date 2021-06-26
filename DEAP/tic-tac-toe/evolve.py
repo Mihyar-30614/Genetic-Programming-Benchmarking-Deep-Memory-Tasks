@@ -53,16 +53,21 @@ def eval_function(individual):
     # Transform the tree expression in a callable function
     tree1 = toolbox.compile(expr=individual[0])  # f1(x)
     tree2 = toolbox.compile(expr=individual[1])  # f2(x)
+    labels_dict_count = labels_train_dict.fromkeys(labels_train_dict, 0)
 
     # Evaluate the sum of correctly identified
-    total = []
     for i in range(len(data_train)):
         arg1 = tree1(*data_train[i])
         arg2 = tree2(*data_train[i])
         pos = np.argmax([arg1, arg2])
-        total.append((pos == labels_train[i]))
+        if pos == labels_train[i]:
+            labels_dict_count[pos] += 1
 
-    return sum(total)/len(data_train),
+    tp1 = labels_dict_count[0]/labels_train_dict[0]
+    tp2 = labels_dict_count[1]/labels_train_dict[1]
+
+    fitness = (tp1 + tp2)/len(labels_train_dict)
+    return fitness,
 
 '''
 Psudo code for how this algorithm works:
@@ -179,8 +184,8 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         if verbose:
             print(*values, sep='\t')
 
-        # if record['max'] >= fitness_threshold:
-        #     break
+        if record['max'] >= fitness_threshold:
+            break
 
     return [population1, population2]
 
@@ -245,6 +250,9 @@ if __name__ == "__main__":
     data_validation = lines[:,0:9]
     labels_validation = lines[:,9:].flatten()
 
+    unique, counts = np.unique(labels_train, return_counts=True)
+    labels_train_dict = dict(zip(unique, counts))
+    
     pop_list = [pop1, pop2]
     hof_list = [hof1, hof2]
     cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 40, 0.70
