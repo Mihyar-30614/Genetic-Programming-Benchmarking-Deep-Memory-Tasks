@@ -1,13 +1,12 @@
 """
-This is an example of sequence classification using NEAT-Python.
+This is an example of sequence classification using DEAP.
 
 Example Input:
-    sequence = [1.0, 0.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0, 0.0]
-    Stack_output = [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, -1.0]
+    sequence        = [1.0, 0.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0, 0.0]
     
 Example Output:
-    stack_push = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0]
-    stack_pop = [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]
+    Action_output   = [0.0, 2.0, 2.0, 0.0, 2.0, 1.0, 2.0, 2.0, 1.0, 2.0, 0.0, 2.0] where 0=PUSH, 1=POP, 2=NONE
+    Stack_output    = [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, -1.0] where 0 means empty
     classification = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0]
 """
 
@@ -29,6 +28,9 @@ from deap import algorithms
 depth = 4
 # Number of Zeros between values
 noise = 10
+# num_tests is the number of random examples each network is tested against.
+num_tests = 50
+gneralize = False
 
 # Define a protected division function
 def protected_div(left, right):
@@ -71,14 +73,15 @@ def eval_function(individual):
     # Transform the tree expression in a callable function
     tree1 = toolbox.compile(expr=individual[0])  # f1(x)
     tree2 = toolbox.compile(expr=individual[1])  # f2(x)
-    labels_dict_count = labels_train_dict.fromkeys(labels_train_dict, 0)
+    tree3 = toolbox.compile(expr=individual[2])  # f3(x)
 
     # Evaluate the sum of correctly identified
     for i in range(len(data_train)):
         arg1 = tree1(*data_train[i])
         arg2 = tree2(*data_train[i])
-        pos = np.argmax([arg1, arg2])
-        if pos == labels_train[i]:
+        arg3 = tree3(*data_train[i])
+        pos = np.argmax([arg1, arg2, arg3])
+        if pos == actions_trian[i]:
             labels_dict_count[pos] += 1
 
     tp1 = labels_dict_count[0]/labels_train_dict[0]
@@ -136,26 +139,31 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
 
     population1 = population_list[0]
     population2 = population_list[1]
+    population3 = population_list[2]
 
     halloffame1 = halloffame[0]
     halloffame2 = halloffame[1]
+    halloffame3 = halloffame[2]
 
     # Evaluate the individuals with an invalid fitness
     invalid_ind1 = [ind for ind in population1 if not ind.fitness.valid]
     invalid_ind2 = [ind for ind in population2 if not ind.fitness.valid]
+    invalid_ind3 = [ind for ind in population3 if not ind.fitness.valid]
 
     # we need to zip the 3 individuals and pass it to the eval_function,
     # represented here as "toolbox.evaluate". The returned list of cost is then evaluated for each of the individuals.
     fitness = []
-    fitnesses = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2))
-    for ind1, ind2, fit in zip(invalid_ind1,invalid_ind2, fitnesses):
+    fitnesses = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
+    for ind1, ind2, ind3, fit in zip(invalid_ind1, invalid_ind2, invalid_ind3, fitnesses):
         ind1.fitness.values = fit
         ind2.fitness.values = fit
+        ind3.fitness.values = fit
         fitness.append(fit[0])
 
     if halloffame is not None:
         halloffame1.update(population1)
         halloffame2.update(population2)
+        halloffame3.update(population3)
 
     record = calc_stats(fitness)
     header = ['Gen'] + list(record.keys())
@@ -170,30 +178,36 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         # Select the next generation individuals
         offspring1 = toolbox.select(population1, len(population1))
         offspring2 = toolbox.select(population2, len(population2))
+        offspring3 = toolbox.select(population3, len(population3))
 
         # Vary the pool of individuals
         offspring1 = algorithms.varAnd(offspring1, toolbox, cxpb, mutpb)
         offspring2 = algorithms.varAnd(offspring2, toolbox, cxpb, mutpb)
+        offspring3 = algorithms.varAnd(offspring3, toolbox, cxpb, mutpb)
 
         # Evaluate the individuals with an invalid fitness
         fitness = []
         invalid_ind1 = [ind for ind in offspring1 if not ind.fitness.valid]
         invalid_ind2 = [ind for ind in offspring2 if not ind.fitness.valid]
+        invalid_ind3 = [ind for ind in offspring3 if not ind.fitness.valid]
 
-        fitnesses = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2))
-        for ind1, ind2, fit in zip(invalid_ind1, invalid_ind2, fitnesses):
+        fitnesses = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
+        for ind1, ind2, ind3, fit in zip(invalid_ind1, invalid_ind2, invalid_ind3, fitnesses):
             ind1.fitness.values = fit
             ind2.fitness.values = fit
+            ind3.fitness.values = fit
             fitness.append(fit)
 
         # Update the hall of fame with the generated individuals
         if halloffame is not None:
             halloffame1.update(offspring1)
             halloffame2.update(offspring2)
+            halloffame3.update(offspring3)
 
         # Replace the current population with the offspring
         population1[:] = offspring1
         population2[:] = offspring2
+        population3[:] = offspring3
 
         # Append the current generation statistics to the logbook
         record = calc_stats(fitness)
@@ -205,7 +219,7 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         if record['max'] >= fitness_threshold:
             break
 
-    return [population1, population2]
+    return [population1, population2, population3]
 
 
 # defined a new primitive set for strongly typed GP
@@ -240,20 +254,24 @@ toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
-# Create 2 Individuals (2 outputs)
+# Create 3 Individuals (3 outputs)
 toolbox.register("individual1", tools.initIterate,creator.Individual, toolbox.expr)
 toolbox.register("individual2", tools.initIterate,creator.Individual, toolbox.expr)
+toolbox.register("individual3", tools.initIterate,creator.Individual, toolbox.expr)
 
 # Create output populations.
 toolbox.register("population1", tools.initRepeat, list, toolbox.individual1)
 toolbox.register("population2", tools.initRepeat, list, toolbox.individual2)
+toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 
 pop_size = 100
 pop1 = toolbox.population1(n=pop_size)
 pop2 = toolbox.population2(n=pop_size)
+pop3 = toolbox.population2(n=pop_size)
 
 hof1 = tools.HallOfFame(1)
 hof2 = tools.HallOfFame(1)
+hof3 = tools.HallOfFame(1)
 
 def generate_data(depth, noise):
     sequence = []
@@ -272,26 +290,61 @@ def generate_output(data):
         retval.append(-1 if counter < 0 else 1)
     return retval
 
+def generate_action(data):
+    retval = []
+    MEMORY = []
+    for el in data:
+        if el == 0:
+            retval.append(2)
+        else:
+            if len(MEMORY) == 0 or MEMORY[len(MEMORY)-1] == el:
+                retval.append(0)
+                MEMORY.append(el)
+            else:
+                retval.append(1)
+                MEMORY.pop()
+    return retval
+
 if __name__ == "__main__":
 
     # Loading the Train Dataset
-    data_train = generate_data(depth, noise)
-    labels_train = generate_output(data_train)
+    data_train = []
+    labels_train = []
+    actions_trian = []
+    random_noise = noise
+    for _ in range(num_tests):
+        if gneralize:
+            random_noise = random.randint(10, 20)
+        temp_data = generate_data(depth, noise)
+        temp_label = generate_output(temp_data)
+        temp_actions = generate_action(temp_data)
+        data_train.append(temp_data)
+        labels_train.append(temp_label)
+        actions_trian.append(temp_actions)
 
     # Loading the Test Dataset
-    data_validation = generate_data(depth, noise)
-    labels_validation = generate_output(data_validation)
-
-    unique, counts = np.unique(labels_train, return_counts=True)
-    labels_train_dict = dict(zip(unique, counts))
+    data_validation = []
+    labels_validation = []
+    actions_validation = []
+    random_noise = noise
+    for _ in range(num_tests):
+        if gneralize:
+            random_noise = random.randint(10, 20)
+        temp_data = generate_data(depth, noise)
+        temp_label = generate_output(temp_data)
+        temp_actions = generate_action(temp_data)
+        data_validation.append(temp_data)
+        labels_validation.append(temp_label)
+        actions_validation.append(temp_actions)
     
-    pop_list = [pop1, pop2]
-    hof_list = [hof1, hof2]
+    pop_list = [pop1, pop2, pop3]
+    hof_list = [hof1, hof2, hof3]
     cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 40, 0.70
     pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
     print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
     print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
+    print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
 
     # Save the winner
     with open('output1', 'wb') as f:
@@ -299,6 +352,9 @@ if __name__ == "__main__":
 
     with open('output2', 'wb') as f:
         pickle.dump(hof2[0], f)
+    
+    with open('output3', 'wb') as f:
+        pickle.dump(hof3[0], f)
 
     '''
     Running Test on unseen data and checking results
@@ -310,13 +366,15 @@ if __name__ == "__main__":
     # Transform the tree expression in a callable function
     tree1 = toolbox.compile(expr=hof1[0])
     tree2 = toolbox.compile(expr=hof2[0])
+    tree3 = toolbox.compile(expr=hof3[0])
 
     # Evaluate the sum of correctly identified
     predictions = []
     for i in range(len(data_validation)):
         arg1 = tree1(*data_validation[i])
         arg2 = tree2(*data_validation[i])
-        pos = np.argmax([arg1, arg2])
+        arg3 = tree2(*data_validation[i])
+        pos = np.argmax([arg1, arg2, arg3])
         predictions.append(pos)
 
     # Evaluate predictions
