@@ -4,8 +4,6 @@ import random
 import numpy as np
 import pickle
 
-from sklearn.metrics import classification_report
-from sklearn.metrics import accuracy_score
 from deap import gp
 from deap import tools
 from deap import base
@@ -245,11 +243,6 @@ if __name__ == "__main__":
     data_train = lines[:,0:9]
     labels_train = lines[:,9:].flatten()
 
-    # Loading the Test Dataset
-    lines = np.loadtxt("Test-dataset.txt", comments="#", delimiter=",", unpack=False, dtype=float)
-    data_validation = lines[:,0:9]
-    labels_validation = lines[:,9:].flatten()
-
     unique, counts = np.unique(labels_train, return_counts=True)
     labels_train_dict = dict(zip(unique, counts))
     
@@ -267,29 +260,3 @@ if __name__ == "__main__":
 
     with open('output2', 'wb') as f:
         pickle.dump(hof2[0], f)
-
-    '''
-    Running Test on unseen data and checking results
-    '''
-
-    print("\n==================")
-    print("Begin Testing ....")
-    print("==================\n")
-    # Transform the tree expression in a callable function
-    tree1 = toolbox.compile(expr=hof1[0])
-    tree2 = toolbox.compile(expr=hof2[0])
-
-    # Evaluate the sum of correctly identified
-    predictions = []
-    for i in range(len(data_validation)):
-        arg1 = tree1(*data_validation[i])
-        arg2 = tree2(*data_validation[i])
-        pos = np.argmax([arg1, arg2])
-        predictions.append(pos)
-
-    # Evaluate predictions
-    accuracy = accuracy_score(labels_validation, predictions)
-    print("Accuracy: {}".format(accuracy))
-    print(classification_report(labels_validation, predictions))
-    print("Predictions: \n{}".format(predictions))
-    print("labels: \n{}".format(labels_validation))
