@@ -191,8 +191,8 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         if verbose:
             print(*values, sep='\t')
 
-        if record['max'] >= fitness_threshold:
-            break
+        # if record['max'] >= fitness_threshold:
+        #     break
 
     return [population1, population2]
 
@@ -241,7 +241,7 @@ toolbox.register("population2", tools.initRepeat, list, toolbox.individual2)
 if __name__ == "__main__":
 
     # Process Pool of 4 workers
-    pool = multiprocessing.Pool(processes=4)
+    pool = multiprocessing.Pool(processes=8)
     toolbox.register("map", pool.map)
 
     pop_size = 100
@@ -253,7 +253,7 @@ if __name__ == "__main__":
     
     pop_list = [pop1, pop2]
     hof_list = [hof1, hof2]
-    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 40, 0.70
+    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 10000, 0.70
     pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
     print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
