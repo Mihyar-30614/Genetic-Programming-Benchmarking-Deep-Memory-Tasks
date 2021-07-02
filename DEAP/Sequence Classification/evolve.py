@@ -265,15 +265,6 @@ toolbox.register("population1", tools.initRepeat, list, toolbox.individual1)
 toolbox.register("population2", tools.initRepeat, list, toolbox.individual2)
 toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 
-pop_size = 100
-pop1 = toolbox.population1(n=pop_size)
-pop2 = toolbox.population2(n=pop_size)
-pop3 = toolbox.population2(n=pop_size)
-
-hof1 = tools.HallOfFame(1)
-hof2 = tools.HallOfFame(1)
-hof3 = tools.HallOfFame(1)
-
 def generate_data(depth, noise):
     sequence = []
     sequence.append(random.choice((-1.0, 1.0)))
@@ -337,6 +328,15 @@ if __name__ == "__main__":
         data_validation.append(temp_data)
         labels_validation.append(temp_label)
         actions_validation.append(temp_actions)
+
+    pop_size = 100
+    pop1 = toolbox.population1(n=pop_size)
+    pop2 = toolbox.population2(n=pop_size)
+    pop3 = toolbox.population2(n=pop_size)
+
+    hof1 = tools.HallOfFame(1)
+    hof2 = tools.HallOfFame(1)
+    hof3 = tools.HallOfFame(1)
     
     pop_list = [pop1, pop2, pop3]
     hof_list = [hof1, hof2, hof3]
@@ -379,6 +379,7 @@ if __name__ == "__main__":
         predictions.append(pos)
 
     # Evaluate predictions
+    # https://stackoverflow.com/questions/39836318/comparing-arrays-for-accuracy
     accuracy = accuracy_score(labels_validation, predictions)
     print("Accuracy: {}".format(accuracy))
     print(classification_report(labels_validation, predictions))
