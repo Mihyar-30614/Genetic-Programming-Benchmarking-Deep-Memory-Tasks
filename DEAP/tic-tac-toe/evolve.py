@@ -241,7 +241,8 @@ toolbox.register("population2", tools.initRepeat, list, toolbox.individual2)
 if __name__ == "__main__":
 
     # Process Pool of 4 workers
-    pool = multiprocessing.Pool(processes=8)
+    ncpu = multiprocessing.cpu_count()
+    pool = multiprocessing.Pool(processes=ncpu)
     toolbox.register("map", pool.map)
 
     pop_size = 100
