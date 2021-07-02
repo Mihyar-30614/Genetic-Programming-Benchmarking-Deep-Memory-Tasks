@@ -10,6 +10,22 @@ from deap import gp
 from deap import base
 from deap import creator
 
+# Loading the Test Dataset
+lines = np.loadtxt("Test-dataset.txt", comments="#", delimiter=",", unpack=False, dtype=float)
+data_validation = lines[:,0:9]
+labels_validation = lines[:,9:].flatten()
+
+# Load the best tree
+with open('output1', 'rb') as f:
+    hof1 = pickle.load(f)
+    print("loaded Tree1:")
+    print(hof1)
+
+with open('output2', 'rb') as f:
+    hof2 = pickle.load(f)
+    print("loaded Tree2:")
+    print(hof2)
+
 # Define a protected division function
 def protected_div(left, right):
     try:
@@ -51,22 +67,6 @@ toolbox.register("compile", gp.compile, pset=pset)
 
 
 if __name__ == "__main__":
-    # Loading the Test Dataset
-    lines = np.loadtxt("Test-dataset.txt", comments="#", delimiter=",", unpack=False, dtype=float)
-    data_validation = lines[:,0:9]
-    labels_validation = lines[:,9:].flatten()
-
-    # Load the best tree
-    with open('output1', 'rb') as f:
-        hof1 = pickle.load(f)
-        print("loaded Tree1:")
-        print(hof1)
-
-    with open('output2', 'rb') as f:
-        hof2 = pickle.load(f)
-        print("loaded Tree2:")
-        print(hof2)
-
     '''
     Running Test on unseen data and checking results
     '''

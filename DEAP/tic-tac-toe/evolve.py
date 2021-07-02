@@ -3,12 +3,21 @@ import operator
 import random
 import numpy as np
 import pickle
+import multiprocessing
 
 from deap import gp
 from deap import tools
 from deap import base
 from deap import creator
 from deap import algorithms
+
+# Loading the Train Dataset
+lines = np.loadtxt("Train-dataset.txt", comments="#", delimiter=",", unpack=False, dtype=float)
+data_train = lines[:,0:9]
+labels_train = lines[:,9:].flatten()
+
+unique, counts = np.unique(labels_train, return_counts=True)
+labels_train_dict = dict(zip(unique, counts))
 
 # Define a protected division function
 def protected_div(left, right):
@@ -228,23 +237,19 @@ toolbox.register("individual2", tools.initIterate,creator.Individual, toolbox.ex
 toolbox.register("population1", tools.initRepeat, list, toolbox.individual1)
 toolbox.register("population2", tools.initRepeat, list, toolbox.individual2)
 
-pop_size = 100
-pop1 = toolbox.population1(n=pop_size)
-pop2 = toolbox.population2(n=pop_size)
-
-hof1 = tools.HallOfFame(1)
-hof2 = tools.HallOfFame(1)
-
 
 if __name__ == "__main__":
 
-    # Loading the Train Dataset
-    lines = np.loadtxt("Train-dataset.txt", comments="#", delimiter=",", unpack=False, dtype=float)
-    data_train = lines[:,0:9]
-    labels_train = lines[:,9:].flatten()
+    # Process Pool of 4 workers
+    pool = multiprocessing.Pool(processes=4)
+    toolbox.register("map", pool.map)
 
-    unique, counts = np.unique(labels_train, return_counts=True)
-    labels_train_dict = dict(zip(unique, counts))
+    pop_size = 100
+    pop1 = toolbox.population1(n=pop_size)
+    pop2 = toolbox.population2(n=pop_size)
+
+    hof1 = tools.HallOfFame(1)
+    hof2 = tools.HallOfFame(1)
     
     pop_list = [pop1, pop2]
     hof_list = [hof1, hof2]
