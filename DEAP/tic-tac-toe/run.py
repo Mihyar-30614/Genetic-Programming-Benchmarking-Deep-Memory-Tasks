@@ -15,16 +15,9 @@ lines = np.loadtxt("Test-dataset.txt", comments="#", delimiter=",", unpack=False
 data_validation = lines[:,0:9]
 labels_validation = lines[:,9:].flatten()
 
-# Load the best tree
-with open('output1', 'rb') as f:
-    hof1 = pickle.load(f)
-    print("loaded Tree1:")
-    print(hof1)
-
-with open('output2', 'rb') as f:
-    hof2 = pickle.load(f)
-    print("loaded Tree2:")
-    print(hof2)
+'''
+    Begin DEAP Structure
+'''
 
 # Define a protected division function
 def protected_div(left, right):
@@ -65,6 +58,16 @@ toolbox = base.Toolbox()
 toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=3, max_=5)
 toolbox.register("compile", gp.compile, pset=pset)
 
+# Load the best tree
+with open('output1', 'rb') as f:
+    hof1 = pickle.load(f)
+    print("loaded Tree1:")
+    print(hof1)
+
+with open('output2', 'rb') as f:
+    hof2 = pickle.load(f)
+    print("loaded Tree2:")
+    print(hof2)
 
 if __name__ == "__main__":
     '''

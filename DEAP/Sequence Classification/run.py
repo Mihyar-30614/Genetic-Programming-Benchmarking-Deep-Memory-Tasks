@@ -75,22 +75,6 @@ actions_validation = generate_action(data_validation)
     Begining of DEAP Structure
 '''
 
-# Load the best tree
-with open('output1', 'rb') as f:
-    hof1 = pickle.load(f)
-    print("loaded Tree1:")
-    print(hof1)
-
-with open('output2', 'rb') as f:
-    hof2 = pickle.load(f)
-    print("loaded Tree2:")
-    print(hof2)
-
-with open('output3', 'rb') as f:
-    hof3 = pickle.load(f)
-    print("loaded Tree3:")
-    print(hof3)
-
 # Define a protected division function
 def protected_div(left, right):
     try:
@@ -129,6 +113,23 @@ creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 toolbox = base.Toolbox()
 toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=3, max_=5)
 toolbox.register("compile", gp.compile, pset=pset)
+
+
+# Load the best tree
+with open('output1', 'rb') as f:
+    hof1 = pickle.load(f)
+    print("loaded Tree1:")
+    print(hof1)
+
+with open('output2', 'rb') as f:
+    hof2 = pickle.load(f)
+    print("loaded Tree2:")
+    print(hof2)
+
+with open('output3', 'rb') as f:
+    hof3 = pickle.load(f)
+    print("loaded Tree3:")
+    print(hof3)
 
 
 if __name__ == "__main__":
@@ -186,11 +187,11 @@ if __name__ == "__main__":
     # https://stackoverflow.com/questions/39836318/comparing-arrays-for-accuracy
     total_accuracy = 0
     for i in range(num_tests):
-        print("Predictions: \n{}".format(predictions))
-        print("labels: \n{}".format(labels_validation))
+        print("Predictions: \n{}".format(predictions[i]))
+        print("labels: \n{}".format(labels_validation[i]))
         print("Prediction Actions: \n{}".format(predict_actions[i]))
         print("Actions: \n{}".format(actions_validation[i]))
-        accuracy = accuracy_score(labels_validation, predictions)
+        accuracy = accuracy_score(labels_validation[i], predictions[i])
         print("Accuracy: {}".format(accuracy))
         total_accuracy += accuracy
     
