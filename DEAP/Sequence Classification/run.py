@@ -171,6 +171,10 @@ if __name__ == "__main__":
             elif pos == 1:
                 MEMORY.pop()
                 counter -= 1
+                stack_output = MEMORY[counter - 1] if counter > 0 else 0
+                temp = 1 if stack_output >= 0 else -1
+            else:
+                temp = 1 if stack_output >= 0 else -1
             
             # Add to classification
             classification.append(temp)

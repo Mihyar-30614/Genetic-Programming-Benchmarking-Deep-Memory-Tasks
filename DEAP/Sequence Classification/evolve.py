@@ -153,7 +153,6 @@ def eval_function(individual):
 
             if pos == actions[j]:
                 # correct action produced
-                temp = 1 if stack_output >= 0 else -1
                 if pos == 0:
                     MEMORY.append(data[j])
                     temp = data[j]
@@ -161,6 +160,10 @@ def eval_function(individual):
                 elif pos == 1:
                     MEMORY.pop()
                     counter -= 1
+                    stack_output = MEMORY[counter - 1] if counter > 0 else 0
+                    temp = 1 if stack_output >= 0 else -1
+                else:
+                    temp = 1 if stack_output >= 0 else -1
                 
                 # Add to classification
                 if temp == labels[j]:
