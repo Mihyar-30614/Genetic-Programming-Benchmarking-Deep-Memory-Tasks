@@ -140,6 +140,7 @@ def eval_function(individual):
         actions = actions_trian[i]
         MEMORY, classification = [], []
         counter = 0
+        stopped = False
         length = len(data)
         total_len += length
         for j in range(length):
@@ -173,7 +174,10 @@ def eval_function(individual):
             else:
                 # wrong action produced
                 fitness += len(classification)
+                stopped = True
                 break
+        if stopped == False:
+            fitness += len(classification)
 
     return fitness/total_len,
 
@@ -364,7 +368,7 @@ if __name__ == "__main__":
     
     pop_list = [pop1, pop2, pop3]
     hof_list = [hof1, hof2, hof3]
-    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 40, 0.70
+    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 100, 0.9
     pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
     print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
