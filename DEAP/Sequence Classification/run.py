@@ -165,7 +165,7 @@ if __name__ == "__main__":
             temp = 1 if stack_output >= 0 else -1
             actions.append(pos)
             if pos == 0:
-                MEMORY.push(data[j])
+                MEMORY.append(data[j])
                 temp = data[j]
                 counter += 1
             elif pos == 1:
@@ -173,7 +173,7 @@ if __name__ == "__main__":
                 counter -= 1
             
             # Add to classification
-            classification.push(temp)
+            classification.append(temp)
 
         predictions.append(classification)
         predict_actions.append(actions)

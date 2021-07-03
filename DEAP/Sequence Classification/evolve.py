@@ -155,7 +155,7 @@ def eval_function(individual):
                 # correct action produced
                 temp = 1 if stack_output >= 0 else -1
                 if pos == 0:
-                    MEMORY.push(data[j])
+                    MEMORY.append(data[j])
                     temp = data[j]
                     counter += 1
                 elif pos == 1:
@@ -164,7 +164,7 @@ def eval_function(individual):
                 
                 # Add to classification
                 if temp == labels[j]:
-                    classification.push(temp)
+                    classification.append(temp)
                 else:
                     print("Something has went horribly wrong!")
             else:
