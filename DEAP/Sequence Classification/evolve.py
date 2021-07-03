@@ -17,8 +17,6 @@ import random
 import numpy as np
 import pickle
 
-from sklearn.metrics import classification_report
-from sklearn.metrics import accuracy_score
 from deap import gp
 from deap import tools
 from deap import base
@@ -28,10 +26,68 @@ from deap import algorithms
 # Number of (1, -1) in a sequence
 depth = 4
 # Number of Zeros between values
-noise = 10
+noise = 3
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
 gneralize = False
+
+# Generate Random Data
+def generate_data(depth, noise):
+    retval = []
+    for _ in range(num_tests):
+        sequence = []
+        sequence.append(random.choice((-1.0, 1.0)))
+        for _ in range(depth - 1):
+            sequence.extend([0 for _ in range(noise)])
+            sequence.append(random.choice((-1.0, 1.0)))
+        retval.append(sequence)
+    return retval
+
+# Generate Classification based on dataset
+def generate_output(dataset):
+    retval = []
+    for i in range(num_tests):
+        data = dataset[i]
+        sequence = []
+        counter = 0
+        for el in data:
+            counter += el
+            sequence.append(-1 if counter < 0 else 1)
+        retval.append(sequence)
+    return retval
+
+# Generate expected GP Action based on Dataset
+def generate_action(dataset):
+    retval = []
+    for i in range(num_tests):
+        data = dataset[i]
+        sequence = []
+        MEMORY = []
+        for el in data:
+            if el == 0:
+                sequence.append(2)
+            else:
+                if len(MEMORY) == 0 or MEMORY[len(MEMORY)-1] == el:
+                    sequence.append(0)
+                    MEMORY.append(el)
+                else:
+                    sequence.append(1)
+                    MEMORY.pop()
+        retval.append(sequence)
+    return retval
+
+# Generate Train Dataset
+random_noise = noise
+
+if gneralize:
+    random_noise = random.randint(10, 20)
+data_train = generate_data(depth, noise)
+labels_train = generate_output(data_train)
+actions_trian = generate_action(data_train)
+
+'''
+    Begining of DEAP Structure
+'''
 
 # Define a protected division function
 def protected_div(left, right):
@@ -76,33 +132,62 @@ def eval_function(individual):
     tree2 = toolbox.compile(expr=individual[1])  # f2(x)
     tree3 = toolbox.compile(expr=individual[2])  # f3(x)
 
+    fitness, total_len = 0, 0
     # Evaluate the sum of correctly identified
-    for i in range(len(data_train)):
-        arg1 = tree1(*data_train[i])
-        arg2 = tree2(*data_train[i])
-        arg3 = tree3(*data_train[i])
-        pos = np.argmax([arg1, arg2, arg3])
-        if pos == actions_trian[i]:
-            labels_dict_count[pos] += 1
+    for i in range(num_tests):
+        data = data_train[i]
+        labels = labels_train[i]
+        actions = actions_trian[i]
+        MEMORY, classification = [], []
+        counter = 0
+        length = len(data)
+        total_len += length
+        for j in range(length):
+            # If stack is empty then 0, else the value on top of stack
+            stack_output = MEMORY[counter - 1] if counter > 0 else 0
 
-    tp1 = labels_dict_count[0]/labels_train_dict[0]
-    tp2 = labels_dict_count[1]/labels_train_dict[1]
+            arg1 = tree1(data[j],stack_output)
+            arg2 = tree2(data[j],stack_output)
+            arg3 = tree3(data[j],stack_output)
+            pos = np.argmax([arg1, arg2, arg3])
 
-    fitness = (tp1 + tp2)/len(labels_train_dict)
-    return fitness,
+            if pos == actions[j]:
+                # correct action produced
+                temp = 1 if stack_output >= 0 else -1
+                if pos == 0:
+                    MEMORY.push(data[j])
+                    temp = data[j]
+                    counter += 1
+                elif pos == 1:
+                    MEMORY.pop()
+                    counter -= 1
+                
+                # Add to classification
+                if temp == labels[j]:
+                    classification.push(temp)
+                else:
+                    print("Something has went horribly wrong!")
+            else:
+                # wrong action produced
+                fitness += len(classification)
+                break
+
+    return fitness/total_len,
 
 '''
 Psudo code for how this algorithm works:
 N = population size
 population1 = [tree1, tree2, ..., treeN]
 population2 = [tree1, tree2, ..., treeN]
+population3 = [tree1, tree2, ..., treeN]
 
 New trees have invalid fitness
 invalid_ind1 = [invalid_tree1, invalid_tree2, ..., invalid_treeN]
 invalid_ind2 = [invalid_tree1, invalid_tree2, ..., invalid_treeN]
+invalid_ind3 = [invalid_tree1, invalid_tree2, ..., invalid_treeN]
 
 for I = 1 to N
-    evaluate_fitness(invalid_ind1[I], invalid_ind2[I])
+    evaluate_fitness(invalid_ind1[I], invalid_ind2[I], invalid_ind3[I])
 Next I
 
 Pick the best tree fitness and assign it to Hall Of Fame for each invalid_ind.
@@ -111,6 +196,7 @@ For each generation evolving include:
 * Select the next generation individuals (select entire population):
     offspring1 = select(population1, len(population1))
     offspring2 = select(population2, len(population2))
+    offspring3 = select(population3, len(population3))
 
 * Vary the pool of individuals:
     offspring_population = clone(parent_population)
@@ -124,14 +210,11 @@ For each generation evolving include:
     For I = 1 to len(offspring_population)
         If mutate_probability then
             mutate_child = mutate(offspring_population[I])
-            offspring_population[I] = mutate_child
-        End
-    Next I
-    return offspring_population
+            offspring_population[I] = mutate_childtemp_data
     
 * Select new trees with invalid fittness then (number of invalid tree != N):
     for I = 1 to N
-        evaluate_fitness(invalid_ind1[I], invalid_ind2[I])
+        evaluate_fitness(invalid_ind1[I], invalid_ind2[I], invalid_ind3[I])
     Next I
 * Update the hall of fame with the generated individuals.
 * Replace the current population with the offspring.
@@ -224,7 +307,7 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
 
 
 # defined a new primitive set for strongly typed GP
-pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, depth + noise), float)
+pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, 2), float)
 
 # boolean operators
 pset.addPrimitive(operator.and_, [bool, bool], bool)
@@ -265,69 +348,7 @@ toolbox.register("population1", tools.initRepeat, list, toolbox.individual1)
 toolbox.register("population2", tools.initRepeat, list, toolbox.individual2)
 toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 
-def generate_data(depth, noise):
-    sequence = []
-    sequence.append(random.choice((-1.0, 1.0)))
-    for _ in range(depth - 1):
-        sequence.extend([0 for _ in range(noise)])
-        sequence.append(random.choice((-1.0, 1.0)))
-    return sequence
-
-
-def generate_output(data):
-    retval = []
-    counter = 0
-    for el in data:
-        counter += el
-        retval.append(-1 if counter < 0 else 1)
-    return retval
-
-def generate_action(data):
-    retval = []
-    MEMORY = []
-    for el in data:
-        if el == 0:
-            retval.append(2)
-        else:
-            if len(MEMORY) == 0 or MEMORY[len(MEMORY)-1] == el:
-                retval.append(0)
-                MEMORY.append(el)
-            else:
-                retval.append(1)
-                MEMORY.pop()
-    return retval
-
 if __name__ == "__main__":
-
-    # Loading the Train Dataset
-    data_train = []
-    labels_train = []
-    actions_trian = []
-    random_noise = noise
-    for _ in range(num_tests):
-        if gneralize:
-            random_noise = random.randint(10, 20)
-        temp_data = generate_data(depth, noise)
-        temp_label = generate_output(temp_data)
-        temp_actions = generate_action(temp_data)
-        data_train.append(temp_data)
-        labels_train.append(temp_label)
-        actions_trian.append(temp_actions)
-
-    # Loading the Test Dataset
-    data_validation = []
-    labels_validation = []
-    actions_validation = []
-    random_noise = noise
-    for _ in range(num_tests):
-        if gneralize:
-            random_noise = random.randint(10, 20)
-        temp_data = generate_data(depth, noise)
-        temp_label = generate_output(temp_data)
-        temp_actions = generate_action(temp_data)
-        data_validation.append(temp_data)
-        labels_validation.append(temp_label)
-        actions_validation.append(temp_actions)
 
     pop_size = 100
     pop1 = toolbox.population1(n=pop_size)
@@ -356,32 +377,3 @@ if __name__ == "__main__":
     
     with open('output3', 'wb') as f:
         pickle.dump(hof3[0], f)
-
-    '''
-    Running Test on unseen data and checking results
-    '''
-
-    print("\n==================")
-    print("Begin Testing ....")
-    print("==================\n")
-    # Transform the tree expression in a callable function
-    tree1 = toolbox.compile(expr=hof1[0])
-    tree2 = toolbox.compile(expr=hof2[0])
-    tree3 = toolbox.compile(expr=hof3[0])
-
-    # Evaluate the sum of correctly identified
-    predictions = []
-    for i in range(len(data_validation)):
-        arg1 = tree1(*data_validation[i])
-        arg2 = tree2(*data_validation[i])
-        arg3 = tree2(*data_validation[i])
-        pos = np.argmax([arg1, arg2, arg3])
-        predictions.append(pos)
-
-    # Evaluate predictions
-    # https://stackoverflow.com/questions/39836318/comparing-arrays-for-accuracy
-    accuracy = accuracy_score(labels_validation, predictions)
-    print("Accuracy: {}".format(accuracy))
-    print(classification_report(labels_validation, predictions))
-    print("Predictions: \n{}".format(predictions))
-    print("labels: \n{}".format(labels_validation))
