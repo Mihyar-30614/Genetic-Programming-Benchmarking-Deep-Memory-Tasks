@@ -59,12 +59,12 @@ toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=3, max_=5)
 toolbox.register("compile", gp.compile, pset=pset)
 
 # Load the best tree
-with open('output1', 'rb') as f:
+with open('10k-output1', 'rb') as f:
     hof1 = pickle.load(f)
     print("loaded Tree1:")
     print(hof1)
 
-with open('output2', 'rb') as f:
+with open('10k-output2', 'rb') as f:
     hof2 = pickle.load(f)
     print("loaded Tree2:")
     print(hof2)
