@@ -10,12 +10,12 @@ from deap import base
 from deap import creator
 
 # Number of (1, -1) in a sequence
-depth = 4
+depth = 21
 # Number of Zeros between values
-noise = 3
+noise = 10
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
-gneralize = False
+gneralize = True
 
 # Generate Random Data
 def generate_data(depth, noise):
