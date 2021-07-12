@@ -82,19 +82,36 @@ def protected_div(left, right):
     except ZeroDivisionError:
         return 1
 
+# Define a new if-then-else function
+def if_then_else(input, output1, output2):
+    if input:
+        return output1
+    else:
+        return output2
+
 # defined a new primitive set for strongly typed GP
 pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, 2), float)
 
-# Float operators
-pset.addPrimitive(operator.add, [float, float], float)
-pset.addPrimitive(operator.sub, [float, float], float)
+# boolean operators
+pset.addPrimitive(operator.and_, [bool, bool], bool)
+pset.addPrimitive(operator.or_, [bool, bool], bool)
+pset.addPrimitive(operator.not_, [bool], bool)
+pset.addPrimitive(operator.mul, [float, float], float)
+pset.addPrimitive(operator.lt, [float, float], bool)
+pset.addPrimitive(operator.eq, [float, float], bool)
 pset.addPrimitive(protected_div, [float, float], float)
+pset.addPrimitive(if_then_else, [bool, float, float], float)
+
+# terminals
+pset.addEphemeralConstant("rand100", lambda: random.random() * 100, float)
+pset.addTerminal(False, bool)
+pset.addTerminal(True, bool)
 
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
 toolbox = base.Toolbox()
-toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=2)
+toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=3, max_=5)
 toolbox.register("compile", gp.compile, pset=pset)
 
 
