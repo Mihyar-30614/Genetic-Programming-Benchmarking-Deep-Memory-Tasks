@@ -26,7 +26,7 @@ from deap import algorithms
 from sklearn.metrics import accuracy_score
 
 # Number of (1, -1) in a sequence
-depth = 21
+depth = 15
 # Number of Zeros between values
 noise = 10
 # num_tests is the number of random examples each network is tested against.
@@ -444,5 +444,5 @@ if __name__ == "__main__":
     with open('output3', 'wb') as f:
         pickle.dump(hof3[0], f)
 
-    with open('21-progress_report', 'wb') as f:
+    with open('15-progress_report', 'wb') as f:
         pickle.dump(progress_report, f)
