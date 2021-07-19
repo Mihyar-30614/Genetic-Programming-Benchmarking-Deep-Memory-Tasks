@@ -67,7 +67,7 @@ random_noise = noise
 
 if gneralize:
     random_noise = random.randint(10, 20)
-data_validation = generate_data(depth, noise)
+data_validation = generate_data(depth, random_noise)
 labels_validation = generate_output(data_validation)
 actions_validation = generate_action(data_validation)
 
