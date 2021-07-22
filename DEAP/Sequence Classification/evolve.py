@@ -26,14 +26,14 @@ from deap import algorithms
 from sklearn.metrics import accuracy_score
 
 # Number of (1, -1) in a sequence
-depth = 15
+depth = 21
 # Number of Zeros between values
 noise = 10
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
 gneralize = True
-save_log = True
-progress_report = []
+save_log = False
+
 
 # Generate Random Data
 def generate_data(depth, noise):
@@ -371,8 +371,8 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         if verbose:
             print(*values, sep='\t')
 
-        # if record['max'] >= fitness_threshold:
-        #     break
+        if record['max'] >= fitness_threshold:
+            break
 
     return [population1, population2, population3]
 
@@ -411,10 +411,12 @@ toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 
 if __name__ == "__main__":
 
+    # for i in range(1, 11):
     # Process Pool of ncpu workers
     ncpu = multiprocessing.cpu_count()
     pool = multiprocessing.Pool(processes=ncpu)
     toolbox.register("map", pool.map)
+    progress_report = []
 
     pop_size = 100
     pop1 = toolbox.population1(n=pop_size)
@@ -427,7 +429,7 @@ if __name__ == "__main__":
     
     pop_list = [pop1, pop2, pop3]
     hof_list = [hof1, hof2, hof3]
-    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 1000, 0.95
+    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 250, 0.95
     pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
     print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
@@ -443,6 +445,7 @@ if __name__ == "__main__":
     
     with open('output3', 'wb') as f:
         pickle.dump(hof3[0], f)
-
-    with open('15-progress_report', 'wb') as f:
-        pickle.dump(progress_report, f)
+    
+    if save_log:
+        with open(str(depth) + '-progress_report' + str(i), 'wb') as f:
+            pickle.dump(progress_report, f)
