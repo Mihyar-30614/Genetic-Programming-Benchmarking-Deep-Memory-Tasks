@@ -22,66 +22,64 @@ from deap import base
 from deap import creator
 from deap import algorithms
 
-depth = 3
-corridor = 10
+depth = 21
+corridor_length = 10
 num_tests = 50
-generalize = False
+generalize = True
 
 '''
 Problem setup
 '''
 
 
-def generate_data(depth, corridor):
-    data1 = []
-    data2 = []
+def generate_data(depth, corridor_length):
+    retval = []
+    for _ in range(num_tests):
+        data1, data2 = [], []
+        # create insturctions
+        for _ in range(depth):
+            data1.append(1)
+            data2.append(random.choice((-1.0, 1.0)))
 
-    # create insturctions
-    for _ in range(depth):
-        data1.append(1)
-        data2.append(random.choice((-1.0, 1.0)))
+        # create maze
+        for _ in range(depth):
+            if generalize:
+                corridor_length = random.randint(10, 20)
 
-    # create maze
-    for _ in range(depth):
-        if generalize:
-            corridor = random.randint(10, 20)
+            countdown = 1
+            step = round(countdown/corridor_length, 2)
 
-        step = round(1/corridor, 2)
-        length = 1
+            while countdown >= 0:
+                # Countdown starts with 1 and decrease
+                countdown = round(countdown, 2)
+                data1.append(0)
+                data2.append(countdown)
+                countdown -= step
+            # Just in case Countdown didn't reach 0
+            if data2[-1] != 0:
+                data1.append(0)
+                data2.append(0)
 
-        for i in range(corridor + 1):
+        retval.append([data1, data2])
+    return retval
 
-            # Countdown starts with 1 and decrease
-            if i != 0:
-                length = length - step
+def generate_action(data_array):
+    retval = []
+    for i in range(num_tests):
+        output, instruction, data = [], data_array[i][0], data_array[i][1]
+        for i in range(len(instruction)):
+            # 0 = PUSH, 1 = POP HEAD, 2 = NOTHING, 3 = POP TAIL
+            if instruction[i] == 1:
+                output.append(0)
+            elif instruction[i] == 0 and data[i] == 0:
+                output.append(1)
+            else:
+                output.append(2)
+        retval.append(output)
+    return retval
 
-            # Countdown should never be less than zero
-            if length < 0:
-                length = 0
-
-            length = round(length, 2)
-            data1.append(0)
-            data2.append(length)
-
-    return [data1, data2]
-
-
-def generate_action(instruction, data):
-    output = []
-
-    for i in range(len(instruction)):
-        # 0 = PUSH, 1 = POP HEAD, 2 = NOTHING, 3 = POP TAIL
-        if instruction[i] == 1:
-            output.append(0)
-        elif instruction[i] == 0 and data[i] == 0:
-            output.append(1)
-        else:
-            output.append(2)
-
-    return output
-
-data_train = generate_data(depth, corridor)
-actions_train = generate_action(data_train[0], data_train[1])
+data_train = generate_data(depth, corridor_length)
+actions_train = generate_action(data_train)
 
 
 '''
@@ -127,11 +125,22 @@ def eval_function(individual):
     fitness, total_len = 0, 0
     # Evaluate the sum of correctly identified
     for i in range(num_tests):
-        data = data_train[i]
-        actions = actions_train[i]
-        MEMORY = []
-        stopped = False
+        instructions, data, actions = data_train[i][0], data_train[i][1], actions_train[i]
+        length = len(data)
+        total_len += length
 
+        for j in range(length):
+            arg1 = tree1(instructions[j], data[j])
+            arg2 = tree2(instructions[j], data[j])
+            arg3 = tree3(instructions[j], data[j])
+            arg4 = tree4(instructions[j], data[j])
+            pos = np.argmax([arg1, arg2, arg3, arg4])
+
+            if pos == actions[j]:
+                fitness += 1
+            else:
+                # wrong action produced
+                break
     return fitness/total_len,
 
 '''
