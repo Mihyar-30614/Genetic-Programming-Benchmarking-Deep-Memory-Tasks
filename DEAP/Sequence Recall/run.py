@@ -53,11 +53,11 @@ def generate_action(data_array):
     retval = []
     for i in range(num_tests):
         output, instruction, data = [], data_array[i][0], data_array[i][1]
-        for i in range(len(instruction)):
+        for x in range(len(instruction)):
             # 0 = PUSH, 1 = POP HEAD, 2 = NOTHING, 3 = POP TAIL
-            if instruction[i] == 1:
+            if instruction[x] == 1:
                 output.append(0)
-            elif instruction[i] == 0 and data[i] == 0:
+            elif instruction[x] == 0 and data[x] == 0:
                 output.append(1)
             else:
                 output.append(2)
