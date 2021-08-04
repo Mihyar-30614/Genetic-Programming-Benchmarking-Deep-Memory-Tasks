@@ -15,7 +15,7 @@ seq_length = 10
 bits = 8
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
-generalize = False
+generalize = True
 
 '''
 Problem setup
@@ -79,7 +79,7 @@ def protected_div(left, right):
         return 1
 
 # defined a new primitive set for strongly typed GP
-pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, 2), float)
+pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, 3), float)
 
 # Float operators
 pset.addPrimitive(operator.add, [float, float], float)
@@ -114,6 +114,11 @@ with open('output4', 'rb') as f:
     print("loaded Tree4:")
     print(hof4)
 
+with open('output5', 'rb') as f:
+    hof5 = pickle.load(f)
+    print("loaded Tree5:")
+    print(hof5)
+
 if __name__ == "__main__":
     '''
     Running Test on unseen data and checking results
@@ -127,6 +132,7 @@ if __name__ == "__main__":
     tree2 = toolbox.compile(expr=hof2)
     tree3 = toolbox.compile(expr=hof3)
     tree4 = toolbox.compile(expr=hof4)
+    tree5 = toolbox.compile(expr=hof5)
 
     # Evaluate the sum of correctly identified
     predict_actions = []
@@ -134,12 +140,14 @@ if __name__ == "__main__":
     for i in range(num_tests):
         data, actions = data_validation[i], []
         length = len(data)
+        prog_state = 0
 
         for j in range(length):
-            arg1 = tree1(data[j][0], data[j][1])
-            arg2 = tree2(data[j][0], data[j][1])
-            arg3 = tree3(data[j][0], data[j][1])
-            arg4 = tree4(data[j][0], data[j][1])
+            arg1 = tree1(data[j][0], data[j][1], prog_state)
+            arg2 = tree2(data[j][0], data[j][1], prog_state)
+            arg3 = tree3(data[j][0], data[j][1], prog_state)
+            arg4 = tree4(data[j][0], data[j][1], prog_state)
+            prog_state = tree5(data[j][0], data[j][1], prog_state)
             pos = np.argmax([arg1, arg2, arg3, arg4])
             actions.append(pos)
 
