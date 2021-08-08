@@ -411,7 +411,7 @@ if __name__ == "__main__":
     
     pop_list = [pop1, pop2, pop3, pop4, pop5]
     hof_list = [hof1, hof2, hof3, hof4, hof5]
-    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 100, 0.95
+    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 250, 0.95
     pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
     print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
@@ -437,5 +437,5 @@ if __name__ == "__main__":
         pickle.dump(hof5[0], f)
 
     if save_log:
-        with open(str(seq_length) + '-progress_report' + str(i), 'wb') as f:
+        with open(str(bits) + '-progress_report' + str(i), 'wb') as f:
             pickle.dump(progress_report, f)
