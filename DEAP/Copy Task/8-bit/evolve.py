@@ -16,6 +16,7 @@ import random
 import numpy as np
 import pickle
 import multiprocessing
+import os
 
 from deap import gp
 from deap import tools
@@ -346,7 +347,7 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         if verbose:
             print(*values, sep='\t')
 
-        if record['max'] >= fitness_threshold:
+        if save_log == False and record['max'] >= fitness_threshold:
             break
 
     return [population1, population2, population3, population4, population5]
@@ -391,6 +392,8 @@ toolbox.register("population5", tools.initRepeat, list, toolbox.individual5)
 if __name__ == "__main__":
     # for i in range(1, 11):
     # Process Pool of ncpu workers
+    local_dir = os.path.dirname(__file__)
+    path = os.path.join(local_dir, '8-bit-report/')
     ncpu = multiprocessing.cpu_count()
     pool = multiprocessing.Pool(processes=ncpu)
     toolbox.register("map", pool.map)
@@ -437,5 +440,5 @@ if __name__ == "__main__":
         pickle.dump(hof5[0], f)
 
     if save_log:
-        with open(str(bits) + '-progress_report' + str(i), 'wb') as f:
+        with open(path + str(bits) + '-progress_report' + str(i), 'wb') as f:
             pickle.dump(progress_report, f)
