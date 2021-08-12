@@ -371,7 +371,7 @@ toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 toolbox.register("population4", tools.initRepeat, list, toolbox.individual4)
 
 if __name__ == "__main__":
-    # for i in range(1, 11):
+    # for i in range(11, 21):
     # Process Pool of ncpu workers
     local_dir = os.path.dirname(__file__)
     path = os.path.join(local_dir, str(depth)+'-deep-report/')
