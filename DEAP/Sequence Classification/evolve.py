@@ -27,7 +27,7 @@ from deap import algorithms
 from sklearn.metrics import accuracy_score
 
 # Number of (1, -1) in a sequence
-depth = 4
+depth = 6
 # Number of Zeros between values
 noise = 10
 # num_tests is the number of random examples each network is tested against.
@@ -412,7 +412,7 @@ toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 
 if __name__ == "__main__":
 
-    for i in range(1, 21):
+    for i in range(11, 21):
         # Process Pool of ncpu workers
         local_dir = os.path.dirname(__file__)
         path = os.path.join(local_dir, str(depth)+'-deep-report/')
