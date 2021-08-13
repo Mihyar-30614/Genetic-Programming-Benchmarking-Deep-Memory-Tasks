@@ -390,7 +390,7 @@ toolbox.register("population4", tools.initRepeat, list, toolbox.individual4)
 toolbox.register("population5", tools.initRepeat, list, toolbox.individual5)
 
 if __name__ == "__main__":
-    # for i in range(1, 11):
+    # for i in range(1, 21):
     # Process Pool of ncpu workers
     local_dir = os.path.dirname(__file__)
     path = os.path.join(local_dir, '8-bit-report/')
