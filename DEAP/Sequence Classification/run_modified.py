@@ -15,6 +15,8 @@ depth = 21
 noise = 10
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
+range_min = -0.5
+range_max = 0.5
 gneralize = True
 
 # Generate Random Data
@@ -24,7 +26,7 @@ def generate_data(depth, noise):
         sequence = []
         sequence.append(random.choice((-1.0, 1.0)))
         for _ in range(depth - 1):
-            sequence.extend([random.uniform(-0.50,0.50) for _ in range(noise)])
+            sequence.extend([random.uniform(range_min,range_max) for _ in range(noise)])
             sequence.append(random.choice((-1.0, 1.0)))
         retval.append(sequence)
     return retval

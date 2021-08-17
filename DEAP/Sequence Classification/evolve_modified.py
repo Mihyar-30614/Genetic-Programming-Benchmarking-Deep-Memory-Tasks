@@ -27,11 +27,13 @@ from deap import algorithms
 from sklearn.metrics import accuracy_score
 
 # Number of (1, -1) in a sequence
-depth = 4
+depth = 5
 # Number of Zeros between values
 noise = 10
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
+range_min = -0.125
+range_max = 0.125
 generalize = True
 save_log = True
 
@@ -43,7 +45,7 @@ def generate_data(depth, noise):
         sequence = []
         sequence.append(random.choice((-1.0, 1.0)))
         for _ in range(depth - 1):
-            sequence.extend([random.uniform(-0.125,0.125) for _ in range(noise)])
+            sequence.extend([random.uniform(range_min,range_max) for _ in range(noise)])
             sequence.append(random.choice((-1.0, 1.0)))
         retval.append(sequence)
     return retval
@@ -453,5 +455,5 @@ if __name__ == "__main__":
             pickle.dump(hof3[0], f)
         
         if save_log:
-            with open(path + str(depth) + '-progress_report_0.125_' + str(i), 'wb') as f:
+            with open(path + str(depth) + '-progress_report_' + str(range_max) + '_' + str(i), 'wb') as f:
                 pickle.dump(progress_report, f)
