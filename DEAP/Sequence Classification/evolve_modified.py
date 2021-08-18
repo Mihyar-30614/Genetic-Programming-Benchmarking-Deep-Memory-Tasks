@@ -1,5 +1,6 @@
 """
-This is an example of sequence classification using DEAP.
+This is an example of sequence classification modified using DEAP.
+Zeros could be any number between range_min and range_max
 
 Example Input:
     sequence        = [1.0, 0.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0, 0.0]
@@ -27,7 +28,7 @@ from deap import algorithms
 from sklearn.metrics import accuracy_score
 
 # Number of (1, -1) in a sequence
-depth = 5
+depth = 21
 # Number of Zeros between values
 noise = 10
 # num_tests is the number of random examples each network is tested against.
@@ -35,7 +36,7 @@ num_tests = 50
 range_min = -0.125
 range_max = 0.125
 generalize = True
-save_log = True
+save_log = False
 
 
 # Generate Random Data
@@ -417,43 +418,43 @@ toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 
 if __name__ == "__main__":
 
-    for i in range(1, 11):
-        # Process Pool of ncpu workers
-        local_dir = os.path.dirname(__file__)
-        path = os.path.join(local_dir, str(depth)+'-deep-report/')
-        ncpu = multiprocessing.cpu_count()
-        pool = multiprocessing.Pool(processes=ncpu)
-        toolbox.register("map", pool.map)
-        progress_report = []
+    # for i in range(1, 21):
+    # Process Pool of ncpu workers
+    local_dir = os.path.dirname(__file__)
+    path = os.path.join(local_dir, str(depth)+'-deep-report/')
+    ncpu = multiprocessing.cpu_count()
+    pool = multiprocessing.Pool(processes=ncpu)
+    toolbox.register("map", pool.map)
+    progress_report = []
 
-        pop_size = 100
-        pop1 = toolbox.population1(n=pop_size)
-        pop2 = toolbox.population2(n=pop_size)
-        pop3 = toolbox.population2(n=pop_size)
+    pop_size = 100
+    pop1 = toolbox.population1(n=pop_size)
+    pop2 = toolbox.population2(n=pop_size)
+    pop3 = toolbox.population2(n=pop_size)
 
-        hof1 = tools.HallOfFame(1)
-        hof2 = tools.HallOfFame(1)
-        hof3 = tools.HallOfFame(1)
-        
-        pop_list = [pop1, pop2, pop3]
-        hof_list = [hof1, hof2, hof3]
-        cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 250, 0.95
-        pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
+    hof1 = tools.HallOfFame(1)
+    hof2 = tools.HallOfFame(1)
+    hof3 = tools.HallOfFame(1)
+    
+    pop_list = [pop1, pop2, pop3]
+    hof_list = [hof1, hof2, hof3]
+    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 250, 0.95
+    pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
-        print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
-        print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
-        print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
+    print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
+    print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
+    print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
 
-        # Save the winner
-        with open('output1', 'wb') as f:
-            pickle.dump(hof1[0], f)
+    # Save the winner
+    with open('output1', 'wb') as f:
+        pickle.dump(hof1[0], f)
 
-        with open('output2', 'wb') as f:
-            pickle.dump(hof2[0], f)
-        
-        with open('output3', 'wb') as f:
-            pickle.dump(hof3[0], f)
-        
-        if save_log:
-            with open(path + str(depth) + '-progress_report_' + str(range_max) + '_' + str(i), 'wb') as f:
-                pickle.dump(progress_report, f)
+    with open('output2', 'wb') as f:
+        pickle.dump(hof2[0], f)
+    
+    with open('output3', 'wb') as f:
+        pickle.dump(hof3[0], f)
+    
+    if save_log:
+        with open(path + str(depth) + '-progress_report_' + str(range_max) + '_' + str(i), 'wb') as f:
+            pickle.dump(progress_report, f)
