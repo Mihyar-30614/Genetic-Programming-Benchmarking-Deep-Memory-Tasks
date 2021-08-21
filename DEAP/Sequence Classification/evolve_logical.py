@@ -16,20 +16,25 @@ import operator
 import random
 import numpy as np
 import pickle
+import multiprocessing
+import os
 
 from deap import gp
 from deap import tools
 from deap import base
 from deap import creator
 from deap import algorithms
+from sklearn.metrics import accuracy_score
 
 # Number of (1, -1) in a sequence
-depth = 21
+depth = 15
 # Number of Zeros between values
 noise = 10
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
 gneralize = True
+save_log = True
+
 
 # Generate Random Data
 def generate_data(depth, noise):
@@ -81,9 +86,9 @@ random_noise = noise
 
 if gneralize:
     random_noise = random.randint(10, 20)
-data_train = generate_data(depth, noise)
+data_train = generate_data(depth, random_noise)
 labels_train = generate_output(data_train)
-actions_trian = generate_action(data_train)
+actions_train = generate_action(data_train)
 
 '''
     Begining of DEAP Structure
@@ -137,7 +142,7 @@ def eval_function(individual):
     for i in range(num_tests):
         data = data_train[i]
         labels = labels_train[i]
-        actions = actions_trian[i]
+        actions = actions_train[i]
         MEMORY, classification = [], []
         counter = 0
         stopped = False
@@ -180,6 +185,63 @@ def eval_function(individual):
             fitness += len(classification)
 
     return fitness/total_len,
+
+# Champion Test for progress report
+def champion_test(hof_array):
+    tree1 = toolbox.compile(expr=hof_array[0])
+    tree2 = toolbox.compile(expr=hof_array[1])
+    tree3 = toolbox.compile(expr=hof_array[2])
+
+    # Generate Test Dataset
+    random_noise = noise
+    if gneralize:
+        random_noise = random.randint(10, 20)
+    data_validation = generate_data(depth, random_noise)
+    actions_validation = generate_action(data_validation)
+
+    # Evaluate the sum of correctly identified
+    predictions, predict_actions = [],[]
+    total_accuracy = 0
+    # Evaluate the sum of correctly identified
+    for i in range(num_tests):
+        data = data_validation[i]
+        MEMORY, classification, actions = [], [], []
+        counter = 0
+        length = len(data)
+        for j in range(length):
+            # If stack is empty then 0, else the value on top of stack
+            stack_output = MEMORY[counter - 1] if counter > 0 else 0
+
+            arg1 = tree1(data[j],stack_output)
+            arg2 = tree2(data[j],stack_output)
+            arg3 = tree3(data[j],stack_output)
+            pos = np.argmax([arg1, arg2, arg3])
+
+            # Action has been decided
+            actions.append(pos)
+            if pos == 0:
+                MEMORY.append(data[j])
+                temp = data[j]
+                counter += 1
+            elif pos == 1:
+                if len(MEMORY) > 0:
+                    MEMORY.pop()
+                counter -= 1
+                stack_output = MEMORY[counter - 1] if counter > 0 else 0
+                temp = 1 if stack_output >= 0 else -1
+            else:
+                temp = 1 if stack_output >= 0 else -1
+            
+            # Add to classification
+            classification.append(temp)
+
+        predictions.append(classification)
+        predict_actions.append(actions)
+        accuracy = accuracy_score(actions_validation[i], actions)
+        if accuracy == 1.0:
+            total_accuracy += 1
+    
+    progress_report.append((total_accuracy/num_tests)*100)
 
 '''
 Psudo code for how this algorithm works:
@@ -260,6 +322,11 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
     header = ['Gen'] + list(record.keys())
     values = [0] + list(record.values())
 
+    # Test Champion and log it
+    if save_log:
+        hof_list = [halloffame1[0], halloffame2[0], halloffame3[0]]
+        champion_test(hof_list)
+
     if verbose:
         print(*header, sep='\t')
         print(*values, sep='\t')
@@ -304,10 +371,15 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         record = calc_stats(fitness)
         values = [gen] + list(record.values())
 
+        # Test Champion and log it
+        if save_log:
+            hof_list = [halloffame1[0], halloffame2[0], halloffame3[0]]
+            champion_test(hof_list)
+
         if verbose:
             print(*values, sep='\t')
 
-        if record['max'] >= fitness_threshold:
+        if save_log == False and record['max'] >= fitness_threshold:
             break
 
     return [population1, population2, population3]
@@ -335,12 +407,12 @@ creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
 toolbox = base.Toolbox()
-toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=3, max_=5)
+toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=2)
 toolbox.register("compile", gp.compile, pset=pset)
 toolbox.register("evaluate", eval_function)
-toolbox.register("select", tools.selTournament, tournsize=7)
+toolbox.register("select", tools.selTournament, tournsize=5)
 toolbox.register("mate", gp.cxOnePoint)
-toolbox.register("expr_mut", gp.genFull, min_=3, max_=5)
+toolbox.register("expr_mut", gp.genFull, min_=0, max_=2)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
@@ -357,30 +429,43 @@ toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
 
 if __name__ == "__main__":
 
-    pop_size = 100
-    pop1 = toolbox.population1(n=pop_size)
-    pop2 = toolbox.population2(n=pop_size)
-    pop3 = toolbox.population2(n=pop_size)
+    for i in range(1, 21):
+        # Process Pool of ncpu workers
+        local_dir = os.path.dirname(__file__)
+        path = os.path.join(local_dir, str(depth)+'-deep-report/')
+        ncpu = multiprocessing.cpu_count()
+        pool = multiprocessing.Pool(processes=ncpu)
+        toolbox.register("map", pool.map)
+        progress_report = []
 
-    hof1 = tools.HallOfFame(1)
-    hof2 = tools.HallOfFame(1)
-    hof3 = tools.HallOfFame(1)
-    
-    pop_list = [pop1, pop2, pop3]
-    hof_list = [hof1, hof2, hof3]
-    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 100, 0.9
-    pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
+        pop_size = 100
+        pop1 = toolbox.population1(n=pop_size)
+        pop2 = toolbox.population2(n=pop_size)
+        pop3 = toolbox.population2(n=pop_size)
 
-    print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
-    print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
-    print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
+        hof1 = tools.HallOfFame(1)
+        hof2 = tools.HallOfFame(1)
+        hof3 = tools.HallOfFame(1)
+        
+        pop_list = [pop1, pop2, pop3]
+        hof_list = [hof1, hof2, hof3]
+        cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 250, 0.95
+        pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
-    # Save the winner
-    with open('output1', 'wb') as f:
-        pickle.dump(hof1[0], f)
+        print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
+        print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
+        print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
 
-    with open('output2', 'wb') as f:
-        pickle.dump(hof2[0], f)
-    
-    with open('output3', 'wb') as f:
-        pickle.dump(hof3[0], f)
+        # Save the winner
+        with open('output1', 'wb') as f:
+            pickle.dump(hof1[0], f)
+
+        with open('output2', 'wb') as f:
+            pickle.dump(hof2[0], f)
+        
+        with open('output3', 'wb') as f:
+            pickle.dump(hof3[0], f)
+        
+        if save_log:
+            with open(path + str(depth) + '-progress_report_logic' + str(i), 'wb') as f:
+                pickle.dump(progress_report, f)
