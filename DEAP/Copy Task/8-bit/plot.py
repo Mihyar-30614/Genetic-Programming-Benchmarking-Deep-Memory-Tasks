@@ -9,6 +9,7 @@ y_label = "Success Percentage"
 x_label = "Training Generations"
 
 # 8-bit Report
+plt.figure(1)
 for i in range(1,21):
     path = os.path.join(local_dir, '8-bit-report/8-progress_report' + str(i))
     with open(path, 'rb') as f:
@@ -18,9 +19,9 @@ for i in range(1,21):
 plt.ylabel(y_label)
 plt.xlabel(x_label)
 plt.title(str(ngen) + "-Gen 8-bit Report")
-plt.show()
 
 # 8-bit Report Logical
+plt.figure(2)
 for i in range(1,21):
     path = os.path.join(local_dir, '8-bit-report/8-progress_report_logic' + str(i))
     with open(path, 'rb') as f:
@@ -30,9 +31,9 @@ for i in range(1,21):
 plt.ylabel(y_label)
 plt.xlabel(x_label)
 plt.title(str(ngen) + "-Gen 8-bit Report Using Logic")
-plt.show()
 
 # 8-bit Report Modified
+plt.figure(3)
 for i in range(1,21):
     path = os.path.join(local_dir, '8-bit-report/8-progress_report_mod' + str(i))
     with open(path, 'rb') as f:
@@ -42,4 +43,16 @@ for i in range(1,21):
 plt.ylabel(y_label)
 plt.xlabel(x_label)
 plt.title(str(ngen) + "-Gen 8-bit Report Modified")
+
+# 8-bit Report Multiplication
+plt.figure(4)
+for i in range(1,21):
+    path = os.path.join(local_dir, '8-bit-report/8-progress_report_mul' + str(i))
+    with open(path, 'rb') as f:
+        info = pickle.load(f)
+    plt.plot(axis_x, info, linewidth=1)
+
+plt.ylabel(y_label)
+plt.xlabel(x_label)
+plt.title(str(ngen) + "-Gen 8-bit Report Using Multiplication")
 plt.show()
