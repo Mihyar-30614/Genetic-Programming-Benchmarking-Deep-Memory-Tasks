@@ -31,3 +31,15 @@ plt.ylabel(y_label)
 plt.xlabel(x_label)
 plt.title(str(ngen) + "-Gen 8-bit Report Using Logic")
 plt.show()
+
+# 8-bit Report Modified
+for i in range(1,21):
+    path = os.path.join(local_dir, '8-bit-report/8-progress_report_mod' + str(i))
+    with open(path, 'rb') as f:
+        info = pickle.load(f)
+    plt.plot(axis_x, info, linewidth=1)
+
+plt.ylabel(y_label)
+plt.xlabel(x_label)
+plt.title(str(ngen) + "-Gen 8-bit Report Modified")
+plt.show()
