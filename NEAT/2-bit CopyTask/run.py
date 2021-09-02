@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score
 # length of the test sequence.
 seq_length = 10
 # number of bits used
-bits = 1
+bits = 2
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
 generalize = True
