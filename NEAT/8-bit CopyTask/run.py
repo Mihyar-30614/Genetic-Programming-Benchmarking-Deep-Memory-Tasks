@@ -1,95 +1,115 @@
 from __future__ import division, print_function
 
 import os
-import visualize
 import neat
 import numpy as np
 import pickle
+import random
+from sklearn.metrics import accuracy_score
 
 # length of the test sequence.
-length = 5
+seq_length = 10
 # number of bits used
 bits = 8
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
+generalize = True
 
 
 def generate_data(seq_length):
-    # Adding 2 to bits for writing delim and reading delim
-    # also adding 2 to length for delim sequence
-    sequence = np.zeros([seq_length + 2, bits + 2], dtype=np.float32)
-    for idx in range(1, seq_length + 1):
-        sequence[idx, 2:bits+2] = np.random.rand(bits).round()
+    retval = []
+    for _ in range(num_tests):
+        if generalize:
+                seq_length = random.randint(10, 20)
+        # Adding 2 to bits for writing delim and reading delim
+        # also adding 2 to length for delim sequence
+        sequence = np.zeros([seq_length + 2, bits + 2], dtype=np.float32)
+        for idx in range(1, seq_length + 1):
+            sequence[idx, 2:bits+2] = np.random.rand(bits).round()
 
-    sequence[0, 0] = 1                # Setting Wrting delim
-    sequence[seq_length+1, 1] = 1     # Setting reading delim
+        sequence[0, 0] = 1                # Setting Wrting delim
+        sequence[seq_length+1, 1] = 1     # Setting reading delim
 
-    recall = np.zeros([seq_length, bits + 2], dtype=np.float32)
-    return np.concatenate((sequence, recall), axis=0).tolist()
+        recall = np.zeros([seq_length, bits + 2], dtype=np.float32)
+        data = np.concatenate((sequence, recall), axis=0).tolist()
+        retval.append(data)
+    return retval
 
+def generate_action(data_array):
+    retval = []
+    for i in range(num_tests):
+        data, action, write, read = data_array[i], [], False, False
+        length = len(data)
 
-def generate_output(seq_length):
-    data = np.zeros((seq_length*2 + 2, 2), dtype=np.float32)
-    data[1:seq_length + 1, 0] = 1
-    data[seq_length + 2:seq_length*2 + 2, 1] = 1
-    return data.tolist()
+        # 0 = PUSH, 1 = POP HEAD, 2 = NOTHING, 3 = POP TAIL
+        for x in range(length):
+            if data[x][0] == 1 and data[x][1] == 0:
+                write = True
+                read = False
+                action.append(2)
+            elif data[x][0] == 0 and data[x][1] == 1:
+                write = False
+                read = True
+                action.append(2)
+            else:
+                if write == True:
+                    action.append(0)
+                elif read == True:
+                    action.append(1)
+        retval.append(action)
+    return retval
 
-
-def compute_fitness(output_data, expected_data):
-    error = 0.0
-    output_data = np.around(np.array(output_data)).tolist()
-    for indata, outdata in zip(output_data, expected_data):
-        if outdata != indata:
-            error += 1.0
-    fitness = 100.0 - ((error * 100) / len(output_data))
-    return fitness
+data_validation = generate_data(seq_length)
+actions_validation = generate_action(data_validation)
 
 
 def run(config, winner):
+
+    '''
+    Running Test on unseen data and checking results
+    '''
+
+    print("\n==================")
+    print("Begin Testing ....")
+    print("==================\n")
+
     winner_net = neat.nn.RecurrentNetwork.create(winner, config)
-    num_correct = 0
 
-    for n in range(num_tests):
-        print('\nRun {0} output:'.format(n))
-
-        sequence = generate_data(length)
-        expected_output = generate_output(length)
-        output, MEMORY = [], []
+    # Evaluate the sum of correctly identified
+    predict_actions = []
+    # Evaluate the sum of correctly identified
+    for i in range(num_tests):
+        data, actions = data_validation[i], []
+        length = len(data)
+        prog_state = 0
         winner_net.reset()
 
-        print('\tsequence {0}'.format(sequence))
-        correct = True
-        for I in range(len(sequence)):
-            action = "NONE"
+        for j in range(length):
+            net_input = [data[j][0], data[j][1], prog_state]
+            outdata = winner_net.activate(net_input)
+            arg1 = outdata[0]
+            arg2 = outdata[1]
+            arg3 = outdata[2]
+            arg4 = outdata[3]
+            prog_state = outdata[4]
+            pos = np.argmax([arg1, arg2, arg3, arg4])
+            actions.append(pos)
 
-            outdata = winner_net.activate(sequence[I])
-            stack_push = round(outdata[0])
-            stack_pop = round(outdata[1])
+        predict_actions.append(actions)
 
-            # If Pop and not Push remove the top of stack
-            # If Push and not Pop Add sequence to stack
-            # Else keep stack as is
-            if stack_pop == 1 and stack_push == 0:
-                action = "POP"
-                if len(MEMORY) > 0:
-                    MEMORY.pop()
-            elif stack_pop == 0 and stack_push == 1:
-                action = "PUSH"
-                MEMORY.append(sequence[I][2:])
-
-            # Network output added for fitness evaluate
-            output.append(outdata)
-            outdata = np.around(np.array(outdata)).tolist()
-            print("\texpected {} got {} Action {} Memory {}".format(
-                expected_output[I], outdata, action, MEMORY))
-
-        fitness = compute_fitness(output, expected_output)
-        correct = correct and fitness == 100
-        print("OK" if correct else "FAIL")
-        num_correct += 1 if correct else 0
-
-    print("{0} of {1} correct {2:.2f}%".format(
-        num_correct, num_tests, 100.0 * num_correct / num_tests))
+    # Evaluate predictions
+    total_accuracy = 0
+    for i in range(num_tests):
+        print("Delim1: \n{}".format([item[0] for item in data_validation[i]]))
+        print("Delim2: \n{}".format([item[1] for item in data_validation[i]]))
+        print("Prediction Actions: \n{}".format(predict_actions[i]))
+        print("Actions: \n{}".format(actions_validation[i]))
+        accuracy = accuracy_score(actions_validation[i], predict_actions[i])
+        print("Accuracy: {}".format(accuracy))
+        print("==================================================================")
+        total_accuracy += accuracy
+    
+    print("Total Accuracy: {}".format(total_accuracy/num_tests))
 
 
 if __name__ == "__main__":
