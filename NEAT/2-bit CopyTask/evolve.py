@@ -7,10 +7,8 @@ Example Input:
     
 Example Output:
     Abstracted output, if NEAT guess the command right the stack will be correct. This is why we only care about commands.
-    Sample Output = [[0.0, 0.0], [1.0, 0.0], [1.0, 0.0], [1.0, 0.0], [0.0, 0.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0]]
+    Sample Output = [[2, 0, 0, 0, 2, 1, 1, 1]]
 """
-
-from __future__ import division, print_function
 
 import multiprocessing
 import os
@@ -21,153 +19,103 @@ import random
 import pickle
 
 # length of the test sequence.
-length = 10
+seq_length = 10
 # number of bits used
 bits = 2
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
-num_generations = 1000
+num_generations = 500
 generalize = True
+save_log = False
 
+'''
+Problem setup
+'''
 
 def generate_data(seq_length):
-    # Adding 2 to bits for writing delim and reading delim
-    # also adding 2 to length for delim sequence
-    sequence = np.zeros([seq_length + 2, bits + 2], dtype=np.float32)
-    for idx in range(1, seq_length + 1):
-        sequence[idx, 2:bits+2] = np.random.rand(bits).round()
+    retval = []
+    for _ in range(num_tests):
+        if generalize:
+                seq_length = random.randint(10, 20)
+        # Adding 2 to bits for writing delim and reading delim
+        # also adding 2 to length for delim sequence
+        sequence = np.zeros([seq_length + 2, bits + 2], dtype=np.float32)
+        for idx in range(1, seq_length + 1):
+            sequence[idx, 2:bits+2] = np.random.rand(bits).round()
 
-    sequence[0, 0] = 1                # Setting Wrting delim
-    sequence[seq_length+1, 1] = 1     # Setting reading delim
+        sequence[0, 0] = 1                # Setting Wrting delim
+        sequence[seq_length+1, 1] = 1     # Setting reading delim
 
-    recall = np.zeros([seq_length, bits + 2], dtype=np.float32)
-    return np.concatenate((sequence, recall), axis=0).tolist()
-
-
-def generate_output(seq_length):
-    data = np.zeros((seq_length*2 + 2, 2), dtype=np.float32)
-    data[1:seq_length + 1, 0] = 1
-    data[seq_length + 2:seq_length*2 + 2, 1] = 1
-    return data.tolist()
-
-
-def compute_fitness(output_data, expected_data):
-    error = 0.0
-    output_data = np.around(np.array(output_data)).tolist()
-    for indata, outdata in zip(output_data, expected_data):
-        if outdata != indata:
-            error += 1.0
-    fitness = 100.0 - ((error * 100) / len(output_data))
-    return fitness
-
-
-def network_simulator(input_data, mode):
-    global switch
-    if mode == "PERFECT":
-        retval = [0.0, 0.0]
-        if input_data[0] == 1 and input_data[1] == 0:
-            switch = "PUSH"
-        elif input_data[0] == 0 and input_data[1] == 1:
-            switch = "POP"
-        else:
-            if switch == "PUSH":
-                retval = [1.0, 0.0]
-            elif switch == "POP":
-                retval = [0.0, 1.0]
-            else:
-                raise ValueError("Switch is NONE")
-    elif mode == "RANDOM":
-        delim1 = random.choice((0.0, 1.0))
-        delim2 = random.choice((0.0, 1.0))
-        retval = [delim1, delim2]
-    else:
-        raise ValueError("Unknown Mode")
+        recall = np.zeros([seq_length, bits + 2], dtype=np.float32)
+        data = np.concatenate((sequence, recall), axis=0).tolist()
+        retval.append(data)
     return retval
 
+def generate_action(data_array):
+    retval = []
+    for i in range(num_tests):
+        data, action, write, read = data_array[i], [], False, False
+        length = len(data)
 
-def run_simulator():
-    total_fitness = 0.0
-    global length
-    for _ in range(num_tests):
-        # Create a random sequence, and feed it to the network (Write)
-        if generalize:
-            length = random.randint(5, 10)
-        sequence = generate_data(length)
-        expected_output = generate_output(length)
-        output, MEMORY = [], []
+        # 0 = PUSH, 1 = POP HEAD, 2 = NOTHING, 3 = POP TAIL
+        for x in range(length):
+            if data[x][0] == 1 and data[x][1] == 0:
+                write = True
+                read = False
+                action.append(2)
+            elif data[x][0] == 0 and data[x][1] == 1:
+                write = False
+                read = True
+                action.append(2)
+            else:
+                if write == True:
+                    action.append(0)
+                elif read == True:
+                    action.append(1)
+        retval.append(action)
+    return retval
+        
 
-        print('\tSequence {}'.format(sequence))
-        correct = True
-        global switch
-        switch = "NONE"
-
-        for I in range(len(sequence)):
-            action = "NONE"
-
-            outdata = network_simulator(sequence[I], "RANDOM")
-            stack_push = round(outdata[0])
-            stack_pop = round(outdata[1])
-
-            if stack_pop == 1 and stack_push == 0:
-                action = "POP"
-                if len(MEMORY) > 0:
-                    MEMORY.pop()
-            elif stack_pop == 0 and stack_push == 1:
-                action = "PUSH"
-                MEMORY.append(sequence[I][2:])
-
-            # Network output added for fitness evaluate
-            output.append(outdata)
-
-            print("\texpected {} got {} Action {} Memory {}".format(
-                expected_output[I], outdata, action, MEMORY))
-
-        fitness = compute_fitness(output, expected_output)
-        total_fitness += fitness
-        correct = correct and fitness == 100
-
-        print("Fitness: {}".format(fitness))
-        print("OK" if correct else "FAIL")
-
-    print("Total Fitness: {}".format(total_fitness/num_tests))
+data_train = generate_data(seq_length)
+actions_train = generate_action(data_train)
 
 
-def eval_genome(genome, config):
+'''
+    Begining of NEAT Structure
+'''
+
+def eval_function(genome, config):
+
     net = neat.nn.RecurrentNetwork.create(genome, config)
-
-    total_fitness = 0.0
-    global length
-    for _ in range(num_tests):
-        # Create a random sequence, and feed it to the network (Write)
-        if generalize:
-            length = random.randint(1, 3)
-        sequence = generate_data(length)
-        expected_output = generate_output(length)
-        output, MEMORY = [], []
+    
+    fitness, total_len = 0, 0
+    # Evaluate the sum of correctly identified
+    for i in range(num_tests):
+        data, actions = data_train[i], actions_train[i]
+        length = len(data)
+        total_len += length
+        prog_state = 0
         net.reset()
+        
+        for j in range(length):
+            net_input = [data[j][0], data[j][1], prog_state]
+            outdata = net.activate(net_input)
+            arg1 = outdata[0]
+            arg2 = outdata[1]
+            arg3 = outdata[2]
+            arg4 = outdata[3]
+            prog_state = outdata[4]
+            pos = np.argmax([arg1, arg2, arg3, arg4])
 
-        for I in range(len(sequence)):
-
-            outdata = net.activate(sequence[I])
-            stack_push = round(outdata[0])
-            stack_pop = round(outdata[1])
-
-            if stack_pop == 1 and stack_push == 0:
-                if len(MEMORY) > 0:
-                    MEMORY.pop()
-            elif stack_pop == 0 and stack_push == 1:
-                MEMORY.append(sequence[I][2:])
-
-            # Network output added for fitness evaluate
-            output.append(outdata)
-
-        fitness = compute_fitness(output, expected_output)
-        total_fitness += fitness
-
-    return total_fitness/num_tests
+            if pos == actions[j]:
+                fitness += 1
+            else:
+                # wrong action produced
+                break
+    return fitness/total_len
 
 
-def run():
+if __name__ == "__main__":
     # Determine path to configuration file.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'CopyTask_config')
@@ -178,8 +126,8 @@ def run():
     stats = neat.StatisticsReporter()
     pop.add_reporter(stats)
     pop.add_reporter(neat.StdOutReporter(True))
-
-    pe = neat.ParallelEvaluator(multiprocessing.cpu_count(), eval_genome)
+    
+    pe = neat.ParallelEvaluator(multiprocessing.cpu_count(), eval_function)
     winner = pop.run(pe.evaluate, num_generations)
 
     # Log statistics.
@@ -191,10 +139,3 @@ def run():
     # Save the winner
     with open('champion-gnome', 'wb') as f:
         pickle.dump(winner, f)
-
-
-if __name__ == "__main__":
-
-    # Run Training
-    run()
-    # run_simulator()

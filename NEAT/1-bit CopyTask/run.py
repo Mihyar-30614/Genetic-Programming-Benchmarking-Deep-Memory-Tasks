@@ -90,8 +90,9 @@ def run(config, winner):
             arg1 = outdata[0]
             arg2 = outdata[1]
             arg3 = outdata[2]
-            prog_state = outdata[3]
-            pos = np.argmax([arg1, arg2, arg3])
+            arg4 = outdata[3]
+            prog_state = outdata[4]
+            pos = np.argmax([arg1, arg2, arg3, arg4])
             actions.append(pos)
 
         predict_actions.append(actions)
