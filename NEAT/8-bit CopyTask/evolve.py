@@ -85,7 +85,7 @@ actions_train = generate_action(data_train)
 '''
 
 def eval_function(genome, config):
-
+    
     net = neat.nn.RecurrentNetwork.create(genome, config)
     
     fitness, total_len = 0, 0
@@ -112,10 +112,11 @@ def eval_function(genome, config):
             else:
                 # wrong action produced
                 break
-    return fitness/total_len
+    return (fitness/total_len) * 100
 
 
 if __name__ == "__main__":
+
     # Determine path to configuration file.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'CopyTask_config')
