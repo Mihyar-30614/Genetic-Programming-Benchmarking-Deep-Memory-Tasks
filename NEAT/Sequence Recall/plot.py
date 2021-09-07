@@ -83,7 +83,7 @@ plt.ylim([0, 100])
 plt.title(str(ngen) + "-Gen 15-deep Report")
 
 # 21-deep Report
-plt.figure(2)
+plt.figure(5)
 for i in range(1,21):
     path = os.path.join(local_dir, '21-deep-report/21-progress_report' + str(i) + '.csv')
     info = []

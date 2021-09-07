@@ -19,7 +19,7 @@ import pickle
 import shutil
 
 # Number of (1, -1) in a sequence
-depth = 5
+depth = 21
 # Number of Zeros between values
 corridor_length = 10
 # num_tests is the number of random examples each network is tested against.
@@ -122,7 +122,7 @@ if __name__ == "__main__":
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
     
-    for i in range(16,21):
+    for i in range(12,21):
         pop = neat.Population(config)
         stats = neat.StatisticsReporter()
         pop.add_reporter(stats)
