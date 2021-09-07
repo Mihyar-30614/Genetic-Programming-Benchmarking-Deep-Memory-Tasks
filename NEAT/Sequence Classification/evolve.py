@@ -21,14 +21,14 @@ import pickle
 import shutil
 
 # Number of (1, -1) in a sequence
-depth = 6
+depth = 15
 # Number of Zeros between values
 noise = 10
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
 num_generations = 500
 generalize = True
-save_log = True
+save_log = False
 
 '''
 Problem setup
@@ -157,28 +157,28 @@ if __name__ == "__main__":
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
     
-    for i in range(1,21):
-        pop = neat.Population(config)
-        stats = neat.StatisticsReporter()
-        pop.add_reporter(stats)
-        pop.add_reporter(neat.StdOutReporter(True))
-        
-        pe = neat.ParallelEvaluator(multiprocessing.cpu_count(), eval_function)
-        winner = pop.run(pe.evaluate, num_generations)
+    # for i in range(1,21):
+    pop = neat.Population(config)
+    stats = neat.StatisticsReporter()
+    pop.add_reporter(stats)
+    pop.add_reporter(neat.StdOutReporter(True))
+    
+    pe = neat.ParallelEvaluator(multiprocessing.cpu_count(), eval_function)
+    winner = pop.run(pe.evaluate, num_generations)
 
-        # Log statistics.
-        stats.save()
+    # Log statistics.
+    stats.save()
 
-        # Show output of the most fit genome against a random input.
-        print('\nBest genome:\n{!s}'.format(winner))
+    # Show output of the most fit genome against a random input.
+    print('\nBest genome:\n{!s}'.format(winner))
 
-        # Save the winner
-        with open('champion-gnome', 'wb') as f:
-            pickle.dump(winner, f)
+    # Save the winner
+    with open('champion-gnome', 'wb') as f:
+        pickle.dump(winner, f)
 
-        # Add to reporting
-        if save_log:
-            path = os.path.join(local_dir, str(depth)+'-deep-report/')
-            src_dir = local_dir + 'fitness_history.csv'
-            dest_dir = path + str(depth) + '-progress_report' + str(i) + ".csv"
-            shutil.copy(src_dir,dest_dir)
+    # Add to reporting
+    if save_log:
+        path = os.path.join(local_dir, str(depth)+'-deep-report/')
+        src_dir = local_dir + 'fitness_history.csv'
+        dest_dir = path + str(depth) + '-progress_report' + str(i) + ".csv"
+        shutil.copy(src_dir,dest_dir)
