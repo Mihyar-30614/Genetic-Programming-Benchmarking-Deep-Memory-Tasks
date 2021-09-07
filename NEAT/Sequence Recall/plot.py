@@ -4,8 +4,7 @@ import os
 import numpy as np
 
 local_dir = os.path.dirname(__file__)
-axis_x = list(range(0, 500))
-ngen = len(axis_x)
+ngen = 500
 y_label = "Success Percentage"
 x_label = "Training Generations"
 
@@ -20,6 +19,7 @@ for i in range(1,21):
         for row in reader:
             fitness = row[0].split()
             info.append(float(fitness[0]))
+            axis_x = list(range(0, len(info)))
     plt.plot(axis_x, info, linewidth=1)
 
 plt.ylabel(y_label)
@@ -38,6 +38,7 @@ for i in range(1,21):
         for row in reader:
             fitness = row[0].split()
             info.append(float(fitness[0]))
+            axis_x = list(range(0, len(info)))
     plt.plot(axis_x, info, linewidth=1)
 
 plt.ylabel(y_label)
@@ -56,6 +57,7 @@ for i in range(1,21):
         for row in reader:
             fitness = row[0].split()
             info.append(float(fitness[0]))
+            axis_x = list(range(0, len(info)))
     plt.plot(axis_x, info, linewidth=1)
 
 plt.ylabel(y_label)
@@ -74,6 +76,7 @@ for i in range(1,21):
         for row in reader:
             fitness = row[0].split()
             info.append(float(fitness[0]))
+            axis_x = list(range(0, len(info)))
     plt.plot(axis_x, info, linewidth=1)
 
 plt.ylabel(y_label)
@@ -92,6 +95,7 @@ for i in range(1,21):
         for row in reader:
             fitness = row[0].split()
             info.append(float(fitness[0]))
+            axis_x = list(range(0, len(info)))
     plt.plot(axis_x, info, linewidth=1)
 
 plt.ylabel(y_label)
