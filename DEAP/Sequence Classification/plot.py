@@ -9,6 +9,7 @@ y_label = "Success Percentage"
 x_label = "Training Generations"
 
 # 4 Deep Report
+plt.figure(1)
 for i in range(1,21):
     path = os.path.join(local_dir, '4-deep-report/4-progress_report' + str(i))
     with open(path, 'rb') as f:
@@ -18,9 +19,9 @@ for i in range(1,21):
 plt.ylabel(y_label)
 plt.xlabel(x_label)
 plt.title(str(ngen) + "-Gen 4-deep Report")
-plt.show()
 
 # 5 Deep Report
+plt.figure(2)
 for i in range(1,21):
     path = os.path.join(local_dir, '5-deep-report/5-progress_report' + str(i))
     with open(path, 'rb') as f:
@@ -30,9 +31,9 @@ for i in range(1,21):
 plt.ylabel(y_label)
 plt.xlabel(x_label)
 plt.title(str(ngen) + "-Gen 5-deep Report")
-plt.show()
 
 # 6 Deep Report
+plt.figure(3)
 for i in range(1,21):
     path = os.path.join(local_dir, '6-deep-report/6-progress_report' + str(i))
     with open(path, 'rb') as f:
@@ -42,9 +43,9 @@ for i in range(1,21):
 plt.ylabel(y_label)
 plt.xlabel(x_label)
 plt.title(str(ngen) + "-Gen 6-deep Report")
-plt.show()
 
 # 15 Deep Report
+plt.figure(4)
 for i in range(1,21):
     path = os.path.join(local_dir, '15-deep-report/15-progress_report' + str(i))
     with open(path, 'rb') as f:
@@ -54,9 +55,9 @@ for i in range(1,21):
 plt.ylabel(y_label)
 plt.xlabel(x_label)
 plt.title(str(ngen) + "-Gen 15-deep Report")
-plt.show()
 
 # 21 Deep Report
+plt.figure(5)
 for i in range(1,21):
     path = os.path.join(local_dir, '21-deep-report/21-progress_report' + str(i))
     with open(path, 'rb') as f:
