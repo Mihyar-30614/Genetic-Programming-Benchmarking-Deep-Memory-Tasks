@@ -148,6 +148,6 @@ plt.fill_between(axis_x_250, mod_mean - mod_std, mod_mean + mod_std, alpha=.3)
 plt.plot(axis_x_250, mul_mean, linewidth=1, label="Multiplication")
 plt.fill_between(axis_x_250, mul_mean - mul_std, mul_mean + mul_std, alpha=.3)
 
-plt.legend(loc="lower right")
+plt.legend(loc=legend_loc)
 plt.savefig("../Plotting/Copy Task/DEAP_combined.png", bbox_inches='tight')
 plt.show()
