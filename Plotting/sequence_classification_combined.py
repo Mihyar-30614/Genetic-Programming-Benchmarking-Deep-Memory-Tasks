@@ -296,99 +296,163 @@ for i in range(1,21):
 
 DEAP_4_Standard_mean = np.mean(DEAP_4_Standard, axis=0)
 DEAP_4_Standard_std = np.std(DEAP_4_Standard, axis=0)
+DEAP_4_Standard_upperlimit = np.clip(np.add(DEAP_4_Standard_mean, DEAP_4_Standard_std), a_min=0, a_max=100)
+DEAP_4_Standard_lowerlimit = np.clip(np.subtract(DEAP_4_Standard_mean, DEAP_4_Standard_std), a_min=0, a_max=100)
 
 NEAT_4_Standard_mean = np.mean(NEAT_4_Standard, axis=0)
 NEAT_4_Standard_std = np.std(NEAT_4_Standard, axis=0)
+NEAT_4_Standard_upperlimit = np.clip(np.add(NEAT_4_Standard_mean, NEAT_4_Standard_std), a_min=0, a_max=100)
+NEAT_4_Standard_lowerlimit = np.clip(np.subtract(NEAT_4_Standard_mean, NEAT_4_Standard_std), a_min=0, a_max=100)
 
 DEAP_5_Standard_mean = np.mean(DEAP_5_Standard, axis=0)
 DEAP_5_Standard_std = np.std(DEAP_5_Standard, axis=0)
+DEAP_5_Standard_upperlimit = np.clip(np.add(DEAP_5_Standard_mean, DEAP_5_Standard_std), a_min=0, a_max=100)
+DEAP_5_Standard_lowerlimit = np.clip(np.subtract(DEAP_5_Standard_mean, DEAP_5_Standard_std), a_min=0, a_max=100)
 
 NEAT_5_Standard_mean = np.mean(NEAT_5_Standard, axis=0)
 NEAT_5_Standard_std = np.std(NEAT_5_Standard, axis=0)
+NEAT_5_Standard_upperlimit = np.clip(np.add(NEAT_5_Standard_mean, NEAT_5_Standard_std), a_min=0, a_max=100)
+NEAT_5_Standard_lowerlimit = np.clip(np.subtract(NEAT_5_Standard_mean, NEAT_5_Standard_std), a_min=0, a_max=100)
 
 DEAP_6_Standard_mean = np.mean(DEAP_6_Standard, axis=0)
 DEAP_6_Standard_std = np.std(DEAP_6_Standard, axis=0)
+DEAP_6_Standard_upperlimit = np.clip(np.add(DEAP_6_Standard_mean, DEAP_6_Standard_std), a_min=0, a_max=100)
+DEAP_6_Standard_lowerlimit = np.clip(np.subtract(DEAP_6_Standard_mean, DEAP_6_Standard_std), a_min=0, a_max=100)
 
 NEAT_6_Standard_mean = np.mean(NEAT_6_Standard, axis=0)
 NEAT_6_Standard_std = np.std(NEAT_6_Standard, axis=0)
+NEAT_6_Standard_upperlimit = np.clip(np.add(NEAT_6_Standard_mean, NEAT_6_Standard_std), a_min=0, a_max=100)
+NEAT_6_Standard_lowerlimit = np.clip(np.subtract(NEAT_6_Standard_mean, NEAT_6_Standard_std), a_min=0, a_max=100)
 
 DEAP_15_Standard_mean = np.mean(DEAP_15_Standard, axis=0)
 DEAP_15_Standard_std = np.std(DEAP_15_Standard, axis=0)
+DEAP_15_Standard_upperlimit = np.clip(np.add(DEAP_15_Standard_mean, DEAP_15_Standard_std), a_min=0, a_max=100)
+DEAP_15_Standard_lowerlimit = np.clip(np.subtract(DEAP_15_Standard_mean, DEAP_15_Standard_std), a_min=0, a_max=100)
 
 NEAT_15_Standard_mean = np.mean(NEAT_15_Standard, axis=0)
 NEAT_15_Standard_std = np.std(NEAT_15_Standard, axis=0)
+NEAT_15_Standard_upperlimit = np.clip(np.add(NEAT_15_Standard_mean, NEAT_15_Standard_std), a_min=0, a_max=100)
+NEAT_15_Standard_lowerlimit = np.clip(np.subtract(NEAT_15_Standard_mean, NEAT_15_Standard_std), a_min=0, a_max=100)
 
 DEAP_21_Standard_mean = np.mean(DEAP_21_Standard, axis=0)
 DEAP_21_Standard_std = np.std(DEAP_21_Standard, axis=0)
+DEAP_21_Standard_upperlimit = np.clip(np.add(DEAP_21_Standard_mean, DEAP_21_Standard_std), a_min=0, a_max=100)
+DEAP_21_Standard_lowerlimit = np.clip(np.subtract(DEAP_21_Standard_mean, DEAP_21_Standard_std), a_min=0, a_max=100)
 
 NEAT_21_Standard_mean = np.mean(NEAT_21_Standard, axis=0)
 NEAT_21_Standard_std = np.std(NEAT_21_Standard, axis=0)
+NEAT_21_Standard_upperlimit = np.clip(np.add(NEAT_21_Standard_mean, NEAT_21_Standard_std), a_min=0, a_max=100)
+NEAT_21_Standard_lowerlimit = np.clip(np.subtract(NEAT_21_Standard_mean, NEAT_21_Standard_std), a_min=0, a_max=100)
 
 DEAP_4_Logical_mean = np.mean(DEAP_4_Logical, axis=0)
 DEAP_4_Logical_std = np.std(DEAP_4_Logical, axis=0)
+DEAP_4_Logical_upperlimit = np.clip(np.add(DEAP_4_Logical_mean, DEAP_4_Logical_std), a_min=0, a_max=100)
+DEAP_4_Logical_lowerlimit = np.clip(np.subtract(DEAP_4_Logical_mean, DEAP_4_Logical_std), a_min=0, a_max=100)
 
 DEAP_5_Logical_mean = np.mean(DEAP_5_Logical, axis=0)
 DEAP_5_Logical_std = np.std(DEAP_5_Logical, axis=0)
+DEAP_5_Logical_upperlimit = np.clip(np.add(DEAP_5_Logical_mean, DEAP_5_Logical_std), a_min=0, a_max=100)
+DEAP_5_Logical_lowerlimit = np.clip(np.subtract(DEAP_5_Logical_mean, DEAP_5_Logical_std), a_min=0, a_max=100)
 
 DEAP_6_Logical_mean = np.mean(DEAP_6_Logical, axis=0)
 DEAP_6_Logical_std = np.std(DEAP_6_Logical, axis=0)
+DEAP_6_Logical_upperlimit = np.clip(np.add(DEAP_6_Logical_mean, DEAP_6_Logical_std), a_min=0, a_max=100)
+DEAP_6_Logical_lowerlimit = np.clip(np.subtract(DEAP_6_Logical_mean, DEAP_6_Logical_std), a_min=0, a_max=100)
 
 DEAP_15_Logical_mean = np.mean(DEAP_15_Logical, axis=0)
 DEAP_15_Logical_std = np.std(DEAP_15_Logical, axis=0)
+DEAP_15_Logical_upperlimit = np.clip(np.add(DEAP_15_Logical_mean, DEAP_15_Logical_std), a_min=0, a_max=100)
+DEAP_15_Logical_lowerlimit = np.clip(np.subtract(DEAP_15_Logical_mean, DEAP_15_Logical_std), a_min=0, a_max=100)
 
 DEAP_21_Logical_mean = np.mean(DEAP_21_Logical, axis=0)
 DEAP_21_Logical_std = np.std(DEAP_21_Logical, axis=0)
+DEAP_21_Logical_upperlimit = np.clip(np.add(DEAP_21_Logical_mean, DEAP_21_Logical_std), a_min=0, a_max=100)
+DEAP_21_Logical_lowerlimit = np.clip(np.subtract(DEAP_21_Logical_mean, DEAP_21_Logical_std), a_min=0, a_max=100)
 
 DEAP_4_Multiplication_mean = np.mean(DEAP_4_Multiplication, axis=0)
 DEAP_4_Multiplication_std = np.std(DEAP_4_Multiplication, axis=0)
+DEAP_4_Multiplication_upperlimit = np.clip(np.add(DEAP_4_Multiplication_mean, DEAP_4_Multiplication_std), a_min=0, a_max=100)
+DEAP_4_Multiplication_lowerlimit = np.clip(np.subtract(DEAP_4_Multiplication_mean, DEAP_4_Multiplication_std), a_min=0, a_max=100)
 
 DEAP_5_Multiplication_mean = np.mean(DEAP_5_Multiplication, axis=0)
 DEAP_5_Multiplication_std = np.std(DEAP_5_Multiplication, axis=0)
+DEAP_5_Multiplication_upperlimit = np.clip(np.add(DEAP_5_Multiplication_mean, DEAP_5_Multiplication_std), a_min=0, a_max=100)
+DEAP_5_Multiplication_lowerlimit = np.clip(np.subtract(DEAP_5_Multiplication_mean, DEAP_5_Multiplication_std), a_min=0, a_max=100)
 
 DEAP_4_Modified_5_mean = np.mean(DEAP_4_Modified_5, axis=0)
 DEAP_4_Modified_5_std = np.std(DEAP_4_Modified_5, axis=0)
+DEAP_4_Modified_5_upperlimit = np.clip(np.add(DEAP_4_Modified_5_mean, DEAP_4_Modified_5_std), a_min=0, a_max=100)
+DEAP_4_Modified_5_lowerlimit = np.clip(np.subtract(DEAP_4_Modified_5_mean, DEAP_4_Modified_5_std), a_min=0, a_max=100)
 
 DEAP_5_Modified_5_mean = np.mean(DEAP_5_Modified_5, axis=0)
 DEAP_5_Modified_5_std = np.std(DEAP_5_Modified_5, axis=0)
+DEAP_5_Modified_5_upperlimit = np.clip(np.add(DEAP_5_Modified_5_mean, DEAP_5_Modified_5_std), a_min=0, a_max=100)
+DEAP_5_Modified_5_lowerlimit = np.clip(np.subtract(DEAP_5_Modified_5_mean, DEAP_5_Modified_5_std), a_min=0, a_max=100)
 
 DEAP_6_Modified_5_mean = np.mean(DEAP_6_Modified_5, axis=0)
 DEAP_6_Modified_5_std = np.std(DEAP_6_Modified_5, axis=0)
+DEAP_6_Modified_5_upperlimit = np.clip(np.add(DEAP_6_Modified_5_mean, DEAP_6_Modified_5_std), a_min=0, a_max=100)
+DEAP_6_Modified_5_lowerlimit = np.clip(np.subtract(DEAP_6_Modified_5_mean, DEAP_6_Modified_5_std), a_min=0, a_max=100)
 
 DEAP_15_Modified_5_mean = np.mean(DEAP_15_Modified_5, axis=0)
 DEAP_15_Modified_5_std = np.std(DEAP_15_Modified_5, axis=0)
+DEAP_15_Modified_5_upperlimit = np.clip(np.add(DEAP_15_Modified_5_mean, DEAP_15_Modified_5_std), a_min=0, a_max=100)
+DEAP_15_Modified_5_lowerlimit = np.clip(np.subtract(DEAP_15_Modified_5_mean, DEAP_15_Modified_5_std), a_min=0, a_max=100)
 
 DEAP_21_Modified_5_mean = np.mean(DEAP_21_Modified_5, axis=0)
 DEAP_21_Modified_5_std = np.std(DEAP_21_Modified_5, axis=0)
+DEAP_21_Modified_5_upperlimit = np.clip(np.add(DEAP_21_Modified_5_mean, DEAP_21_Modified_5_std), a_min=0, a_max=100)
+DEAP_21_Modified_5_lowerlimit = np.clip(np.subtract(DEAP_21_Modified_5_mean, DEAP_21_Modified_5_std), a_min=0, a_max=100)
 
 DEAP_4_Modified_25_mean = np.mean(DEAP_4_Modified_25, axis=0)
 DEAP_4_Modified_25_std = np.std(DEAP_4_Modified_25, axis=0)
+DEAP_4_Modified_25_upperlimit = np.clip(np.add(DEAP_4_Modified_25_mean, DEAP_4_Modified_25_std), a_min=0, a_max=100)
+DEAP_4_Modified_25_lowerlimit = np.clip(np.subtract(DEAP_4_Modified_25_mean, DEAP_4_Modified_25_std), a_min=0, a_max=100)
 
 DEAP_5_Modified_25_mean = np.mean(DEAP_5_Modified_25, axis=0)
 DEAP_5_Modified_25_std = np.std(DEAP_5_Modified_25, axis=0)
+DEAP_5_Modified_25_upperlimit = np.clip(np.add(DEAP_5_Modified_25_mean, DEAP_5_Modified_25_std), a_min=0, a_max=100)
+DEAP_5_Modified_25_lowerlimit = np.clip(np.subtract(DEAP_5_Modified_25_mean, DEAP_5_Modified_25_std), a_min=0, a_max=100)
 
 DEAP_6_Modified_25_mean = np.mean(DEAP_6_Modified_25, axis=0)
 DEAP_6_Modified_25_std = np.std(DEAP_6_Modified_25, axis=0)
+DEAP_6_Modified_25_upperlimit = np.clip(np.add(DEAP_6_Modified_25_mean, DEAP_6_Modified_25_std), a_min=0, a_max=100)
+DEAP_6_Modified_25_lowerlimit = np.clip(np.subtract(DEAP_6_Modified_25_mean, DEAP_6_Modified_25_std), a_min=0, a_max=100)
 
 DEAP_15_Modified_25_mean = np.mean(DEAP_15_Modified_25, axis=0)
 DEAP_15_Modified_25_std = np.std(DEAP_15_Modified_25, axis=0)
+DEAP_15_Modified_25_upperlimit = np.clip(np.add(DEAP_15_Modified_25_mean, DEAP_15_Modified_25_std), a_min=0, a_max=100)
+DEAP_15_Modified_25_lowerlimit = np.clip(np.subtract(DEAP_15_Modified_25_mean, DEAP_15_Modified_25_std), a_min=0, a_max=100)
 
 DEAP_21_Modified_25_mean = np.mean(DEAP_21_Modified_25, axis=0)
 DEAP_21_Modified_25_std = np.std(DEAP_21_Modified_25, axis=0)
+DEAP_21_Modified_25_upperlimit = np.clip(np.add(DEAP_21_Modified_25_mean, DEAP_21_Modified_25_std), a_min=0, a_max=100)
+DEAP_21_Modified_25_lowerlimit = np.clip(np.subtract(DEAP_21_Modified_25_mean, DEAP_21_Modified_25_std), a_min=0, a_max=100)
 
 DEAP_4_Modified_125_mean = np.mean(DEAP_4_Modified_125, axis=0)
 DEAP_4_Modified_125_std = np.std(DEAP_4_Modified_125, axis=0)
+DEAP_4_Modified_125_upperlimit = np.clip(np.add(DEAP_4_Modified_125_mean, DEAP_4_Modified_125_std), a_min=0, a_max=100)
+DEAP_4_Modified_125_lowerlimit = np.clip(np.subtract(DEAP_4_Modified_125_mean, DEAP_4_Modified_125_std), a_min=0, a_max=100)
 
 DEAP_5_Modified_125_mean = np.mean(DEAP_5_Modified_125, axis=0)
 DEAP_5_Modified_125_std = np.std(DEAP_5_Modified_125, axis=0)
+DEAP_5_Modified_125_upperlimit = np.clip(np.add(DEAP_5_Modified_125_mean, DEAP_5_Modified_125_std), a_min=0, a_max=100)
+DEAP_5_Modified_125_lowerlimit = np.clip(np.subtract(DEAP_5_Modified_125_mean, DEAP_5_Modified_125_std), a_min=0, a_max=100)
 
 DEAP_6_Modified_125_mean = np.mean(DEAP_6_Modified_125, axis=0)
 DEAP_6_Modified_125_std = np.std(DEAP_6_Modified_125, axis=0)
+DEAP_6_Modified_125_upperlimit = np.clip(np.add(DEAP_6_Modified_125_mean, DEAP_6_Modified_125_std), a_min=0, a_max=100)
+DEAP_6_Modified_125_lowerlimit = np.clip(np.subtract(DEAP_6_Modified_125_mean, DEAP_6_Modified_125_std), a_min=0, a_max=100)
 
 DEAP_15_Modified_125_mean = np.mean(DEAP_15_Modified_125, axis=0)
 DEAP_15_Modified_125_std = np.std(DEAP_15_Modified_125, axis=0)
+DEAP_15_Modified_125_upperlimit = np.clip(np.add(DEAP_15_Modified_125_mean, DEAP_15_Modified_125_std), a_min=0, a_max=100)
+DEAP_15_Modified_125_lowerlimit = np.clip(np.subtract(DEAP_15_Modified_125_mean, DEAP_15_Modified_125_std), a_min=0, a_max=100)
 
 DEAP_21_Modified_125_mean = np.mean(DEAP_21_Modified_125, axis=0)
 DEAP_21_Modified_125_std = np.std(DEAP_21_Modified_125, axis=0)
+DEAP_21_Modified_125_upperlimit = np.clip(np.add(DEAP_21_Modified_125_mean, DEAP_21_Modified_125_std), a_min=0, a_max=100)
+DEAP_21_Modified_125_lowerlimit = np.clip(np.subtract(DEAP_21_Modified_125_mean, DEAP_21_Modified_125_std), a_min=0, a_max=100)
 
 
 '''
@@ -398,9 +462,9 @@ DEAP_21_Modified_125_std = np.std(DEAP_21_Modified_125, axis=0)
 # DEAP vs NEAT
 plt.figure(1)
 plt.plot(axis_x_250, DEAP_4_Standard_mean, linewidth=1, label="4-deep DEAP")
-plt.fill_between(axis_x_250, DEAP_4_Standard_mean - DEAP_4_Standard_std, DEAP_4_Standard_mean + DEAP_4_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Standard_lowerlimit, DEAP_4_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_500, NEAT_4_Standard_mean, linewidth=1, label="4-deep NEAT")
-plt.fill_between(axis_x_500, NEAT_4_Standard_mean - NEAT_4_Standard_std, NEAT_4_Standard_mean + NEAT_4_Standard_std, alpha=.3)
+plt.fill_between(axis_x_500, NEAT_4_Standard_lowerlimit, NEAT_4_Standard_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -409,9 +473,9 @@ plt.savefig("../Plotting/Sequence Classification/DEAP_vs_NEAT_4.png", bbox_inche
 
 plt.figure(2)
 plt.plot(axis_x_250, DEAP_5_Standard_mean, linewidth=1, label="5-deep DEAP")
-plt.fill_between(axis_x_250, DEAP_5_Standard_mean - DEAP_5_Standard_std, DEAP_5_Standard_mean + DEAP_5_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Standard_lowerlimit, DEAP_5_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_500, NEAT_5_Standard_mean, linewidth=1, label="5-deep NEAT")
-plt.fill_between(axis_x_500, NEAT_5_Standard_mean - NEAT_5_Standard_std, NEAT_5_Standard_mean + NEAT_5_Standard_std, alpha=.3)
+plt.fill_between(axis_x_500, NEAT_5_Standard_lowerlimit, NEAT_5_Standard_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -420,9 +484,9 @@ plt.savefig("../Plotting/Sequence Classification/DEAP_vs_NEAT_5.png", bbox_inche
 
 plt.figure(3)
 plt.plot(axis_x_250, DEAP_6_Standard_mean, linewidth=1, label="6-deep DEAP")
-plt.fill_between(axis_x_250, DEAP_6_Standard_mean - DEAP_6_Standard_std, DEAP_6_Standard_mean + DEAP_6_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_6_Standard_lowerlimit, DEAP_6_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_500, NEAT_6_Standard_mean, linewidth=1, label="6-deep NEAT")
-plt.fill_between(axis_x_500, NEAT_6_Standard_mean - NEAT_6_Standard_std, NEAT_6_Standard_mean + NEAT_6_Standard_std, alpha=.3)
+plt.fill_between(axis_x_500, NEAT_6_Standard_lowerlimit, NEAT_6_Standard_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -431,9 +495,9 @@ plt.savefig("../Plotting/Sequence Classification/DEAP_vs_NEAT_6.png", bbox_inche
 
 plt.figure(4)
 plt.plot(axis_x_250, DEAP_15_Standard_mean, linewidth=1, label="15-deep DEAP")
-plt.fill_between(axis_x_250, DEAP_15_Standard_mean - DEAP_15_Standard_std, DEAP_15_Standard_mean + DEAP_15_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_15_Standard_lowerlimit, DEAP_15_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_500, NEAT_15_Standard_mean, linewidth=1, label="15-deep NEAT")
-plt.fill_between(axis_x_500, NEAT_15_Standard_mean - NEAT_15_Standard_std, NEAT_15_Standard_mean + NEAT_15_Standard_std, alpha=.3)
+plt.fill_between(axis_x_500, NEAT_15_Standard_lowerlimit, NEAT_15_Standard_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -442,9 +506,9 @@ plt.savefig("../Plotting/Sequence Classification/DEAP_vs_NEAT_15.png", bbox_inch
 
 plt.figure(5)
 plt.plot(axis_x_250, DEAP_21_Standard_mean, linewidth=1, label="21-deep DEAP")
-plt.fill_between(axis_x_250, DEAP_21_Standard_mean - DEAP_21_Standard_std, DEAP_21_Standard_mean + DEAP_21_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_21_Standard_lowerlimit, DEAP_21_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_500, NEAT_21_Standard_mean, linewidth=1, label="21-deep NEAT")
-plt.fill_between(axis_x_500, NEAT_21_Standard_mean - NEAT_21_Standard_std, NEAT_21_Standard_mean + NEAT_21_Standard_std, alpha=.3)
+plt.fill_between(axis_x_500, NEAT_21_Standard_lowerlimit, NEAT_21_Standard_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -457,9 +521,9 @@ plt.show()
 # Standard vs Logical
 plt.figure(6)
 plt.plot(axis_x_250, DEAP_4_Standard_mean, linewidth=1, label="4-deep Standard")
-plt.fill_between(axis_x_250, DEAP_4_Standard_mean - DEAP_4_Standard_std, DEAP_4_Standard_mean + DEAP_4_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Standard_lowerlimit, DEAP_4_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_4_Logical_mean, linewidth=1, label="4-deep Logical")
-plt.fill_between(axis_x_250, DEAP_4_Logical_mean - DEAP_4_Logical_std, DEAP_4_Logical_mean + DEAP_4_Logical_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Logical_lowerlimit, DEAP_4_Logical_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -468,9 +532,9 @@ plt.savefig("../Plotting/Sequence Classification/Standard_vs_Logical_4.png", bbo
 
 plt.figure(7)
 plt.plot(axis_x_250, DEAP_5_Standard_mean, linewidth=1, label="5-deep Standard")
-plt.fill_between(axis_x_250, DEAP_5_Standard_mean - DEAP_5_Standard_std, DEAP_5_Standard_mean + DEAP_5_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Standard_lowerlimit, DEAP_5_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_5_Logical_mean, linewidth=1, label="5-deep Logical")
-plt.fill_between(axis_x_250, DEAP_5_Logical_mean - DEAP_5_Logical_std, DEAP_5_Logical_mean + DEAP_5_Logical_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Logical_lowerlimit, DEAP_5_Logical_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -479,9 +543,9 @@ plt.savefig("../Plotting/Sequence Classification/Standard_vs_Logical_5.png", bbo
 
 plt.figure(8)
 plt.plot(axis_x_250, DEAP_6_Standard_mean, linewidth=1, label="6-deep Standard")
-plt.fill_between(axis_x_250, DEAP_6_Standard_mean - DEAP_6_Standard_std, DEAP_6_Standard_mean + DEAP_6_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_6_Standard_lowerlimit, DEAP_6_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_6_Logical_mean, linewidth=1, label="6-deep Logical")
-plt.fill_between(axis_x_250, DEAP_6_Logical_mean - DEAP_6_Logical_std, DEAP_6_Logical_mean + DEAP_6_Logical_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_6_Logical_lowerlimit, DEAP_6_Logical_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -490,9 +554,9 @@ plt.savefig("../Plotting/Sequence Classification/Standard_vs_Logical_6.png", bbo
 
 plt.figure(9)
 plt.plot(axis_x_250, DEAP_15_Standard_mean, linewidth=1, label="15-deep Standard")
-plt.fill_between(axis_x_250, DEAP_15_Standard_mean - DEAP_15_Standard_std, DEAP_15_Standard_mean + DEAP_15_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_15_Standard_lowerlimit, DEAP_15_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_15_Logical_mean, linewidth=1, label="15-deep Logical")
-plt.fill_between(axis_x_250, DEAP_15_Logical_mean - DEAP_15_Logical_std, DEAP_15_Logical_mean + DEAP_15_Logical_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_15_Logical_lowerlimit, DEAP_15_Logical_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -501,9 +565,9 @@ plt.savefig("../Plotting/Sequence Classification/Standard_vs_Logical_15.png", bb
 
 plt.figure(10)
 plt.plot(axis_x_250, DEAP_21_Standard_mean, linewidth=1, label="21-deep Standard")
-plt.fill_between(axis_x_250, DEAP_21_Standard_mean - DEAP_21_Standard_std, DEAP_21_Standard_mean + DEAP_21_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_21_Standard_lowerlimit, DEAP_21_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_21_Logical_mean, linewidth=1, label="21-deep Logical")
-plt.fill_between(axis_x_250, DEAP_21_Logical_mean - DEAP_21_Logical_std, DEAP_21_Logical_mean + DEAP_21_Logical_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_21_Logical_lowerlimit, DEAP_21_Logical_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -516,9 +580,9 @@ plt.show()
 # Standard vs Multiplication
 plt.figure(11)
 plt.plot(axis_x_250, DEAP_4_Standard_mean, linewidth=1, label="4-deep Standard")
-plt.fill_between(axis_x_250, DEAP_4_Standard_mean - DEAP_4_Standard_std, DEAP_4_Standard_mean + DEAP_4_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Standard_lowerlimit, DEAP_4_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_4_Multiplication_mean, linewidth=1, label="4-deep Multiplication")
-plt.fill_between(axis_x_250, DEAP_4_Multiplication_mean - DEAP_4_Multiplication_std, DEAP_4_Multiplication_mean + DEAP_4_Multiplication_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Multiplication_lowerlimit, DEAP_4_Multiplication_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -527,9 +591,9 @@ plt.savefig("../Plotting/Sequence Classification/Standard_vs_Multiplication_4.pn
 
 plt.figure(12)
 plt.plot(axis_x_250, DEAP_5_Standard_mean, linewidth=1, label="5-deep Standard")
-plt.fill_between(axis_x_250, DEAP_5_Standard_mean - DEAP_5_Standard_std, DEAP_5_Standard_mean + DEAP_5_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Standard_lowerlimit, DEAP_5_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_5_Multiplication_mean, linewidth=1, label="5-deep Multiplication")
-plt.fill_between(axis_x_250, DEAP_5_Multiplication_mean - DEAP_5_Multiplication_std, DEAP_5_Multiplication_mean + DEAP_5_Multiplication_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Multiplication_lowerlimit, DEAP_5_Multiplication_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -542,13 +606,13 @@ plt.show()
 # Standard vs Modified
 plt.figure(13)
 plt.plot(axis_x_250, DEAP_4_Standard_mean, linewidth=1, label="4-deep Standard")
-plt.fill_between(axis_x_250, DEAP_4_Standard_mean - DEAP_4_Standard_std, DEAP_4_Standard_mean + DEAP_4_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Standard_lowerlimit, DEAP_4_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_4_Modified_5_mean, linewidth=1, label="4-deep Modified 0.5")
-plt.fill_between(axis_x_250, DEAP_4_Modified_5_mean - DEAP_4_Modified_5_std, DEAP_4_Modified_5_mean + DEAP_4_Modified_5_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Modified_5_lowerlimit, DEAP_4_Modified_5_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_4_Modified_25_mean, linewidth=1, label="4-deep Modified 0.25")
-plt.fill_between(axis_x_250, DEAP_4_Modified_25_mean - DEAP_4_Modified_25_std, DEAP_4_Modified_25_mean + DEAP_4_Modified_25_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Modified_25_lowerlimit, DEAP_4_Modified_25_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_4_Modified_125_mean, linewidth=1, label="4-deep Modified 0.125")
-plt.fill_between(axis_x_250, DEAP_4_Modified_125_mean - DEAP_4_Modified_125_std, DEAP_4_Modified_125_mean + DEAP_4_Modified_125_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Modified_125_lowerlimit, DEAP_4_Modified_125_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -557,13 +621,13 @@ plt.savefig("../Plotting/Sequence Classification/Standard_vs_Modified_4.png", bb
 
 plt.figure(14)
 plt.plot(axis_x_250, DEAP_5_Standard_mean, linewidth=1, label="5-deep Standard")
-plt.fill_between(axis_x_250, DEAP_5_Standard_mean - DEAP_5_Standard_std, DEAP_5_Standard_mean + DEAP_5_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Standard_lowerlimit, DEAP_5_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_5_Modified_5_mean, linewidth=1, label="5-deep Modified 0.5")
-plt.fill_between(axis_x_250, DEAP_5_Modified_5_mean - DEAP_5_Modified_5_std, DEAP_5_Modified_5_mean + DEAP_5_Modified_5_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Modified_5_lowerlimit, DEAP_5_Modified_5_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_5_Modified_25_mean, linewidth=1, label="5-deep Modified 0.25")
-plt.fill_between(axis_x_250, DEAP_5_Modified_25_mean - DEAP_5_Modified_25_std, DEAP_5_Modified_25_mean + DEAP_5_Modified_25_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Modified_25_lowerlimit, DEAP_5_Modified_25_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_5_Modified_125_mean, linewidth=1, label="5-deep Modified 0.125")
-plt.fill_between(axis_x_250, DEAP_5_Modified_125_mean - DEAP_5_Modified_125_std, DEAP_5_Modified_125_mean + DEAP_5_Modified_125_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Modified_125_lowerlimit, DEAP_5_Modified_125_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -572,13 +636,13 @@ plt.savefig("../Plotting/Sequence Classification/Standard_vs_Modified_5.png", bb
 
 plt.figure(15)
 plt.plot(axis_x_250, DEAP_6_Standard_mean, linewidth=1, label="6-deep Standard")
-plt.fill_between(axis_x_250, DEAP_6_Standard_mean - DEAP_6_Standard_std, DEAP_6_Standard_mean + DEAP_6_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_6_Standard_lowerlimit, DEAP_6_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_6_Modified_5_mean, linewidth=1, label="6-deep Modified 0.5")
-plt.fill_between(axis_x_250, DEAP_6_Modified_5_mean - DEAP_6_Modified_5_std, DEAP_6_Modified_5_mean + DEAP_6_Modified_5_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_6_Modified_5_lowerlimit, DEAP_6_Modified_5_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_6_Modified_25_mean, linewidth=1, label="6-deep Modified 0.25")
-plt.fill_between(axis_x_250, DEAP_6_Modified_25_mean - DEAP_6_Modified_25_std, DEAP_6_Modified_25_mean + DEAP_6_Modified_25_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_6_Modified_25_lowerlimit, DEAP_6_Modified_25_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_6_Modified_125_mean, linewidth=1, label="6-deep Modified 0.125")
-plt.fill_between(axis_x_250, DEAP_6_Modified_125_mean - DEAP_6_Modified_125_std, DEAP_6_Modified_125_mean + DEAP_6_Modified_125_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_6_Modified_125_lowerlimit, DEAP_6_Modified_125_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -587,13 +651,13 @@ plt.savefig("../Plotting/Sequence Classification/Standard_vs_Modified_6.png", bb
 
 plt.figure(16)
 plt.plot(axis_x_250, DEAP_15_Standard_mean, linewidth=1, label="15-deep Standard")
-plt.fill_between(axis_x_250, DEAP_15_Standard_mean - DEAP_15_Standard_std, DEAP_15_Standard_mean + DEAP_15_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_15_Standard_lowerlimit, DEAP_15_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_15_Modified_5_mean, linewidth=1, label="15-deep Modified 0.5")
-plt.fill_between(axis_x_250, DEAP_15_Modified_5_mean - DEAP_15_Modified_5_std, DEAP_15_Modified_5_mean + DEAP_15_Modified_5_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_15_Modified_5_lowerlimit, DEAP_15_Modified_5_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_15_Modified_25_mean, linewidth=1, label="15-deep Modified 0.25")
-plt.fill_between(axis_x_250, DEAP_15_Modified_25_mean - DEAP_15_Modified_25_std, DEAP_15_Modified_25_mean + DEAP_15_Modified_25_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_15_Modified_25_lowerlimit, DEAP_15_Modified_25_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_15_Modified_125_mean, linewidth=1, label="15-deep Modified 0.125")
-plt.fill_between(axis_x_250, DEAP_15_Modified_125_mean - DEAP_15_Modified_125_std, DEAP_15_Modified_125_mean + DEAP_15_Modified_125_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_15_Modified_125_lowerlimit, DEAP_15_Modified_125_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -602,13 +666,13 @@ plt.savefig("../Plotting/Sequence Classification/Standard_vs_Modified_15.png", b
 
 plt.figure(17)
 plt.plot(axis_x_250, DEAP_21_Standard_mean, linewidth=1, label="21-deep Standard")
-plt.fill_between(axis_x_250, DEAP_21_Standard_mean - DEAP_21_Standard_std, DEAP_21_Standard_mean + DEAP_21_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_21_Standard_lowerlimit, DEAP_21_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_21_Modified_5_mean, linewidth=1, label="21-deep Modified 0.5")
-plt.fill_between(axis_x_250, DEAP_21_Modified_5_mean - DEAP_21_Modified_5_std, DEAP_21_Modified_5_mean + DEAP_21_Modified_5_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_21_Modified_5_lowerlimit, DEAP_21_Modified_5_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_21_Modified_25_mean, linewidth=1, label="21-deep Modified 0.25")
-plt.fill_between(axis_x_250, DEAP_21_Modified_25_mean - DEAP_21_Modified_25_std, DEAP_21_Modified_25_mean + DEAP_21_Modified_25_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_21_Modified_25_lowerlimit, DEAP_21_Modified_25_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_21_Modified_125_mean, linewidth=1, label="21-deep Modified 0.125")
-plt.fill_between(axis_x_250, DEAP_21_Modified_125_mean - DEAP_21_Modified_125_std, DEAP_21_Modified_125_mean + DEAP_21_Modified_125_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_21_Modified_125_lowerlimit, DEAP_21_Modified_125_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
