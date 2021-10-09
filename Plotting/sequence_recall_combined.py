@@ -312,7 +312,7 @@ DEAP_4_Modified_lowerlimit = np.clip(np.subtract(DEAP_4_Modified_mean, DEAP_4_Mo
 DEAP_5_Modified_mean = np.mean(DEAP_5_Modified, axis=0)
 DEAP_5_Modified_std = np.std(DEAP_5_Modified, axis=0)
 DEAP_5_Modified_upperlimit = np.clip(np.add(DEAP_5_Modified_mean, DEAP_5_Modified_std), a_min=0, a_max=100)
-DEAP_5_Modified_5_lowerlimit = np.clip(np.subtract(DEAP_5_Modified_mean, DEAP_5_Modified_std), a_min=0, a_max=100)
+DEAP_5_Modified_lowerlimit = np.clip(np.subtract(DEAP_5_Modified_mean, DEAP_5_Modified_std), a_min=0, a_max=100)
 
 DEAP_6_Modified_mean = np.mean(DEAP_6_Modified, axis=0)
 DEAP_6_Modified_std = np.std(DEAP_6_Modified, axis=0)
@@ -396,9 +396,9 @@ plt.show()
 # Standard vs Logical
 plt.figure(6)
 plt.plot(axis_x_250, DEAP_4_Standard_mean, linewidth=1, label="4-deep Standard")
-plt.fill_between(axis_x_250, DEAP_4_Standard_mean - DEAP_4_Standard_std, DEAP_4_Standard_mean + DEAP_4_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Standard_lowerlimit, DEAP_4_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_4_Logical_mean, linewidth=1, label="4-deep Logical")
-plt.fill_between(axis_x_250, DEAP_4_Logical_mean - DEAP_4_Logical_std, DEAP_4_Logical_mean + DEAP_4_Logical_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Logical_lowerlimit, DEAP_4_Logical_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -407,9 +407,9 @@ plt.savefig("../Plotting/Sequence Recall/Standard_vs_Logical_4.png", bbox_inches
 
 plt.figure(7)
 plt.plot(axis_x_250, DEAP_5_Standard_mean, linewidth=1, label="5-deep Standard")
-plt.fill_between(axis_x_250, DEAP_5_Standard_mean - DEAP_5_Standard_std, DEAP_5_Standard_mean + DEAP_5_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Standard_lowerlimit, DEAP_5_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_5_Logical_mean, linewidth=1, label="5-deep Logical")
-plt.fill_between(axis_x_250, DEAP_5_Logical_mean - DEAP_5_Logical_std, DEAP_5_Logical_mean + DEAP_5_Logical_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Logical_lowerlimit, DEAP_5_Logical_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -418,9 +418,9 @@ plt.savefig("../Plotting/Sequence Recall/Standard_vs_Logical_5.png", bbox_inches
 
 plt.figure(8)
 plt.plot(axis_x_250, DEAP_6_Standard_mean, linewidth=1, label="6-deep Standard")
-plt.fill_between(axis_x_250, DEAP_6_Standard_mean - DEAP_6_Standard_std, DEAP_6_Standard_mean + DEAP_6_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_6_Standard_lowerlimit, DEAP_6_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_6_Logical_mean, linewidth=1, label="6-deep Logical")
-plt.fill_between(axis_x_250, DEAP_6_Logical_mean - DEAP_6_Logical_std, DEAP_6_Logical_mean + DEAP_6_Logical_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_6_Logical_lowerlimit, DEAP_6_Logical_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -429,9 +429,9 @@ plt.savefig("../Plotting/Sequence Recall/Standard_vs_Logical_6.png", bbox_inches
 
 plt.figure(9)
 plt.plot(axis_x_250, DEAP_15_Standard_mean, linewidth=1, label="15-deep Standard")
-plt.fill_between(axis_x_250, DEAP_15_Standard_mean - DEAP_15_Standard_std, DEAP_15_Standard_mean + DEAP_15_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_15_Standard_lowerlimit, DEAP_15_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_15_Logical_mean, linewidth=1, label="15-deep Logical")
-plt.fill_between(axis_x_250, DEAP_15_Logical_mean - DEAP_15_Logical_std, DEAP_15_Logical_mean + DEAP_15_Logical_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_15_Logical_lowerlimit, DEAP_15_Logical_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -440,9 +440,9 @@ plt.savefig("../Plotting/Sequence Recall/Standard_vs_Logical_15.png", bbox_inche
 
 plt.figure(10)
 plt.plot(axis_x_250, DEAP_21_Standard_mean, linewidth=1, label="21-deep Standard")
-plt.fill_between(axis_x_250, DEAP_21_Standard_mean - DEAP_21_Standard_std, DEAP_21_Standard_mean + DEAP_21_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_21_Standard_lowerlimit, DEAP_21_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_21_Logical_mean, linewidth=1, label="21-deep Logical")
-plt.fill_between(axis_x_250, DEAP_21_Logical_mean - DEAP_21_Logical_std, DEAP_21_Logical_mean + DEAP_21_Logical_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_21_Logical_lowerlimit, DEAP_21_Logical_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -455,9 +455,9 @@ plt.show()
 # Standard vs Multiplication
 plt.figure(11)
 plt.plot(axis_x_250, DEAP_4_Standard_mean, linewidth=1, label="4-deep Standard")
-plt.fill_between(axis_x_250, DEAP_4_Standard_mean - DEAP_4_Standard_std, DEAP_4_Standard_mean + DEAP_4_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Standard_lowerlimit, DEAP_4_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_4_Multiplication_mean, linewidth=1, label="4-deep Multiplication")
-plt.fill_between(axis_x_250, DEAP_4_Multiplication_mean - DEAP_4_Multiplication_std, DEAP_4_Multiplication_mean + DEAP_4_Multiplication_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Multiplication_lowerlimit, DEAP_4_Multiplication_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -466,9 +466,9 @@ plt.savefig("../Plotting/Sequence Recall/Standard_vs_Multiplication_4.png", bbox
 
 plt.figure(12)
 plt.plot(axis_x_250, DEAP_5_Standard_mean, linewidth=1, label="5-deep Standard")
-plt.fill_between(axis_x_250, DEAP_5_Standard_mean - DEAP_5_Standard_std, DEAP_5_Standard_mean + DEAP_5_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Standard_lowerlimit, DEAP_5_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_5_Multiplication_mean, linewidth=1, label="5-deep Multiplication")
-plt.fill_between(axis_x_250, DEAP_5_Multiplication_mean - DEAP_5_Multiplication_std, DEAP_5_Multiplication_mean + DEAP_5_Multiplication_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Multiplication_lowerlimit, DEAP_5_Multiplication_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -481,9 +481,9 @@ plt.show()
 # Standard vs Modified
 plt.figure(13)
 plt.plot(axis_x_250, DEAP_4_Standard_mean, linewidth=1, label="4-deep Standard")
-plt.fill_between(axis_x_250, DEAP_4_Standard_mean - DEAP_4_Standard_std, DEAP_4_Standard_mean + DEAP_4_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Standard_lowerlimit, DEAP_4_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_4_Modified_mean, linewidth=1, label="4-deep Modified")
-plt.fill_between(axis_x_250, DEAP_4_Modified_mean - DEAP_4_Modified_std, DEAP_4_Modified_mean + DEAP_4_Modified_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_4_Modified_lowerlimit, DEAP_4_Modified_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -492,9 +492,9 @@ plt.savefig("../Plotting/Sequence Recall/Standard_vs_Modified_4.png", bbox_inche
 
 plt.figure(14)
 plt.plot(axis_x_250, DEAP_5_Standard_mean, linewidth=1, label="5-deep Standard")
-plt.fill_between(axis_x_250, DEAP_5_Standard_mean - DEAP_5_Standard_std, DEAP_5_Standard_mean + DEAP_5_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Standard_lowerlimit, DEAP_5_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_5_Modified_mean, linewidth=1, label="5-deep Modified")
-plt.fill_between(axis_x_250, DEAP_5_Modified_mean - DEAP_5_Modified_std, DEAP_5_Modified_mean + DEAP_5_Modified_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_5_Modified_lowerlimit, DEAP_5_Modified_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -503,9 +503,9 @@ plt.savefig("../Plotting/Sequence Recall/Standard_vs_Modified_5.png", bbox_inche
 
 plt.figure(15)
 plt.plot(axis_x_250, DEAP_6_Standard_mean, linewidth=1, label="6-deep Standard")
-plt.fill_between(axis_x_250, DEAP_6_Standard_mean - DEAP_6_Standard_std, DEAP_6_Standard_mean + DEAP_6_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_6_Standard_lowerlimit, DEAP_6_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_6_Modified_mean, linewidth=1, label="6-deep Modified")
-plt.fill_between(axis_x_250, DEAP_6_Modified_mean - DEAP_6_Modified_std, DEAP_6_Modified_mean + DEAP_6_Modified_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_6_Modified_lowerlimit, DEAP_6_Modified_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -514,9 +514,9 @@ plt.savefig("../Plotting/Sequence Recall/Standard_vs_Modified_6.png", bbox_inche
 
 plt.figure(16)
 plt.plot(axis_x_250, DEAP_15_Standard_mean, linewidth=1, label="15-deep Standard")
-plt.fill_between(axis_x_250, DEAP_15_Standard_mean - DEAP_15_Standard_std, DEAP_15_Standard_mean + DEAP_15_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_15_Standard_lowerlimit, DEAP_15_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_15_Modified_mean, linewidth=1, label="15-deep Modified")
-plt.fill_between(axis_x_250, DEAP_15_Modified_mean - DEAP_15_Modified_std, DEAP_15_Modified_mean + DEAP_15_Modified_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_15_Modified_lowerlimit, DEAP_15_Modified_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -525,9 +525,9 @@ plt.savefig("../Plotting/Sequence Recall/Standard_vs_Modified_15.png", bbox_inch
 
 plt.figure(17)
 plt.plot(axis_x_250, DEAP_21_Standard_mean, linewidth=1, label="21-deep Standard")
-plt.fill_between(axis_x_250, DEAP_21_Standard_mean - DEAP_21_Standard_std, DEAP_21_Standard_mean + DEAP_21_Standard_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_21_Standard_lowerlimit, DEAP_21_Standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, DEAP_21_Modified_mean, linewidth=1, label="21-deep Modified")
-plt.fill_between(axis_x_250, DEAP_21_Modified_mean - DEAP_21_Modified_std, DEAP_21_Modified_mean + DEAP_21_Modified_std, alpha=.3)
+plt.fill_between(axis_x_250, DEAP_21_Modified_lowerlimit, DEAP_21_Modified_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
