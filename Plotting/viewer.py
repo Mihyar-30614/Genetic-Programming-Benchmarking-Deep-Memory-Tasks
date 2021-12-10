@@ -13,10 +13,22 @@ axis_x_500 = list(range(0, 500))
 '''
 Values = []
 for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/8-bit-report/8-progress_report_mod' + str(i))
+    path = os.path.join(local_dir, '../DEAP/Sequence Classification/21-deep-report/21-progress_report_0.125_' + str(i))
     with open(path, 'rb') as f:
         info = pickle.load(f)
     Values.append(info)
+
+
+# for i in range(1,21):
+#     path = os.path.join(local_dir, '../NEAT/Sequence Classification/21-deep-report/21-progress_report' + str(i) + '.csv')
+#     info = []
+#     with open(path, newline='\n') as f:
+#         reader = csv.reader(f)
+#         for row in reader:
+#             fitness = row[0].split()
+#             info.append(float(fitness[0]))
+#     Values.append(info)
+
 
 '''
     Calculate Mean and Standard Deviation
