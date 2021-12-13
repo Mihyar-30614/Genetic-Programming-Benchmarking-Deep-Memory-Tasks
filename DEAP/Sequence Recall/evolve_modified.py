@@ -383,8 +383,8 @@ if __name__ == "__main__":
     pop_size = 100
     pop1 = toolbox.population1(n=pop_size)
     pop2 = toolbox.population2(n=pop_size)
-    pop3 = toolbox.population2(n=pop_size)
-    pop4 = toolbox.population2(n=pop_size)
+    pop3 = toolbox.population3(n=pop_size)
+    pop4 = toolbox.population4(n=pop_size)
 
     hof1 = tools.HallOfFame(1)
     hof2 = tools.HallOfFame(1)
