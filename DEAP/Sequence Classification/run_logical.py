@@ -131,6 +131,11 @@ with open('output3', 'rb') as f:
     print("loaded Tree3:")
     print(hof3)
 
+with open('output4', 'rb') as f:
+    hof4 = pickle.load(f)
+    print("loaded Tree4:")
+    print(hof4)
+
 
 if __name__ == "__main__":
     '''
@@ -144,6 +149,7 @@ if __name__ == "__main__":
     tree1 = toolbox.compile(expr=hof1)
     tree2 = toolbox.compile(expr=hof2)
     tree3 = toolbox.compile(expr=hof3)
+    tree4 = toolbox.compile(expr=hof4)
 
     # Evaluate the sum of correctly identified
     predictions, predict_actions = [],[]
@@ -160,7 +166,8 @@ if __name__ == "__main__":
             arg1 = tree1(data[j],stack_output)
             arg2 = tree2(data[j],stack_output)
             arg3 = tree3(data[j],stack_output)
-            pos = np.argmax([arg1, arg2, arg3])
+            arg4 = tree4(data[j],stack_output)
+            pos = np.argmax([arg1, arg2, arg3, arg4])
 
             # Action has been decided
             temp = 1 if stack_output >= 0 else -1

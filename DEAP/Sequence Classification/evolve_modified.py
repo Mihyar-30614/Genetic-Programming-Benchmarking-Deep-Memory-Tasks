@@ -133,6 +133,7 @@ def eval_function(individual):
     tree1 = toolbox.compile(expr=individual[0])  # f1(x)
     tree2 = toolbox.compile(expr=individual[1])  # f2(x)
     tree3 = toolbox.compile(expr=individual[2])  # f3(x)
+    tree4 = toolbox.compile(expr=individual[3])  # f4(x)
 
     fitness, total_len = 0, 0
     # Evaluate the sum of correctly identified
@@ -152,7 +153,8 @@ def eval_function(individual):
             arg1 = tree1(data[j],stack_output)
             arg2 = tree2(data[j],stack_output)
             arg3 = tree3(data[j],stack_output)
-            pos = np.argmax([arg1, arg2, arg3])
+            arg4 = tree4(data[j],stack_output)
+            pos = np.argmax([arg1, arg2, arg3, arg4])
 
             if pos == actions[j]:
                 # correct action produced
@@ -190,6 +192,7 @@ def champion_test(hof_array):
     tree1 = toolbox.compile(expr=hof_array[0])
     tree2 = toolbox.compile(expr=hof_array[1])
     tree3 = toolbox.compile(expr=hof_array[2])
+    tree4 = toolbox.compile(expr=hof_array[3])
 
     # Generate Test Dataset
     random_noise = noise
@@ -214,7 +217,8 @@ def champion_test(hof_array):
             arg1 = tree1(data[j],stack_output)
             arg2 = tree2(data[j],stack_output)
             arg3 = tree3(data[j],stack_output)
-            pos = np.argmax([arg1, arg2, arg3])
+            arg4 = tree4(data[j],stack_output)
+            pos = np.argmax([arg1, arg2, arg3, arg4])
 
             # Action has been decided
             actions.append(pos)
@@ -292,30 +296,35 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
     population1 = population_list[0]
     population2 = population_list[1]
     population3 = population_list[2]
+    population4 = population_list[3]
 
     halloffame1 = halloffame[0]
     halloffame2 = halloffame[1]
     halloffame3 = halloffame[2]
+    halloffame4 = halloffame[3]
 
     # Evaluate the individuals with an invalid fitness
     invalid_ind1 = [ind for ind in population1 if not ind.fitness.valid]
     invalid_ind2 = [ind for ind in population2 if not ind.fitness.valid]
     invalid_ind3 = [ind for ind in population3 if not ind.fitness.valid]
+    invalid_ind4 = [ind for ind in population4 if not ind.fitness.valid]
 
-    # we need to zip the 3 individuals and pass it to the eval_function,
+    # we need to zip the 4 individuals and pass it to the eval_function,
     # represented here as "toolbox.evaluate". The returned list of cost is then evaluated for each of the individuals.
     fitness = []
-    fitnesses = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-    for ind1, ind2, ind3, fit in zip(invalid_ind1, invalid_ind2, invalid_ind3, fitnesses):
+    fitnesses = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3, invalid_ind4))
+    for ind1, ind2, ind3, ind4, fit in zip(invalid_ind1, invalid_ind2, invalid_ind3, invalid_ind4, fitnesses):
         ind1.fitness.values = fit
         ind2.fitness.values = fit
         ind3.fitness.values = fit
+        ind4.fitness.values = fit
         fitness.append(fit[0])
 
     if halloffame is not None:
         halloffame1.update(population1)
         halloffame2.update(population2)
         halloffame3.update(population3)
+        halloffame4.update(population4)
 
     record = calc_stats(fitness)
     header = ['Gen'] + list(record.keys())
@@ -323,7 +332,7 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
 
     # Test Champion and log it
     if save_log:
-        hof_list = [halloffame1[0], halloffame2[0], halloffame3[0]]
+        hof_list = [halloffame1[0], halloffame2[0], halloffame3[0], halloffame4[0]]
         champion_test(hof_list)
 
     if verbose:
@@ -336,23 +345,27 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         offspring1 = toolbox.select(population1, len(population1))
         offspring2 = toolbox.select(population2, len(population2))
         offspring3 = toolbox.select(population3, len(population3))
+        offspring4 = toolbox.select(population4, len(population4))
 
         # Vary the pool of individuals
         offspring1 = algorithms.varAnd(offspring1, toolbox, cxpb, mutpb)
         offspring2 = algorithms.varAnd(offspring2, toolbox, cxpb, mutpb)
         offspring3 = algorithms.varAnd(offspring3, toolbox, cxpb, mutpb)
+        offspring4 = algorithms.varAnd(offspring4, toolbox, cxpb, mutpb)
 
         # Evaluate the individuals with an invalid fitness
         fitness = []
         invalid_ind1 = [ind for ind in offspring1 if not ind.fitness.valid]
         invalid_ind2 = [ind for ind in offspring2 if not ind.fitness.valid]
         invalid_ind3 = [ind for ind in offspring3 if not ind.fitness.valid]
+        invalid_ind4 = [ind for ind in offspring4 if not ind.fitness.valid]
 
-        fitnesses = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3))
-        for ind1, ind2, ind3, fit in zip(invalid_ind1, invalid_ind2, invalid_ind3, fitnesses):
+        fitnesses = toolbox.map(toolbox.evaluate, zip(invalid_ind1, invalid_ind2, invalid_ind3, invalid_ind4))
+        for ind1, ind2, ind3, ind4, fit in zip(invalid_ind1, invalid_ind2, invalid_ind3, invalid_ind4, fitnesses):
             ind1.fitness.values = fit
             ind2.fitness.values = fit
             ind3.fitness.values = fit
+            ind4.fitness.values = fit
             fitness.append(fit)
 
         # Update the hall of fame with the generated individuals
@@ -360,11 +373,13 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
             halloffame1.update(offspring1)
             halloffame2.update(offspring2)
             halloffame3.update(offspring3)
+            halloffame4.update(offspring4)
 
         # Replace the current population with the offspring
         population1[:] = offspring1
         population2[:] = offspring2
         population3[:] = offspring3
+        population4[:] = offspring4
 
         # Append the current generation statistics to the logbook
         record = calc_stats(fitness)
@@ -372,7 +387,7 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
 
         # Test Champion and log it
         if save_log:
-            hof_list = [halloffame1[0], halloffame2[0], halloffame3[0]]
+            hof_list = [halloffame1[0], halloffame2[0], halloffame3[0], halloffame4[0]]
             champion_test(hof_list)
 
         if verbose:
@@ -381,7 +396,7 @@ def ea_simple_plus(population_list, toolbox, cxpb, mutpb, ngen, stats=None, hall
         if save_log == False and record['max'] >= fitness_threshold:
             break
 
-    return [population1, population2, population3]
+    return [population1, population2, population3, population4]
 
 
 # defined a new primitive set for strongly typed GP
@@ -406,15 +421,17 @@ toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
-# Create 3 Individuals (3 outputs)
+# Create 4 Individuals (4 outputs)
 toolbox.register("individual1", tools.initIterate,creator.Individual, toolbox.expr)
 toolbox.register("individual2", tools.initIterate,creator.Individual, toolbox.expr)
 toolbox.register("individual3", tools.initIterate,creator.Individual, toolbox.expr)
+toolbox.register("individual4", tools.initIterate,creator.Individual, toolbox.expr)
 
 # Create output populations.
 toolbox.register("population1", tools.initRepeat, list, toolbox.individual1)
 toolbox.register("population2", tools.initRepeat, list, toolbox.individual2)
 toolbox.register("population3", tools.initRepeat, list, toolbox.individual3)
+toolbox.register("population4", tools.initRepeat, list, toolbox.individual4)
 
 if __name__ == "__main__":
 
@@ -430,20 +447,23 @@ if __name__ == "__main__":
     pop_size = 100
     pop1 = toolbox.population1(n=pop_size)
     pop2 = toolbox.population2(n=pop_size)
-    pop3 = toolbox.population2(n=pop_size)
+    pop3 = toolbox.population3(n=pop_size)
+    pop4 = toolbox.population4(n=pop_size)
 
     hof1 = tools.HallOfFame(1)
     hof2 = tools.HallOfFame(1)
     hof3 = tools.HallOfFame(1)
+    hof4 = tools.HallOfFame(1)
     
-    pop_list = [pop1, pop2, pop3]
-    hof_list = [hof1, hof2, hof3]
+    pop_list = [pop1, pop2, pop3, pop4]
+    hof_list = [hof1, hof2, hof3, hof4]
     cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 250, 0.95
     pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
     print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
     print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
     print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
+    print("Fourth Output Best individual fitness: %s" % (hof4[0].fitness))
 
     # Save the winner
     with open('output1', 'wb') as f:
@@ -454,6 +474,9 @@ if __name__ == "__main__":
     
     with open('output3', 'wb') as f:
         pickle.dump(hof3[0], f)
+
+    with open('output4', 'wb') as f:
+        pickle.dump(hof4[0], f)
     
     if save_log:
         with open(path + str(depth) + '-progress_report_' + str(range_max) + '_' + str(i), 'wb') as f:
