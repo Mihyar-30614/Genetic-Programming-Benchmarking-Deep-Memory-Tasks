@@ -3,6 +3,7 @@ import operator
 import random
 import numpy as np
 import pickle
+import os
 
 from sklearn.metrics import accuracy_score
 from deap import gp
@@ -16,6 +17,8 @@ bits = 8
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
 generalize = True
+local_dir = os.path.dirname(__file__)
+champ_path = os.path.join(local_dir, 'champion/')
 
 '''
 Problem setup
@@ -111,27 +114,27 @@ toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=2)
 toolbox.register("compile", gp.compile, pset=pset)
 
 # Load the best tree
-with open('output1', 'rb') as f:
+with open(champ_path + 'output1_1', 'rb') as f:
     hof1 = pickle.load(f)
     print("loaded Tree1:")
     print(hof1)
 
-with open('output2', 'rb') as f:
+with open(champ_path + 'output2_1', 'rb') as f:
     hof2 = pickle.load(f)
     print("loaded Tree2:")
     print(hof2)
 
-with open('output3', 'rb') as f:
+with open(champ_path + 'output3_1', 'rb') as f:
     hof3 = pickle.load(f)
     print("loaded Tree3:")
     print(hof3)
 
-with open('output4', 'rb') as f:
+with open(champ_path + 'output4_1', 'rb') as f:
     hof4 = pickle.load(f)
     print("loaded Tree4:")
     print(hof4)
 
-with open('output5', 'rb') as f:
+with open(champ_path + 'output5_1', 'rb') as f:
     hof5 = pickle.load(f)
     print("loaded Tree5:")
     print(hof5)
