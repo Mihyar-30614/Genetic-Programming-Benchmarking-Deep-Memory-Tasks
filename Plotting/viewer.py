@@ -11,12 +11,12 @@ axis_x_500 = list(range(0, 500))
 '''
     Load Data
 '''
-Values = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Sequence Classification/21-deep-report/21-progress_report_0.125_' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    Values.append(info)
+# Values = []
+# for i in range(1,21):
+#     path = os.path.join(local_dir, '../DEAP/Sequence Classification/21-deep-report/21-progress_report_0.125_' + str(i))
+#     with open(path, 'rb') as f:
+#         info = pickle.load(f)
+#     Values.append(info)
 
 
 # for i in range(1,21):
@@ -29,6 +29,10 @@ for i in range(1,21):
 #             info.append(float(fitness[0]))
 #     Values.append(info)
 
+path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/champion/results_50')
+with open(path, 'rb') as f:
+    Values = pickle.load(f)
+
 
 '''
     Calculate Mean and Standard Deviation
@@ -39,5 +43,5 @@ Values_std = np.std(Values, axis=0)
 '''
     View Last item as result
 '''
-print("Mean: {}".format(Values_mean[-1]))
-print("STD: {}".format(Values_std[-1]))
+print("Mean: {}".format(Values_mean))
+print("STD: {}".format(Values_std))
