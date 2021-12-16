@@ -11,37 +11,69 @@ axis_x_500 = list(range(0, 500))
 '''
     Load Data
 '''
-# Values = []
-# for i in range(1,21):
-#     path = os.path.join(local_dir, '../DEAP/Sequence Classification/21-deep-report/21-progress_report_0.125_' + str(i))
-#     with open(path, 'rb') as f:
-#         info = pickle.load(f)
-#     Values.append(info)
-
-
-# for i in range(1,21):
-#     path = os.path.join(local_dir, '../NEAT/Sequence Classification/21-deep-report/21-progress_report' + str(i) + '.csv')
-#     info = []
-#     with open(path, newline='\n') as f:
-#         reader = csv.reader(f)
-#         for row in reader:
-#             fitness = row[0].split()
-#             info.append(float(fitness[0]))
-#     Values.append(info)
-
 path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/champion/results_50')
 with open(path, 'rb') as f:
-    Values = pickle.load(f)
+    Values1_50 = pickle.load(f)
+
+path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/champion/results_100')
+with open(path, 'rb') as f:
+    Values1_100 = pickle.load(f)
+
+path = os.path.join(local_dir, '../DEAP/Sequence Classification/champion/results_50')
+with open(path, 'rb') as f:
+    Values2_50 = pickle.load(f)
+
+path = os.path.join(local_dir, '../DEAP/Sequence Classification/champion/results_100')
+with open(path, 'rb') as f:
+    Values2_100 = pickle.load(f)
+
+path = os.path.join(local_dir, '../DEAP/Sequence Recall/champion/results_50')
+with open(path, 'rb') as f:
+    Values3_50 = pickle.load(f)
+
+path = os.path.join(local_dir, '../DEAP/Sequence Recall/champion/results_100')
+with open(path, 'rb') as f:
+    Values3_100 = pickle.load(f)
 
 
 '''
     Calculate Mean and Standard Deviation
 '''
-Values_mean = np.mean(Values, axis=0)
-Values_std = np.std(Values, axis=0)
+Values1_50_mean = np.mean(Values1_50, axis=0)
+Values1_50_std = np.std(Values1_50, axis=0)
+Values1_100_mean = np.mean(Values1_100, axis=0)
+Values1_100_std = np.std(Values1_100, axis=0)
+
+Values2_50_mean = np.mean(Values2_50, axis=0)
+Values2_50_std = np.std(Values2_50, axis=0)
+Values2_100_mean = np.mean(Values2_100, axis=0)
+Values2_100_std = np.std(Values2_100, axis=0)
+
+Values3_50_mean = np.mean(Values3_50, axis=0)
+Values3_50_std = np.std(Values3_50, axis=0)
+Values3_100_mean = np.mean(Values3_100, axis=0)
+Values3_100_std = np.std(Values3_100, axis=0)
 
 '''
     View Last item as result
 '''
-print("Mean: {}".format(Values_mean))
-print("STD: {}".format(Values_std))
+print("Copy Task length 50")
+print("Mean: {}".format(Values1_50_mean))
+print("STD: {}".format(Values1_50_std))
+print("Copy Task length 100")
+print("Mean: {}".format(Values1_100_mean))
+print("STD: {}".format(Values1_100_std))
+
+print("Sequence Classification length 50")
+print("Mean: {}".format(Values2_50_mean))
+print("STD: {}".format(Values2_50_std))
+print("Sequence Classification length 100")
+print("Mean: {}".format(Values2_100_mean))
+print("STD: {}".format(Values2_100_std))
+
+print("Sequence Recall length 50")
+print("Mean: {}".format(Values3_50_mean))
+print("STD: {}".format(Values3_50_std))
+print("Sequence Recall length 100")
+print("Mean: {}".format(Values3_100_mean))
+print("STD: {}".format(Values3_100_std))

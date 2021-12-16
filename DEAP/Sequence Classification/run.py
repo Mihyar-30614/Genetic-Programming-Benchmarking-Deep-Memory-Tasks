@@ -16,7 +16,7 @@ depth = 21
 noise = 10
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
-gneralize = True
+generalize = True
 local_dir = os.path.dirname(__file__)
 champ_path = os.path.join(local_dir, 'champion/')
 
@@ -68,7 +68,7 @@ def generate_action(dataset):
 # Generate Test Dataset
 random_noise = noise
 
-if gneralize:
+if generalize:
     random_noise = random.randint(10, 20)
 data_validation = generate_data(depth, random_noise)
 labels_validation = generate_output(data_validation)

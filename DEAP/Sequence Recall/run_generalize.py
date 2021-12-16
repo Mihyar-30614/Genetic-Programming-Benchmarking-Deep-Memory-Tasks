@@ -10,12 +10,14 @@ from deap import gp
 from deap import base
 from deap import creator
 
-depth = 21
+depth = 100
 corridor_length = 10
 num_tests = 50
 generalize = True
+num_runs = 20
 local_dir = os.path.dirname(__file__)
 champ_path = os.path.join(local_dir, 'champion/')
+results = []
 
 '''
 Problem setup
@@ -67,8 +69,6 @@ def generate_action(data_array):
         retval.append(output)
     return retval
 
-data_validation = generate_data(depth, corridor_length)
-actions_validation = generate_action(data_validation)
 
 '''
     Begining of DEAP Structure
@@ -96,68 +96,61 @@ toolbox = base.Toolbox()
 toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=2)
 toolbox.register("compile", gp.compile, pset=pset)
 
-# Load the best tree
-with open(champ_path + 'output1_1', 'rb') as f:
-    hof1 = pickle.load(f)
-    print("loaded Tree1:")
-    print(hof1)
-
-with open(champ_path + 'output2_1', 'rb') as f:
-    hof2 = pickle.load(f)
-    print("loaded Tree2:")
-    print(hof2)
-
-with open(champ_path + 'output3_1', 'rb') as f:
-    hof3 = pickle.load(f)
-    print("loaded Tree3:")
-    print(hof3)
-
-with open(champ_path + 'output4_1', 'rb') as f:
-    hof4 = pickle.load(f)
-    print("loaded Tree4:")
-    print(hof4)
-
 if __name__ == "__main__":
-    '''
-    Running Test on unseen data and checking results
-    '''
 
-    print("\n==================")
-    print("Begin Testing ....")
-    print("==================\n")
-    # Transform the tree expression in a callable function
-    tree1 = toolbox.compile(expr=hof1)
-    tree2 = toolbox.compile(expr=hof2)
-    tree3 = toolbox.compile(expr=hof3)
-    tree4 = toolbox.compile(expr=hof4)
+    for ch in range(num_runs):
 
-    # Evaluate the sum of correctly identified
-    predict_actions = []
-    # Evaluate the sum of correctly identified
-    for i in range(num_tests):
-        instructions, data, actions = data_validation[i][0], data_validation[i][1], []
-        length = len(data)
+        print("Loading Champion {} ....".format(ch+1))
 
-        for j in range(length):
-            arg1 = tree1(instructions[j], data[j])
-            arg2 = tree2(instructions[j], data[j])
-            arg3 = tree3(instructions[j], data[j])
-            arg4 = tree4(instructions[j], data[j])
-            pos = np.argmax([arg1, arg2, arg3, arg4])
-            actions.append(pos)
+        with open(champ_path + 'output1_' + str(ch+1), 'rb') as f:
+            hof1 = pickle.load(f)
 
-        predict_actions.append(actions)
+        with open(champ_path + 'output2_' + str(ch+1), 'rb') as f:
+            hof2 = pickle.load(f)
 
-    # Evaluate predictions
-    total_accuracy = 0
-    for i in range(num_tests):
-        print("instructrions: \n{}".format(data_validation[i][0]))
-        print("data: \n{}".format(data_validation[i][1]))
-        print("Prediction Actions: \n{}".format(predict_actions[i]))
-        print("Actions: \n{}".format(actions_validation[i]))
-        accuracy = accuracy_score(actions_validation[i], predict_actions[i])
-        print("Accuracy: {}".format(accuracy))
+        with open(champ_path + 'output3_' + str(ch+1), 'rb') as f:
+            hof3 = pickle.load(f)
+
+        with open(champ_path + 'output4_' + str(ch+1), 'rb') as f:
+            hof4 = pickle.load(f)
+
+        print("Generate Test Dataset ...")
+        data_validation = generate_data(depth, corridor_length)
+        actions_validation = generate_action(data_validation)
+        
+        print("Begin Testing ....")
+
+        # Transform the tree expression in a callable function
+        tree1 = toolbox.compile(expr=hof1)
+        tree2 = toolbox.compile(expr=hof2)
+        tree3 = toolbox.compile(expr=hof3)
+        tree4 = toolbox.compile(expr=hof4)
+
+        # Evaluate the sum of correctly identified
+        predict_actions = []
+        # Evaluate the sum of correctly identified
+        for i in range(num_tests):
+            instructions, data, actions = data_validation[i][0], data_validation[i][1], []
+            length = len(data)
+
+            for j in range(length):
+                arg1 = tree1(instructions[j], data[j])
+                arg2 = tree2(instructions[j], data[j])
+                arg3 = tree3(instructions[j], data[j])
+                arg4 = tree4(instructions[j], data[j])
+                pos = np.argmax([arg1, arg2, arg3, arg4])
+                actions.append(pos)
+
+            predict_actions.append(actions)
+
+        # Evaluate predictions
+        for i in range(num_tests):
+            accuracy = accuracy_score(actions_validation[i], predict_actions[i])
+            results.append(accuracy)
+            print("Champion {} Test {} Accuracy: {}".format(ch+1, i+1, accuracy))
         print("==================================================================")
-        total_accuracy += accuracy
     
-    print("Total Accuracy: {}".format(total_accuracy/num_tests))
+    # Save the results
+    with open(champ_path + 'results_' + str(depth), 'wb') as f:
+        pickle.dump(results, f)
+        

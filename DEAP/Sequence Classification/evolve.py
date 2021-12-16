@@ -32,7 +32,7 @@ depth = 21
 noise = 10
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
-num_runs = 1
+num_runs = 20
 generalize = True
 save_log = False
 local_dir = os.path.dirname(__file__)
