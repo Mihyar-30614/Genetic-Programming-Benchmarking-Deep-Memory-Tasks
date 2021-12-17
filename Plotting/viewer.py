@@ -57,6 +57,7 @@ Values3_100_std = np.std(Values3_100, axis=0)
 '''
     View Last item as result
 '''
+print("=================================")
 print("Copy Task length 50")
 print("Mean: {}".format(Values1_50_mean))
 print("STD: {}".format(Values1_50_std))
@@ -64,12 +65,14 @@ print("Copy Task length 100")
 print("Mean: {}".format(Values1_100_mean))
 print("STD: {}".format(Values1_100_std))
 
+print("=================================")
 print("Sequence Classification length 50")
 print("Mean: {}".format(Values2_50_mean))
 print("STD: {}".format(Values2_50_std))
 print("Sequence Classification length 100")
 print("Mean: {}".format(Values2_100_mean))
 print("STD: {}".format(Values2_100_std))
+print("=================================")
 
 print("Sequence Recall length 50")
 print("Mean: {}".format(Values3_50_mean))
@@ -77,3 +80,4 @@ print("STD: {}".format(Values3_50_std))
 print("Sequence Recall length 100")
 print("Mean: {}".format(Values3_100_mean))
 print("STD: {}".format(Values3_100_std))
+print("=================================")
