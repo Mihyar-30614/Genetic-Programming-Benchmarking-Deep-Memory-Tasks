@@ -7,6 +7,7 @@ import csv
 local_dir = os.path.dirname(__file__)
 axis_x_250 = list(range(0, 251))
 axis_x_500 = list(range(0, 500))
+axis_x_501 = list(range(0, 501))
 y_label = "Success Percentage"
 x_label = "Training Generations"
 legend_loc = "lower right"
@@ -57,6 +58,14 @@ for i in range(1,21):
         info = pickle.load(f)
     mul_info.append(info)
 
+# 8-bit-vector
+DEAP_Vector = []
+for i in range(1,21):
+    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit-vector/8-bit-vector-report/8-progress_report' + str(i))
+    with open(path, 'rb') as f:
+        info = pickle.load(f)
+    DEAP_Vector.append(info)
+
 
 '''
     Calculate Mean and Standard Deviation
@@ -85,6 +94,11 @@ mul_mean = np.mean(mul_info, axis=0)
 mul_std = np.std(mul_info, axis=0)
 DEAP_mul_upperlimit = np.clip(np.add(mul_mean, mul_std), a_min=0, a_max=100)
 DEAP_mul_lowerlimit = np.clip(np.subtract(mul_mean, mul_std), a_min=0, a_max=100)
+
+DEAP_vector_mean = np.mean(DEAP_Vector, axis=0)
+DEAP_vector_std = np.std(DEAP_Vector, axis=0)
+DEAP_vector_upperlimit = np.clip(np.add(DEAP_vector_mean, DEAP_vector_std), a_min=0, a_max=100)
+DEAP_vector_lowerlimit = np.clip(np.subtract(DEAP_vector_mean, DEAP_vector_std), a_min=0, a_max=100)
 
 
 '''
@@ -160,4 +174,15 @@ plt.fill_between(axis_x_250, DEAP_mul_lowerlimit, DEAP_mul_upperlimit, alpha=.3)
 
 plt.legend(loc=legend_loc)
 plt.savefig("../Plotting/Copy Task/DEAP_combined.png", bbox_inches='tight')
+
+# 8-bit-vector
+plt.figure(6)
+plt.plot(axis_x_501, DEAP_vector_mean, linewidth=1, label="8-bit-vector")
+plt.fill_between(axis_x_501, DEAP_vector_lowerlimit, DEAP_vector_upperlimit, alpha=.3)
+
+plt.ylabel(y_label)
+plt.xlabel(x_label)
+plt.legend(loc=legend_loc)
+plt.savefig("../Plotting/Copy Task/8-bit-vector.png", bbox_inches='tight')
+
 plt.show()

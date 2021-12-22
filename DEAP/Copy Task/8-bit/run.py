@@ -130,6 +130,7 @@ if __name__ == "__main__":
     print("\n==================")
     print("Begin Testing ....")
     print("==================\n")
+    
     # Transform the tree expression in a callable function
     tree1 = toolbox.compile(expr=hof1)
     tree2 = toolbox.compile(expr=hof2)

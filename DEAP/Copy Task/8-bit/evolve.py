@@ -394,7 +394,7 @@ toolbox.register("population4", tools.initRepeat, list, toolbox.individual4)
 toolbox.register("population5", tools.initRepeat, list, toolbox.individual5)
 
 if __name__ == "__main__":
-    for i in range(1, num_runs):
+    for i in range(num_runs):
         # Process Pool of ncpu workers
         ncpu = multiprocessing.cpu_count()
         pool = multiprocessing.Pool(processes=ncpu)

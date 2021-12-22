@@ -73,4 +73,20 @@ plt.xlabel(x_label)
 plt.xlim([0, 500])
 plt.ylim([0, 100])
 plt.savefig("../Plotting/Copy Task/NEAT_Standard.png", bbox_inches='tight')
+
+# 8-bit-vector Report
+plt.figure(6)
+axis_x = list(range(0, 501))
+for i in range(1,21):
+    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit-vector/8-bit-vector-report/8-progress_report' + str(i))
+    with open(path, 'rb') as f:
+        info = pickle.load(f)
+    plt.plot(axis_x, info, linewidth=1)
+
+plt.ylabel(y_label)
+plt.xlabel(x_label)
+plt.xlim([0, 500])
+plt.ylim([0, 100])
+plt.savefig("../Plotting/Copy Task/DEAP_Vector_Standard.png", bbox_inches='tight')
+
 plt.show()

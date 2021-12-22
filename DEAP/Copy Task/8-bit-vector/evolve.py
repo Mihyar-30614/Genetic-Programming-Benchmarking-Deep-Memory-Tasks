@@ -31,8 +31,12 @@ seq_length = 10
 bits = 8
 # num_tests is the number of random examples each network is tested against.
 num_tests = 50
+num_runs = 20
 generalize = True
-save_log = False
+save_log = True
+local_dir = os.path.dirname(__file__)
+rpt_path = os.path.join(local_dir, '8-bit-vector-report/')
+champ_path = os.path.join(local_dir, 'champion/')
 
 '''
 Problem setup
@@ -390,55 +394,53 @@ toolbox.register("population4", tools.initRepeat, list, toolbox.individual4)
 toolbox.register("population5", tools.initRepeat, list, toolbox.individual5)
 
 if __name__ == "__main__":
-    # for i in range(1, 21):
-    # Process Pool of ncpu workers
-    local_dir = os.path.dirname(__file__)
-    path = os.path.join(local_dir, '8-bit-vector-report/')
-    ncpu = multiprocessing.cpu_count()
-    pool = multiprocessing.Pool(processes=ncpu)
-    toolbox.register("map", pool.map)
-    progress_report = []
+    for i in range(num_runs):
+        # Process Pool of ncpu workers
+        ncpu = multiprocessing.cpu_count()
+        pool = multiprocessing.Pool(processes=ncpu)
+        toolbox.register("map", pool.map)
+        progress_report = []
 
-    pop_size = 100
-    pop1 = toolbox.population1(n=pop_size)
-    pop2 = toolbox.population2(n=pop_size)
-    pop3 = toolbox.population3(n=pop_size)
-    pop4 = toolbox.population4(n=pop_size)
-    pop5 = toolbox.population5(n=pop_size)
+        pop_size = 100
+        pop1 = toolbox.population1(n=pop_size)
+        pop2 = toolbox.population2(n=pop_size)
+        pop3 = toolbox.population3(n=pop_size)
+        pop4 = toolbox.population4(n=pop_size)
+        pop5 = toolbox.population5(n=pop_size)
 
-    hof1 = tools.HallOfFame(1)
-    hof2 = tools.HallOfFame(1)
-    hof3 = tools.HallOfFame(1)
-    hof4 = tools.HallOfFame(1)
-    hof5 = tools.HallOfFame(1)
-    
-    pop_list = [pop1, pop2, pop3, pop4, pop5]
-    hof_list = [hof1, hof2, hof3, hof4, hof5]
-    cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 250, 0.95
-    pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
+        hof1 = tools.HallOfFame(1)
+        hof2 = tools.HallOfFame(1)
+        hof3 = tools.HallOfFame(1)
+        hof4 = tools.HallOfFame(1)
+        hof5 = tools.HallOfFame(1)
+        
+        pop_list = [pop1, pop2, pop3, pop4, pop5]
+        hof_list = [hof1, hof2, hof3, hof4, hof5]
+        cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 500, 0.95
+        pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
 
-    print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
-    print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
-    print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
-    print("Fourth Output Best individual fitness: %s" % (hof4[0].fitness))
-    print("Prog State Best individual fitness: %s" % (hof5[0].fitness))
+        print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
+        print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
+        print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
+        print("Fourth Output Best individual fitness: %s" % (hof4[0].fitness))
+        print("Prog State Best individual fitness: %s" % (hof5[0].fitness))
 
-    # Save the winner
-    with open('output1', 'wb') as f:
-        pickle.dump(hof1[0], f)
+        # Save the winner
+        with open(champ_path + 'output1_' + str(i+1), 'wb') as f:
+            pickle.dump(hof1[0], f)
 
-    with open('output2', 'wb') as f:
-        pickle.dump(hof2[0], f)
-    
-    with open('output3', 'wb') as f:
-        pickle.dump(hof3[0], f)
+        with open(champ_path + 'output2_' + str(i+1), 'wb') as f:
+            pickle.dump(hof2[0], f)
+        
+        with open(champ_path + 'output3_' + str(i+1), 'wb') as f:
+            pickle.dump(hof3[0], f)
 
-    with open('output4', 'wb') as f:
-        pickle.dump(hof4[0], f)
-    
-    with open('output5', 'wb') as f:
-        pickle.dump(hof5[0], f)
+        with open(champ_path + 'output4_' + str(i+1), 'wb') as f:
+            pickle.dump(hof4[0], f)
+        
+        with open(champ_path + 'output5_' + str(i+1), 'wb') as f:
+            pickle.dump(hof5[0], f)
 
-    if save_log:
-        with open(path + str(bits) + '-progress_report' + str(i), 'wb') as f:
-            pickle.dump(progress_report, f)
+        if save_log:
+            with open(rpt_path + str(bits) + '-progress_report' + str(i+1), 'wb') as f:
+                pickle.dump(progress_report, f)
