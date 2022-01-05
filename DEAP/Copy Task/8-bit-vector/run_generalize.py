@@ -11,7 +11,7 @@ from deap import base
 from deap import creator
 
 # length of the test sequence.
-seq_length = 50
+seq_length = 100
 # number of bits used
 bits = 8
 # num_tests is the number of random examples each network is tested against.
