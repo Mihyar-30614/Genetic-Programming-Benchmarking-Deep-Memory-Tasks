@@ -107,7 +107,7 @@ DEAP_vector_lowerlimit = np.clip(np.subtract(DEAP_vector_mean, DEAP_vector_std),
 
 # DEAP vs NEAT
 plt.figure(1)
-plt.plot(axis_x_250, DEAP_standard_mean, linewidth=1, label="DEAP")
+plt.plot(axis_x_250, DEAP_standard_mean, linewidth=1, label="GP")
 plt.fill_between(axis_x_250, DEAP_standard_lowerlimit, DEAP_standard_upperlimit, alpha=.3)
 plt.plot(axis_x_500, NEAT_standard_mean, linewidth=1, label="NEAT")
 plt.fill_between(axis_x_500, NEAT_standard_lowerlimit, NEAT_standard_upperlimit, alpha=.3)
@@ -117,11 +117,11 @@ plt.xlabel(x_label)
 plt.legend(loc=legend_loc)
 plt.savefig("../Plotting/Copy Task/DEAP_vs_NEAT.png", bbox_inches='tight')
 
-# Standard vs Logical
+# Div vs Full
 plt.figure(2)
-plt.plot(axis_x_250, DEAP_standard_mean, linewidth=1, label="Standard")
+plt.plot(axis_x_250, DEAP_standard_mean, linewidth=1, label="Div")
 plt.fill_between(axis_x_250, DEAP_standard_lowerlimit, DEAP_standard_upperlimit, alpha=.3)
-plt.plot(axis_x_250, logic_mean, linewidth=1, label="Logical")
+plt.plot(axis_x_250, logic_mean, linewidth=1, label="Full")
 plt.fill_between(axis_x_250, DEAP_logic_lowerlimit, DEAP_logic_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
@@ -129,9 +129,9 @@ plt.xlabel(x_label)
 plt.legend(loc=legend_loc)
 plt.savefig("../Plotting/Copy Task/Standard_vs_logical.png", bbox_inches='tight')
 
-# Standard vs Modified
+# Original vs Modified
 plt.figure(3)
-plt.plot(axis_x_250, DEAP_standard_mean, linewidth=1, label="Standard")
+plt.plot(axis_x_250, DEAP_standard_mean, linewidth=1, label="Original")
 plt.fill_between(axis_x_250, DEAP_standard_lowerlimit, DEAP_standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, mod_mean, linewidth=1, label="Modified")
 plt.fill_between(axis_x_250, DEAP_mod_lowerlimit, DEAP_mod_upperlimit, alpha=.3)
@@ -143,7 +143,7 @@ plt.savefig("../Plotting/Copy Task/Standard_vs_Modified.png", bbox_inches='tight
 
 # Standard vs Multiplication
 plt.figure(4)
-plt.plot(axis_x_250, DEAP_standard_mean, linewidth=1, label="Standard")
+plt.plot(axis_x_250, DEAP_standard_mean, linewidth=1, label="Div")
 plt.fill_between(axis_x_250, DEAP_standard_lowerlimit, DEAP_standard_upperlimit, alpha=.3)
 plt.plot(axis_x_250, mul_mean, linewidth=1, label="Multiplication")
 plt.fill_between(axis_x_250, DEAP_mul_lowerlimit, DEAP_mul_upperlimit, alpha=.3)
@@ -156,12 +156,12 @@ plt.savefig("../Plotting/Copy Task/Standard_vs_Multiplication.png", bbox_inches=
 # Combined figure
 plt.figure(5)
 
-#  Plot standard
-plt.plot(axis_x_250, DEAP_standard_mean, linewidth=1, label="Standard")
+#  Plot Div
+plt.plot(axis_x_250, DEAP_standard_mean, linewidth=1, label="Div")
 plt.fill_between(axis_x_250, DEAP_standard_lowerlimit, DEAP_standard_upperlimit, alpha=.3)
 
 # Plot Logical
-plt.plot(axis_x_250, logic_mean, linewidth=1, label="Logical")
+plt.plot(axis_x_250, logic_mean, linewidth=1, label="Full")
 plt.fill_between(axis_x_250, DEAP_logic_lowerlimit, DEAP_logic_upperlimit, alpha=.3)
 
 #  Plot modified
