@@ -34,7 +34,7 @@ num_runs = 50           # number of runs
 # Results Config
 generalize = True
 save_log = True
-turbo_mode = False
+verbose_val = False
 
 # Directory of files
 local_dir = os.path.dirname(__file__)
@@ -417,15 +417,18 @@ if __name__ == "__main__":
         hof3 = tools.HallOfFame(1)
         hof4 = tools.HallOfFame(1)
         hof5 = tools.HallOfFame(1)
+
         
         pop_list = [pop1, pop2, pop3, pop4, pop5]
         hof_list = [hof1, hof2, hof3, hof4, hof5]
         cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 250, 0.95
-        pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose= not turbo_mode)
-
-        if turbo_mode:
+        
+        if not verbose_val:
             print("Generation #: " + str(i+1))
-        else:
+
+        pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=verbose_val)
+
+        if verbose_val:
             print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
             print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
             print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
