@@ -96,31 +96,12 @@ toolbox = base.Toolbox()
 toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=2)
 toolbox.register("compile", gp.compile, pset=pset)
 
-# Load the best tree
-with open(champ_path + 'output1_1', 'rb') as f:
-    hof1 = pickle.load(f)
-    print("loaded Tree1:")
-    print(hof1)
+# Load the champions array
+with open(champ_path + str(bits) + '_champions_std', 'rb') as f:
+    champions = pickle.load(f)
+    print("loaded champions")
 
-with open(champ_path + 'output2_1', 'rb') as f:
-    hof2 = pickle.load(f)
-    print("loaded Tree2:")
-    print(hof2)
-
-with open(champ_path + 'output3_1', 'rb') as f:
-    hof3 = pickle.load(f)
-    print("loaded Tree3:")
-    print(hof3)
-
-with open(champ_path + 'output4_1', 'rb') as f:
-    hof4 = pickle.load(f)
-    print("loaded Tree4:")
-    print(hof4)
-
-with open(champ_path + 'output5_1', 'rb') as f:
-    hof5 = pickle.load(f)
-    print("loaded Tree5:")
-    print(hof5)
+hof1, hof2, hof3, hof4, hof5 = champions["champion_1"]
 
 if __name__ == "__main__":
     '''

@@ -433,7 +433,7 @@ if __name__ == "__main__":
             print("Prog State Best individual fitness: %s" % (hof5[0].fitness))
 
         # Save the winner
-        champions["champion_" + str(i+1)] = [hof1[0], hof2[0], hof3[0], hof4[0]]
+        champions["champion_" + str(i+1)] = [hof1[0], hof2[0], hof3[0], hof4[0],hof5[0]]
         reports['report' + str(i+1)] = progress_report
 
     # Save Champions
