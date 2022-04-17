@@ -417,7 +417,6 @@ if __name__ == "__main__":
         hof3 = tools.HallOfFame(1)
         hof4 = tools.HallOfFame(1)
         hof5 = tools.HallOfFame(1)
-
         
         pop_list = [pop1, pop2, pop3, pop4, pop5]
         hof_list = [hof1, hof2, hof3, hof4, hof5]
