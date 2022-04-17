@@ -25,15 +25,18 @@ from deap import creator
 from deap import algorithms
 from sklearn.metrics import accuracy_score
 
-# length of the test sequence.
-seq_length = 10
-# number of bits used
-bits = 8
-# num_tests is the number of random examples each network is tested against.
-num_tests = 50
-num_runs = 1
+# Data Config
+seq_length = 10         # length of the test sequence.
+bits = 8                # number of bits used
+num_tests = 50          # num_tests is the number of random examples each network is tested against.
+num_runs = 50           # number of runs
+
+# Results Config
 generalize = True
-save_log = False
+save_log = True
+verbose_val = False
+
+# Directory of files
 local_dir = os.path.dirname(__file__)
 rpt_path = os.path.join(local_dir, '8-bit-report/')
 champ_path = os.path.join(local_dir, 'champion/')
@@ -411,6 +414,7 @@ toolbox.register("population4", tools.initRepeat, list, toolbox.individual4)
 toolbox.register("population5", tools.initRepeat, list, toolbox.individual5)
 
 if __name__ == "__main__":
+    champions, reports = {}, {}
     for i in range(num_runs):
         # Process Pool of ncpu workers
         ncpu = multiprocessing.cpu_count()
@@ -434,30 +438,27 @@ if __name__ == "__main__":
         pop_list = [pop1, pop2, pop3, pop4, pop5]
         hof_list = [hof1, hof2, hof3, hof4, hof5]
         cxpb, mutpb, ngen, fitness_threshold = 0.5, 0.4, 250, 0.95
-        pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=True)
+        
+        if not verbose_val:
+            print("Generation #: " + str(i+1))
 
-        print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
-        print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
-        print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
-        print("Fourth Output Best individual fitness: %s" % (hof4[0].fitness))
-        print("Prog State Best individual fitness: %s" % (hof5[0].fitness))
+        pop = ea_simple_plus(pop_list, toolbox, cxpb, mutpb, ngen, None, hof_list, verbose=verbose_val)
+
+        if verbose_val:
+            print("\nFirst Output Best individual fitness: %s" % (hof1[0].fitness))
+            print("Second Output Best individual fitness: %s" % (hof2[0].fitness))
+            print("Third Output Best individual fitness: %s" % (hof3[0].fitness))
+            print("Fourth Output Best individual fitness: %s" % (hof4[0].fitness))
+            print("Prog State Best individual fitness: %s" % (hof5[0].fitness))
 
         # Save the winner
-        with open(champ_path + 'output1_' + str(i+1), 'wb') as f:
-            pickle.dump(hof1[0], f)
+        champions["champion_" + str(i+1)] = [hof1[0], hof2[0], hof3[0], hof4[0],hof5[0]]
+        reports['report' + str(i+1)] = progress_report
 
-        with open(champ_path + 'output2_' + str(i+1), 'wb') as f:
-            pickle.dump(hof2[0], f)
-        
-        with open(champ_path + 'output3_' + str(i+1), 'wb') as f:
-            pickle.dump(hof3[0], f)
+    # Save Champions
+    with open(champ_path + str(bits) + '_champions_logical', 'wb') as f:
+        pickle.dump(champions, f)
 
-        with open(champ_path + 'output4_' + str(i+1), 'wb') as f:
-            pickle.dump(hof4[0], f)
-        
-        with open(champ_path + 'output5_' + str(i+1), 'wb') as f:
-            pickle.dump(hof5[0], f)
-
-        if save_log:
-            with open(rpt_path + str(bits) + '-progress_report_logic' + str(i+1), 'wb') as f:
-                pickle.dump(progress_report, f)
+    if save_log:
+        with open(rpt_path + str(bits) + '_report_logical', 'wb') as f:
+            pickle.dump(reports, f)

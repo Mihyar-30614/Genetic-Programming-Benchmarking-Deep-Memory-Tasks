@@ -90,7 +90,7 @@ toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=2)
 toolbox.register("compile", gp.compile, pset=pset)
 
 # Load the champions array
-with open(champ_path + str(bits) + '_champions_std', 'rb') as f:
+with open(champ_path + str(bits) + '_champions_mul', 'rb') as f:
     champions = pickle.load(f)
     print("loaded champions")
 
