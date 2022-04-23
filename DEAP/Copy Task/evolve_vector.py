@@ -439,9 +439,9 @@ if __name__ == "__main__":
         reports['report' + str(i+1)] = progress_report
 
     # Save Champions
-    with open(champ_path + str(bits) + '_champions_vector', 'wb') as f:
+    with open(champ_path + str(bits) + '_champions_vec', 'wb') as f:
         pickle.dump(champions, f)
 
     if save_log:
-        with open(rpt_path + str(bits) + '_report_vector', 'wb') as f:
+        with open(rpt_path + str(bits) + '_report_vec', 'wb') as f:
             pickle.dump(reports, f)
