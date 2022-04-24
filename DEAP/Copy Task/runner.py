@@ -31,10 +31,11 @@ def get_args():
     str += "************************************************************\n"
     print(str)
     
+    options = ("std", "mul","mod","log","gen","vec","vec-gen")
     while True:
         try:
             input_args = input("Choose your champion:\n").strip().lower().split(",")
-            if input_args[0].strip() not in ("std", "mul","mod","log","gen","vec","vec-gen"):
+            if input_args[0].strip() not in options:
                 raise ValueError
             else:
                 break

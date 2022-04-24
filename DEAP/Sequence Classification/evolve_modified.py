@@ -1,6 +1,6 @@
 """
 This is an example of sequence classification modified using DEAP.
-Zeros could be any number between range_min and range_max
+Zeros could be any number in the range of -/+range
 
 Example Input:
     sequence        = [1.0, 0.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0, 0.0]
@@ -28,12 +28,12 @@ from deap import algorithms
 from sklearn.metrics import accuracy_score
 
 # Data Config
-depth = 4              # Number of (1, -1) in a sequence
+depth = 5               # Number of (1, -1) in a sequence
 noise = 10              # Number of Zeros between values
 num_tests = 50          # num_tests is the number of random examples each network is tested against.
 num_runs = 50           # number of runs
-range_min = -0.125
-range_max = 0.125
+noise_range = 0.5
+range_str = str(noise_range).split(".")[1]
 
 # Results Config
 generalize = True
@@ -53,7 +53,7 @@ def generate_data(depth, noise):
         sequence = []
         sequence.append(random.choice((-1.0, 1.0)))
         for _ in range(depth - 1):
-            sequence.extend([random.uniform(range_min,range_max) for _ in range(noise)])
+            sequence.extend([random.uniform(-noise_range,noise_range) for _ in range(noise)])
             sequence.append(random.choice((-1.0, 1.0)))
         retval.append(sequence)
     return retval
@@ -480,9 +480,9 @@ if __name__ == "__main__":
         reports['report' + str(i+1)] = progress_report
 
     # Save Champions
-    with open(champ_path + str(depth) + '_champions_mod', 'wb') as f:
+    with open(champ_path + str(depth) + '_champions_mod_' + range_str, 'wb') as f:
         pickle.dump(champions, f)
 
     if save_log:
-        with open(rpt_path + str(depth) + '_report_mod', 'wb') as f:
+        with open(rpt_path + str(depth) + '_report_mod_' + range_str, 'wb') as f:
             pickle.dump(reports, f)
