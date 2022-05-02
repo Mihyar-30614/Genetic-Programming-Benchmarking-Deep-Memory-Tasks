@@ -25,7 +25,7 @@ from deap import algorithms
 from sklearn.metrics import accuracy_score
 
 # Data Config
-depth = 21              # Number of (1, -1) in a sequence
+depth = 5              # Number of (1, -1) in a sequence
 corridor_length = 10    # Number of Zeros between values
 num_tests = 50          # num_tests is the number of random examples each network is tested against.
 num_runs = 50           # number of runs
@@ -437,10 +437,10 @@ if __name__ == "__main__":
         reports['report' + str(i+1)] = progress_report
 
     # Save Champions
-    with open(champ_path + str(depth) + '_champions_mod', 'wb') as f:
+    with open(champ_path + str(depth) + '_champions_log', 'wb') as f:
         pickle.dump(champions, f)
 
     if save_log:
-        with open(rpt_path + str(depth) + '_report_mod', 'wb') as f:
+        with open(rpt_path + str(depth) + '_report_log', 'wb') as f:
             pickle.dump(reports, f)
     
