@@ -18,17 +18,23 @@ import neat
 import numpy as np
 import random
 import pickle
-import shutil
 
-# Number of (1, -1) in a sequence
-depth = 15
-# Number of Zeros between values
-noise = 10
-# num_tests is the number of random examples each network is tested against.
-num_tests = 50
-num_generations = 500
+# Data Config
+depth = 4               # Number of (1, -1) in a sequence
+noise = 10              # Number of Zeros between values
+num_tests = 50          # num_tests is the number of random examples each network is tested against.
+num_runs = 50           # number of runs
+
+# Results Config
 generalize = True
-save_log = False
+save_log = True
+verbose_val = False
+num_generations = 500
+
+# Directory of files
+local_dir = os.path.dirname(__file__)
+rpt_path = os.path.join(local_dir, 'reports/')
+champ_path = os.path.join(local_dir, 'champions/')
 
 '''
 Problem setup
@@ -157,28 +163,28 @@ if __name__ == "__main__":
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
     
-    # for i in range(1,21):
-    pop = neat.Population(config)
-    stats = neat.StatisticsReporter()
-    pop.add_reporter(stats)
-    pop.add_reporter(neat.StdOutReporter(True))
-    
-    pe = neat.ParallelEvaluator(multiprocessing.cpu_count(), eval_function)
-    winner = pop.run(pe.evaluate, num_generations)
+    champions, reports = {}, {}
+    for i in range(num_runs):
+        pop = neat.Population(config)
+        stats = neat.StatisticsReporter()
+        pop.add_reporter(stats)
+        pop.add_reporter(neat.StdOutReporter(verbose_val))
 
-    # Log statistics.
-    stats.save()
+        if not verbose_val:
+            print("Run #: " + str(i+1))
+        
+        pe = neat.ParallelEvaluator(multiprocessing.cpu_count(), eval_function)
+        winner = pop.run(pe.evaluate, num_generations)
 
-    # Show output of the most fit genome against a random input.
-    print('\nBest genome:\n{!s}'.format(winner))
+        # Save the winner
+        champions["champion_" + str(i+1)] = winner
+        progress_report = [c.fitness for c in stats.most_fit_genomes]
+        reports['report' + str(i+1)] = progress_report
 
-    # Save the winner
-    with open('champion-gnome', 'wb') as f:
-        pickle.dump(winner, f)
+    # Save Champions
+    with open(champ_path + str(depth) + '_champions_std', 'wb') as f:
+        pickle.dump(champions, f)
 
-    # Add to reporting
     if save_log:
-        path = os.path.join(local_dir, str(depth)+'-deep-report/')
-        src_dir = local_dir + 'fitness_history.csv'
-        dest_dir = path + str(depth) + '-progress_report' + str(i) + ".csv"
-        shutil.copy(src_dir,dest_dir)
+        with open(rpt_path + str(depth) + '_report_std', 'wb') as f:
+            pickle.dump(reports, f)
