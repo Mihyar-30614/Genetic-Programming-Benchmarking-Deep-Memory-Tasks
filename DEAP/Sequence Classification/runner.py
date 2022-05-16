@@ -19,7 +19,6 @@ def get_args():
     str += "*       - mul -> to run the multiplication champion         *\n"
     str += "*       - mod -> to run the modified champion               *\n"
     str += "*       - log -> to run the logical champion                *\n"
-    str += "*       - gen -> to run the generalization of task          *\n"
     str += "*   Depth of sequence i.e. number of 1/-1's (required):     *\n"
     str += "*       - options are: 4, 5, 6, 15, 21                      *\n"
     str += "*   Range of noise to use (required):                       *\n"
@@ -33,7 +32,7 @@ def get_args():
     str += "************************************************************\n"
     print(str)
     
-    options = ("std", "mul","mod","log","gen")
+    options = ("std", "mul","mod","log")
     while True:
         try:
             valid = True
@@ -154,7 +153,7 @@ def create_gp(type):
     # defined a new primitive set for strongly typed GP
     pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, 2), float)
 
-    if type in ("std", "vec", "mod", "gen"):
+    if type in ("std", "vec", "mod"):
         pset.addPrimitive(operator.add, [float, float], float)
         pset.addPrimitive(operator.sub, [float, float], float)
         pset.addPrimitive(protected_div, [float, float], float)
@@ -206,8 +205,7 @@ if __name__ == "__main__":
     toolbox = create_gp(type)
     
     # Load Champion
-    champ_name = champ_path + str(depth) + '_champions_'
-    champ_name = champ_name + type if type not in ("gen") else champ_name + "std"
+    champ_name = champ_path + str(depth) + '_champions_' + type
     with open(champ_name, 'rb') as f:
         champions = pickle.load(f)
         print("loaded champions")

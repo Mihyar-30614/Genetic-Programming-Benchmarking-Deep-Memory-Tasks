@@ -19,9 +19,7 @@ def get_args():
     str += "*       - mul -> to run the multiplication champion         *\n"
     str += "*       - mod -> to run the modified champion               *\n"
     str += "*       - log -> to run the logical champion                *\n"
-    str += "*       - gen -> to run the generalization of task          *\n"
     str += "*       - vec -> to run the full vector champion            *\n"
-    str += "*       - vec-gen -> to run the generalization of vectors   *\n"
     str += "*   Which champion to load (optional):                      *\n"
     str += "*       - example 'champion_1' .... 'champion_50'           *\n"
     str += "*   Number of tests to run (optional):                      *\n"
@@ -31,7 +29,7 @@ def get_args():
     str += "************************************************************\n"
     print(str)
     
-    options = ("std", "mul","mod","log","gen","vec","vec-gen")
+    options = ("std", "mul","mod","log","vec")
     while True:
         try:
             input_args = input("Choose your champion:\n").strip().lower().split(",")
@@ -120,12 +118,12 @@ def if_then_else(input, output1, output2):
 
 def create_gp(type):
     # defined a new primitive set for strongly typed GP
-    if type in ("vec", "vec-gen"):
+    if type in ("vec"):
         pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, bits + 3), float)
     else:
         pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, 3), float)
 
-    if type in ("std", "vec", "mod", "gen", "vec-gen"):
+    if type in ("std", "vec", "mod"):
         pset.addPrimitive(operator.add, [float, float], float)
         pset.addPrimitive(operator.sub, [float, float], float)
         pset.addPrimitive(protected_div, [float, float], float)
@@ -177,8 +175,7 @@ if __name__ == "__main__":
     toolbox = create_gp(type)
     
     # Load Champion
-    champ_name = champ_path + str(bits) + '_champions_'
-    champ_name = champ_name + type if type not in ("gen", "vec-gen") else champ_name + "std"
+    champ_name = champ_path + str(bits) + '_champions_' + type
     with open(champ_name, 'rb') as f:
         champions = pickle.load(f)
         print("loaded champions")
@@ -207,7 +204,7 @@ if __name__ == "__main__":
         prog_state = 0
 
         for j in range(length):
-            if type in ("vec", "vec-gen"):
+            if type in ("vec"):
                 arg1 = tree1(*data[j], prog_state)
                 arg2 = tree2(*data[j], prog_state)
                 arg3 = tree3(*data[j], prog_state)
