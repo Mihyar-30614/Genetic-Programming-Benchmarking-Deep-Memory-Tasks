@@ -10,14 +10,21 @@ from deap import gp
 from deap import base
 from deap import creator
 
-depth = 100
-corridor_length = 10
-num_tests = 50
-generalize = True
-num_runs = 20
-local_dir = os.path.dirname(__file__)
-champ_path = os.path.join(local_dir, 'champion/')
+# Data Config
+depths = [50,100]       # Number of (1, -1) in a sequence
+corridor_length = 10    # Number of Zeros between values
+num_tests = 50          # num_tests is the number of random examples each network is tested against.
+num_runs = 50           # number of runs
+
+# Results Config
+generalize = False
+save_log = True
 results = []
+
+# Directory of files
+local_dir = os.path.dirname(__file__)
+rpt_path = os.path.join(local_dir, 'reports/')
+champ_path = os.path.join(local_dir, 'champions/')
 
 '''
 Problem setup
@@ -97,60 +104,61 @@ toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=2)
 toolbox.register("compile", gp.compile, pset=pset)
 
 if __name__ == "__main__":
+    # Load Champion
+    print("Loading champions ...")
+    champ_name = champ_path + '21_champions_std'
+    with open(champ_name, 'rb') as f:
+        champions = pickle.load(f)
+        print("loaded champions")
 
-    for ch in range(num_runs):
+    for depth in depths:
 
-        print("Loading Champion {} ....".format(ch+1))
+        print("Generalizing {} Sequence Length".format(depth))
 
-        with open(champ_path + 'output1_' + str(ch+1), 'rb') as f:
-            hof1 = pickle.load(f)
+        for ch in range(num_runs):
 
-        with open(champ_path + 'output2_' + str(ch+1), 'rb') as f:
-            hof2 = pickle.load(f)
+            print("Loading Champion {} ....".format(ch+1))
+            champion = "champion_" + str(ch+1)
+            hof1, hof2, hof3, hof4 = champions[champion]
 
-        with open(champ_path + 'output3_' + str(ch+1), 'rb') as f:
-            hof3 = pickle.load(f)
+            print("Generate Test Dataset ...")
+            data_validation = generate_data(depth, corridor_length)
+            actions_validation = generate_action(data_validation)
+            
+            print("Begin Testing ....")
 
-        with open(champ_path + 'output4_' + str(ch+1), 'rb') as f:
-            hof4 = pickle.load(f)
+            # Transform the tree expression in a callable function
+            tree1 = toolbox.compile(expr=hof1)
+            tree2 = toolbox.compile(expr=hof2)
+            tree3 = toolbox.compile(expr=hof3)
+            tree4 = toolbox.compile(expr=hof4)
 
-        print("Generate Test Dataset ...")
-        data_validation = generate_data(depth, corridor_length)
-        actions_validation = generate_action(data_validation)
+            # Evaluate the sum of correctly identified
+            predict_actions = []
+            # Evaluate the sum of correctly identified
+            for i in range(num_tests):
+                instructions, data, actions = data_validation[i][0], data_validation[i][1], []
+                length = len(data)
+
+                for j in range(length):
+                    arg1 = tree1(instructions[j], data[j])
+                    arg2 = tree2(instructions[j], data[j])
+                    arg3 = tree3(instructions[j], data[j])
+                    arg4 = tree4(instructions[j], data[j])
+                    pos = np.argmax([arg1, arg2, arg3, arg4])
+                    actions.append(pos)
+
+                predict_actions.append(actions)
+
+            # Evaluate predictions
+            for i in range(num_tests):
+                accuracy = accuracy_score(actions_validation[i], predict_actions[i])
+                results.append(accuracy)
+                print("Champion {} Test {} Accuracy: {}".format(ch+1, i+1, accuracy))
+            print("==================================================================")
         
-        print("Begin Testing ....")
-
-        # Transform the tree expression in a callable function
-        tree1 = toolbox.compile(expr=hof1)
-        tree2 = toolbox.compile(expr=hof2)
-        tree3 = toolbox.compile(expr=hof3)
-        tree4 = toolbox.compile(expr=hof4)
-
-        # Evaluate the sum of correctly identified
-        predict_actions = []
-        # Evaluate the sum of correctly identified
-        for i in range(num_tests):
-            instructions, data, actions = data_validation[i][0], data_validation[i][1], []
-            length = len(data)
-
-            for j in range(length):
-                arg1 = tree1(instructions[j], data[j])
-                arg2 = tree2(instructions[j], data[j])
-                arg3 = tree3(instructions[j], data[j])
-                arg4 = tree4(instructions[j], data[j])
-                pos = np.argmax([arg1, arg2, arg3, arg4])
-                actions.append(pos)
-
-            predict_actions.append(actions)
-
-        # Evaluate predictions
-        for i in range(num_tests):
-            accuracy = accuracy_score(actions_validation[i], predict_actions[i])
-            results.append(accuracy)
-            print("Champion {} Test {} Accuracy: {}".format(ch+1, i+1, accuracy))
-        print("==================================================================")
-    
-    # Save the results
-    with open(champ_path + 'results_' + str(depth), 'wb') as f:
-        pickle.dump(results, f)
+        # Save the results
+        if save_log:
+            with open(rpt_path + 'gen_results_' + str(depth), 'wb') as f:
+                pickle.dump(results, f)
         
