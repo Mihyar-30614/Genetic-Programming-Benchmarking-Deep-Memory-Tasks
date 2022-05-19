@@ -7,39 +7,35 @@ local_dir = os.path.dirname(__file__)
 '''
     Load Data
 '''
-path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/champion/results_50')
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/gen_results_50')
 with open(path, 'rb') as f:
     Values1_50 = pickle.load(f)
 
-path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/champion/results_100')
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/gen_results_100')
 with open(path, 'rb') as f:
     Values1_100 = pickle.load(f)
 
-path = os.path.join(local_dir, '../DEAP/Sequence Classification/champion/results_50')
+path = os.path.join(local_dir, '../DEAP/Sequence Classification/reports/gen_results_50')
 with open(path, 'rb') as f:
     Values2_50 = pickle.load(f)
 
-path = os.path.join(local_dir, '../DEAP/Sequence Classification/champion/results_100')
+path = os.path.join(local_dir, '../DEAP/Sequence Classification/reports/gen_results_100')
 with open(path, 'rb') as f:
     Values2_100 = pickle.load(f)
 
-path = os.path.join(local_dir, '../DEAP/Sequence Recall/champion/results_50')
+path = os.path.join(local_dir, '../DEAP/Sequence Recall/reports/gen_results_50')
 with open(path, 'rb') as f:
     Values3_50 = pickle.load(f)
 
-path = os.path.join(local_dir, '../DEAP/Sequence Recall/champion/results_100')
+path = os.path.join(local_dir, '../DEAP/Sequence Recall/reports/gen_results_100')
 with open(path, 'rb') as f:
     Values3_100 = pickle.load(f)
 
-path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit-vector/champion/results_20')
-with open(path, 'rb') as f:
-    Values4_20 = pickle.load(f)
-
-path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit-vector/champion/results_50')
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/gen_vec_results_50')
 with open(path, 'rb') as f:
     Values4_50 = pickle.load(f)
 
-path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit-vector/champion/results_100')
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/gen_vec_results_100')
 with open(path, 'rb') as f:
     Values4_100 = pickle.load(f)
 
@@ -62,8 +58,6 @@ Values3_50_std = np.std(Values3_50, axis=0)
 Values3_100_mean = np.mean(Values3_100, axis=0)
 Values3_100_std = np.std(Values3_100, axis=0)
 
-Values4_20_mean = np.mean(Values4_20, axis=0)
-Values4_20_std = np.std(Values4_20, axis=0)
 Values4_50_mean = np.mean(Values4_50, axis=0)
 Values4_50_std = np.std(Values4_50, axis=0)
 Values4_100_mean = np.mean(Values4_100, axis=0)
@@ -81,9 +75,6 @@ print("Mean: {:.2f}%".format(Values1_100_mean * 100))
 print("STD: {:.2f}".format(Values1_100_std * 100))
 
 print("=================================")
-print("Copy Task length 20")
-print("Mean: {:.2f}%".format(Values4_20_mean * 100))
-print("STD: {:.2f}".format(Values4_20_std * 100))
 print("Copy Task Vector length 50")
 print("Mean: {:.2f}%".format(Values4_50_mean * 100))
 print("STD: {:.2f}".format(Values4_50_std * 100))
