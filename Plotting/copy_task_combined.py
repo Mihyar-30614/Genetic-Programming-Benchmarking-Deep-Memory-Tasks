@@ -5,9 +5,8 @@ import numpy as np
 import csv
 
 local_dir = os.path.dirname(__file__)
-axis_x_250 = list(range(0, 251))
-axis_x_500 = list(range(0, 500))
-axis_x_501 = list(range(0, 501))
+axis_x_250 = list(range(251))
+axis_x_500 = list(range(500))
 y_label = "Success Percentage"
 x_label = "Training Generations"
 legend_loc = "lower right"
@@ -16,55 +15,39 @@ legend_loc = "lower right"
     Load Data
 '''
 # 8-bit Report DEAP
-DEAP_Standard = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/8-bit-report/8-progress_report' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    DEAP_Standard.append(info)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_std')
+with open(path, 'rb') as f:
+    DEAP_Standard = list(pickle.load(f).values())
 
 # 8-bit Report NEAT
 NEAT_Standard = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../NEAT/8-bit CopyTask/8-bit-report/fitness_history' + str(i) + '.csv')
-    info = []
-    with open(path, newline='\n') as f:
-        reader = csv.reader(f)
-        for row in reader:
-            info.append(float(*row))
+path = os.path.join(local_dir, '../NEAT/Copy Task/reports/8_report_std')
+with open(path, 'rb') as f:
+    data = pickle.load(f)
+for info in data.values():
+    info.extend([info[-1] for _ in range(500 - len(info))])
     NEAT_Standard.append(info)
 
 # DEAP Logical Operators
-logic_info = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/8-bit-report/8-progress_report_logic' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    logic_info.append(info)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_log')
+with open(path, 'rb') as f:
+    logic_info = list(pickle.load(f).values())
 
 # DEAP Modified Task
-mod_info = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/8-bit-report/8-progress_report_mod' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    mod_info.append(info)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_mod')
+with open(path, 'rb') as f:
+    mod_info = list(pickle.load(f).values())
 
 # DEAP Multiplication Operator
-mul_info = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/8-bit-report/8-progress_report_mul' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    mul_info.append(info)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_mul')
+with open(path, 'rb') as f:
+    mul_info = list(pickle.load(f).values())
 
 # 8-bit-vector
 DEAP_Vector = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit-vector/8-bit-vector-report/8-progress_report' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    DEAP_Vector.append(info)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_vec')
+with open(path, 'rb') as f:
+    DEAP_Vector = list(pickle.load(f).values())
 
 
 '''
@@ -177,8 +160,8 @@ plt.savefig("../Plotting/Copy Task/DEAP_combined.png", bbox_inches='tight')
 
 # 8-bit-vector
 plt.figure(6)
-plt.plot(axis_x_501, DEAP_vector_mean, linewidth=1, label="8-bit-vector")
-plt.fill_between(axis_x_501, DEAP_vector_lowerlimit, DEAP_vector_upperlimit, alpha=.3)
+plt.plot(axis_x_250, DEAP_vector_mean, linewidth=1, label="8-bit-vector")
+plt.fill_between(axis_x_250, DEAP_vector_lowerlimit, DEAP_vector_upperlimit, alpha=.3)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
