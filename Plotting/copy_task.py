@@ -4,17 +4,18 @@ import os
 import csv
 
 local_dir = os.path.dirname(__file__)
-axis_x = list(range(0, 251))
+axis_x_250 = list(range(251))
+axis_x_500 = list(range(500))
 y_label = "Success Percentage"
 x_label = "Training Generations"
 
 # 8-bit Report
 plt.figure(1)
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/8-bit-report/8-progress_report' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    plt.plot(axis_x, info, linewidth=1)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_std')
+with open(path, 'rb') as f:
+    data = pickle.load(f)
+for info in data.values():
+    plt.plot(axis_x_250, info, linewidth=1)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -22,11 +23,11 @@ plt.savefig("../Plotting/Copy Task/DEAP_Standard.png", bbox_inches='tight')
 
 # 8-bit Report Logical
 plt.figure(2)
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/8-bit-report/8-progress_report_logic' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    plt.plot(axis_x, info, linewidth=1)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_log')
+with open(path, 'rb') as f:
+    data = pickle.load(f)
+for info in data.values():
+    plt.plot(axis_x_250, info, linewidth=1)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -34,11 +35,11 @@ plt.savefig("../Plotting/Copy Task/DEAP_Logical.png", bbox_inches='tight')
 
 # 8-bit Report Modified
 plt.figure(3)
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/8-bit-report/8-progress_report_mod' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    plt.plot(axis_x, info, linewidth=1)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_mod')
+with open(path, 'rb') as f:
+    data = pickle.load(f)
+for info in data.values():
+    plt.plot(axis_x_250, info, linewidth=1)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -46,11 +47,11 @@ plt.savefig("../Plotting/Copy Task/DEAP_Modified.png", bbox_inches='tight')
 
 # 8-bit Report Multiplication
 plt.figure(4)
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/8-bit-report/8-progress_report_mul' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    plt.plot(axis_x, info, linewidth=1)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_mul')
+with open(path, 'rb') as f:
+    data = pickle.load(f)
+for info in data.values():
+    plt.plot(axis_x_250, info, linewidth=1)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -58,15 +59,11 @@ plt.savefig("../Plotting/Copy Task/DEAP_Multiplication.png", bbox_inches='tight'
 
 # NEAT 8-bit Report
 plt.figure(5)
-axis_x = list(range(0, 500))
-for i in range(1,21):
-    path = os.path.join(local_dir, '../NEAT/8-bit CopyTask/8-bit-report/fitness_history' + str(i) + '.csv')
-    info = []
-    with open(path, newline='\n') as f:
-        reader = csv.reader(f)
-        for row in reader:
-            info.append(float(*row))
-    plt.plot(axis_x, info, linewidth=1)
+path = os.path.join(local_dir, '../NEAT/Copy Task/reports/8_report_std')
+with open(path, 'rb') as f:
+    data = pickle.load(f)
+for info in data.values():
+    plt.plot(axis_x_500, info, linewidth=1)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
@@ -76,12 +73,11 @@ plt.savefig("../Plotting/Copy Task/NEAT_Standard.png", bbox_inches='tight')
 
 # 8-bit-vector Report
 plt.figure(6)
-axis_x = list(range(0, 501))
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit-vector/8-bit-vector-report/8-progress_report' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    plt.plot(axis_x, info, linewidth=1)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_vec')
+with open(path, 'rb') as f:
+    data = pickle.load(f)
+for info in data.values():
+    plt.plot(axis_x_250, info, linewidth=1)
 
 plt.ylabel(y_label)
 plt.xlabel(x_label)
