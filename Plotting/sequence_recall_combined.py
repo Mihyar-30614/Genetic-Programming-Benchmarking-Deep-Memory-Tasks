@@ -74,27 +74,27 @@ path = os.path.join(local_dir, '../DEAP/Sequence Recall/reports/5_report_mul')
 with open(path, 'rb') as f:
     DEAP_5_Multiplication = list(pickle.load(f).values())
 
-# 4-deep Report DEAP Modified 0.5
+# 4-deep Report DEAP Modified
 path = os.path.join(local_dir, '../DEAP/Sequence Recall/reports/4_report_mod')
 with open(path, 'rb') as f:
     DEAP_4_Modified = list(pickle.load(f).values())
 
-# 5-deep Report DEAP Modified 0.5
+# 5-deep Report DEAP Modified
 path = os.path.join(local_dir, '../DEAP/Sequence Recall/reports/5_report_mod')
 with open(path, 'rb') as f:
     DEAP_5_Modified = list(pickle.load(f).values())
 
-# 6-deep Report DEAP Modified 0.5
+# 6-deep Report DEAP Modified
 path = os.path.join(local_dir, '../DEAP/Sequence Recall/reports/6_report_mod')
 with open(path, 'rb') as f:
     DEAP_6_Modified = list(pickle.load(f).values())
 
-# 15-deep Report DEAP Modified 0.5
+# 15-deep Report DEAP Modified
 path = os.path.join(local_dir, '../DEAP/Sequence Recall/reports/15_report_mod')
 with open(path, 'rb') as f:
     DEAP_15_Modified = list(pickle.load(f).values())
 
-# 21-deep Report DEAP Modified 0.5
+# 21-deep Report DEAP Modified
 path = os.path.join(local_dir, '../DEAP/Sequence Recall/reports/21_report_mod')
 with open(path, 'rb') as f:
     DEAP_21_Modified = list(pickle.load(f).values())

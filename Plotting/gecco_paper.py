@@ -3,12 +3,11 @@ import matplotlib.pyplot as plt
 import pickle
 import os
 import numpy as np
-import csv
 
 local_dir = os.path.dirname(__file__)
-axis_x_250 = list(range(0, 251))
-axis_x_500 = list(range(0, 500))
-axis_x_501 = list(range(0, 501))
+axis_x_250 = list(range(251))
+axis_x_500 = list(range(500))
+axis_x_501 = list(range(501))
 y_label = "Success Percentage"
 x_label = "Training Generations"
 legend_loc = "lower right"
@@ -23,110 +22,78 @@ color2 = "maroon"
     Copy Task
 '''
 # 8-bit Report DEAP
-DEAP_Standard = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/8-bit-report/8-progress_report' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    DEAP_Standard.append(info)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_std')
+with open(path, 'rb') as f:
+    DEAP_Standard = list(pickle.load(f).values())
 
 # 8-bit Report NEAT
 NEAT_Standard = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../NEAT/8-bit CopyTask/8-bit-report/fitness_history' + str(i) + '.csv')
-    info = []
-    with open(path, newline='\n') as f:
-        reader = csv.reader(f)
-        for row in reader:
-            info.append(float(*row))
+path = os.path.join(local_dir, '../NEAT/Copy Task/reports/8_report_std')
+with open(path, 'rb') as f:
+    data = pickle.load(f)
+for info in data.values():
+    info.extend([info[-1] for _ in range(500 - len(info))])
     NEAT_Standard.append(info)
 
 # DEAP Modified Task
-mod_info = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Copy Task/8-bit/8-bit-report/8-progress_report_mod' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    mod_info.append(info)
+path = os.path.join(local_dir, '../DEAP/Copy Task/reports/8_report_mod')
+with open(path, 'rb') as f:
+    mod_info = list(pickle.load(f).values())
 
 '''
     Sequence Recall
 '''
 # 5-deep Report DEAP
-DEAP_5_Standard = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Sequence Recall/5-deep-report/5-progress_report' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    DEAP_5_Standard.append(info)
+path = os.path.join(local_dir, '../DEAP/Sequence Recall/reports/5_report_std')
+with open(path, 'rb') as f:
+    DEAP_5_Standard = list(pickle.load(f).values())
 
 # 5-deep Report NEAT
 NEAT_5_Standard = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../NEAT/Sequence Recall/5-deep-report/5-progress_report' + str(i) + '.csv')
-    info = []
-    with open(path, newline='\n') as f:
-        reader = csv.reader(f)
-        for row in reader:
-            fitness = row[0].split()
-            info.append(float(fitness[0]))
-        info.extend([info[-1] for _ in range(500 - len(info))])
+path = os.path.join(local_dir, '../NEAT/Sequence Recall/reports/5_report_std')
+with open(path, 'rb') as f:
+    data = pickle.load(f)
+for info in data.values():
+    info.extend([info[-1] for _ in range(500 - len(info))])
     NEAT_5_Standard.append(info)
 
 '''
     Sequence Classification
 '''
 # 5-deep Report DEAP
-DEAP_5_Standard_2 = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Sequence Classification/5-deep-report/5-progress_report' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    DEAP_5_Standard_2.append(info)
+path = os.path.join(local_dir, '../DEAP/Sequence Classification/reports/5_report_std')
+with open(path, 'rb') as f:
+    DEAP_5_Standard_2 = list(pickle.load(f).values())
 
 # 5-deep Report NEAT
 NEAT_5_Standard_2 = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../NEAT/Sequence Classification/5-deep-report/5-progress_report' + str(i) + '.csv')
-    info = []
-    with open(path, newline='\n') as f:
-        reader = csv.reader(f)
-        for row in reader:
-            fitness = row[0].split()
-            info.append(float(fitness[0]))
+path = os.path.join(local_dir, '../NEAT/Sequence Classification/reports/5_report_std')
+with open(path, 'rb') as f:
+    data = pickle.load(f)
+for info in data.values():
+    info.extend([info[-1] for _ in range(500 - len(info))])
     NEAT_5_Standard_2.append(info)
 
 # 15-deep Report DEAP
-DEAP_15_Standard = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Sequence Classification/15-deep-report/15-progress_report' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    DEAP_15_Standard.append(info)
+path = os.path.join(local_dir, '../DEAP/Sequence Classification/reports/15_report_std')
+with open(path, 'rb') as f:
+    DEAP_15_Standard = list(pickle.load(f).values())
 
 # 21-deep Report DEAP
-DEAP_21_Standard = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Sequence Classification/21-deep-report/21-progress_report' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    DEAP_21_Standard.append(info)
+path = os.path.join(local_dir, '../DEAP/Sequence Classification/reports/21_report_std')
+with open(path, 'rb') as f:
+    DEAP_21_Standard = list(pickle.load(f).values())
 
 # 15-deep Report DEAP Logical
-DEAP_15_Logical = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Sequence Classification/15-deep-report/15-progress_report_logic' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    DEAP_15_Logical.append(info)
+path = os.path.join(local_dir, '../DEAP/Sequence Classification/reports/15_report_log')
+with open(path, 'rb') as f:
+    DEAP_15_Logical = list(pickle.load(f).values())
 
 # 21-deep Report DEAP Logical
 DEAP_21_Logical = []
-for i in range(1,21):
-    path = os.path.join(local_dir, '../DEAP/Sequence Classification/21-deep-report/21-progress_report_logic' + str(i))
-    with open(path, 'rb') as f:
-        info = pickle.load(f)
-    DEAP_21_Logical.append(info)
+path = os.path.join(local_dir, '../DEAP/Sequence Classification/reports/21_report_log')
+with open(path, 'rb') as f:
+    DEAP_21_Logical = list(pickle.load(f).values())
 
 '''
     Calculate Mean and Standard Deviation
