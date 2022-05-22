@@ -35,33 +35,50 @@ def get_args():
     options = ("std", "mul","mod","log")
     while True:
         try:
-            valid = True
             input_args = input("Choose your champion:\n").strip().lower().split(",")
 
-            if input_args[0].strip() not in options:
-                valid = False
-
-            if int(input_args[1].strip()) not in (4, 5, 6, 15, 21):
-                valid= False
-
-            if float(input_args[2].strip()) not in (0, 0.5, 0.25, 0.125):
-                valid= False
-
-            if valid:
-                break
-            else:
+            if len(input_args) < 2:
                 raise ValueError
+
+            if len(input_args)>0 and input_args[0].strip() not in options:
+                raise ValueError
+
+            if len(input_args)>1 and int(input_args[1].strip()) not in (4, 5, 6, 15, 21):
+                raise ValueError
+
+            # Everything is fine 
+            break
+
         except ValueError:
             print("Sorry your entry is wrong, try again!")
 
-    # Setting values and default values
+    # Reading Type and Depth Values
     type = input_args[0]
     depth = int(input_args[1])
-    range_val = float(input_args[2]) if type in ('mod') else 0
-    champion = input_args[3] if len(input_args) >= 4 else "champion_1"
-    num_test = int(input_args[4]) if len(input_args) >= 5 else 50
-    noise = int(input_args[5]) if len(input_args) >= 6 else 10
-    generalize = False if len(input_args) >= 5 else True
+
+    # Default Range Value if not passed
+    range_val = 0
+    if type in ('mod'):
+        if len(input_args) > 2:
+            range_val = float(input_args[2])
+        else:
+            range_val = 0.5
+
+    # Default Champion if not passed
+    champion = "champion_1"
+    if len(input_args) > 3:
+        champion = input_args[3]
+    
+    # Default Number of tests if not passed
+    num_test = 50
+    if len(input_args) > 4:
+        num_test = int(input_args[4])
+
+    # Default Noise and generalize
+    noise, generalize = 10, True
+    if len(input_args) > 5:
+        noise = int(input_args[5])
+        generalize = False
 
     return type, depth, range_val, champion, num_test, generalize, noise
 

@@ -33,29 +33,42 @@ def get_args():
     options = ("std", "mul","mod","log")
     while True:
         try:
-            valid = True
             input_args = input("Choose your champion:\n").strip().lower().split(",")
 
-            if input_args[0].strip() not in options:
-                valid = False
-
-            if int(input_args[1].strip()) not in (4, 5, 6, 15, 21):
-                valid= False
-
-            if valid:
-                break
-            else:
+            if len(input_args) < 2:
                 raise ValueError
+
+            if len(input_args)>0 and input_args[0].strip() not in options:
+                raise ValueError
+
+            if len(input_args)>1 and int(input_args[1].strip()) not in (4, 5, 6, 15, 21):
+                raise ValueError
+
+            # Everything is fine 
+            break
+        
         except ValueError:
             print("Sorry your entry is wrong, try again!")
 
-    # Setting values and default values
+    # Reading Type and Depth Values
     type = input_args[0]
     depth = int(input_args[1])
-    champion = input_args[2] if len(input_args) >= 3 else "champion_1"
-    num_test = int(input_args[3]) if len(input_args) >= 4 else 50
-    noise = int(input_args[4]) if len(input_args) >= 5 else 10
-    generalize = False if len(input_args) >= 5 else True
+
+    # Default Champion if not passed
+    champion = "champion_1"
+    if len(input_args) > 2:
+        champion = input_args[2]
+    
+    # Default Number of tests if not passed
+    num_test = 50
+    if len(input_args) > 3:
+        num_test = int(input_args[3])
+
+    # Default Noise and generalize
+    noise, generalize = 10, True
+    if len(input_args) > 4:
+        noise = int(input_args[4])
+        generalize = False
 
     return type, depth, champion, num_test, generalize, noise
 

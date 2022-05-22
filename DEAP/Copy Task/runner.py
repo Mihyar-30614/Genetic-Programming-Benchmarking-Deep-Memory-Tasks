@@ -40,12 +40,24 @@ def get_args():
         except ValueError:
             print("Sorry your entry is wrong, try again!")
 
-    # Setting values and default values
+    # Reading Type and Depth Values
     type = input_args[0]
-    champion = input_args[1] if len(input_args) >= 2 else "champion_1"
-    num_test = int(input_args[2]) if len(input_args) >= 3 else 50
-    seq_length = int(input_args[3]) if len(input_args) >= 4 else 10
-    generalize = False if len(input_args) >= 4 else True
+
+    # Default Champion if not passed
+    champion = "champion_1"
+    if len(input_args) > 1:
+        champion = input_args[1]
+    
+    # Default Number of tests if not passed
+    num_test = 50
+    if len(input_args) > 2:
+        num_test = int(input_args[2])
+
+    # Default seq_length and generalize
+    seq_length, generalize = 10, True
+    if len(input_args) > 3:
+        seq_length = int(input_args[3])
+        generalize = False
 
     return type, champion, num_test, generalize, seq_length
 
