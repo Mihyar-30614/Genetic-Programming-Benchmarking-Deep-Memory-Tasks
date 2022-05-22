@@ -25,7 +25,7 @@ from deap import algorithms
 from sklearn.metrics import accuracy_score
 
 # Data Config
-depth = 15              # Number of (1, -1) in a sequence
+depth = 21              # Number of (1, -1) in a sequence
 corridor_length = 10    # Number of Zeros between values
 num_tests = 50          # num_tests is the number of random examples each network is tested against.
 num_runs = 50           # number of runs
