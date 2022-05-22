@@ -10,12 +10,12 @@ from deap import gp
 from deap import base
 from deap import creator
 
-depth = 100
+depth = 4
 corridor_length = 10
 num_tests = 50
 generalize = True
 local_dir = os.path.dirname(__file__)
-champ_path = os.path.join(local_dir, 'champion/')
+champ_path = os.path.join(local_dir, 'champions/')
 
 '''
 Problem setup
@@ -97,25 +97,12 @@ toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=2)
 toolbox.register("compile", gp.compile, pset=pset)
 
 # Load the best tree
-with open(champ_path + 'output1_1', 'rb') as f:
-    hof1 = pickle.load(f)
-    print("loaded Tree1:")
-    print(hof1)
+champ_name = champ_path + str(depth) + '_champions_mod'
+with open(champ_name, 'rb') as f:
+    champions = pickle.load(f)
+    print("loaded champions")
 
-with open(champ_path + 'output2_1', 'rb') as f:
-    hof2 = pickle.load(f)
-    print("loaded Tree2:")
-    print(hof2)
-
-with open(champ_path + 'output3_1', 'rb') as f:
-    hof3 = pickle.load(f)
-    print("loaded Tree3:")
-    print(hof3)
-
-with open(champ_path + 'output4_1', 'rb') as f:
-    hof4 = pickle.load(f)
-    print("loaded Tree4:")
-    print(hof4)
+hof1, hof2, hof3, hof4 = champions["champion_1"]
 
 if __name__ == "__main__":
     '''
