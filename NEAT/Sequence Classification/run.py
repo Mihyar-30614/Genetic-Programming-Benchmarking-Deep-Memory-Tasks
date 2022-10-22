@@ -7,14 +7,22 @@ import pickle
 import random
 from sklearn.metrics import accuracy_score
 
-# Number of (1, -1) in a sequence
-depth = 21
-# Number of Zeros between values
-noise = 10
-# num_tests is the number of random examples each network is tested against.
-num_tests = 50
-num_generations = 500
-generalize = True
+# Data Config
+depth = 21              # Number of (1, -1) in a sequence
+noise = 10              # Number of Zeros between values
+num_tests = 50          # num_tests is the number of random examples each network is tested against.
+num_runs = 50           # number of runs
+
+# Results Config
+generalize = False
+save_log = True
+results = []
+
+# Directory of files
+local_dir = os.path.dirname(__file__)
+rpt_path = os.path.join(local_dir, 'reports/')
+champ_path = os.path.join(local_dir, 'champions/')
+config_path = os.path.join(local_dir, 'config')
 
 '''
 Problem setup
@@ -146,16 +154,15 @@ def run(config, winner):
 if __name__ == "__main__":
 
     # Determine path to configuration file.
-    local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, 'config')
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
     # Load the winner
-    with open('champion-gnome', 'rb') as f:
+    champ_name = champ_path + '21_champions_std'
+    with open(champ_name, 'rb') as f:
         winner = pickle.load(f)
         print("loaded Genome:")
         print(winner)
 
     # Run Test
-    run(config, winner)
+    run(config, winner["champion_2"])

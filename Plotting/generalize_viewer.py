@@ -39,6 +39,22 @@ path = os.path.join(local_dir, '../DEAP/Copy Task/reports/gen_vec_results_100')
 with open(path, 'rb') as f:
     Values4_100 = pickle.load(f)
 
+path = os.path.join(local_dir, '../NEAT/Sequence Classification/reports/gen_results_50')
+with open(path, 'rb') as f:
+    Values5_50 = pickle.load(f)
+
+path = os.path.join(local_dir, '../NEAT/Sequence Classification/reports/gen_results_100')
+with open(path, 'rb') as f:
+    Values5_100 = pickle.load(f)
+
+path = os.path.join(local_dir, '../NEAT/Sequence Recall/reports/gen_results_50')
+with open(path, 'rb') as f:
+    Values6_50 = pickle.load(f)
+
+path = os.path.join(local_dir, '../NEAT/Sequence Recall/reports/gen_results_100')
+with open(path, 'rb') as f:
+    Values6_100 = pickle.load(f)
+
 
 '''
     Calculate Mean and Standard Deviation
@@ -62,6 +78,16 @@ Values4_50_mean = np.mean(Values4_50, axis=0)
 Values4_50_std = np.std(Values4_50, axis=0)
 Values4_100_mean = np.mean(Values4_100, axis=0)
 Values4_100_std = np.std(Values4_100, axis=0)
+
+Values5_50_mean = np.mean(Values5_50, axis=0)
+Values5_50_std = np.std(Values5_50, axis=0)
+Values5_100_mean = np.mean(Values5_100, axis=0)
+Values5_100_std = np.std(Values5_100, axis=0)
+
+Values6_50_mean = np.mean(Values6_50, axis=0)
+Values6_50_std = np.std(Values6_50, axis=0)
+Values6_100_mean = np.mean(Values6_100, axis=0)
+Values6_100_std = np.std(Values6_100, axis=0)
 
 '''
     View Last item as result
@@ -89,12 +115,28 @@ print("STD: {:.2f}".format(Values2_50_std * 100))
 print("Sequence Classification length 100")
 print("Mean: {:.2f}%".format(Values2_100_mean * 100))
 print("STD: {:.2f}".format(Values2_100_std * 100))
-print("=================================")
 
+print("=================================")
 print("Sequence Recall length 50")
 print("Mean: {:.2f}%".format(Values3_50_mean * 100))
 print("STD: {:.2f}".format(Values3_50_std * 100))
 print("Sequence Recall length 100")
 print("Mean: {:.2f}%".format(Values3_100_mean * 100))
 print("STD: {:.2f}".format(Values3_100_std * 100))
+
+print("=================================")
+print("NEAT Sequence Classification length 50")
+print("Mean: {:.2f}%".format(Values5_50_mean * 100))
+print("STD: {:.2f}".format(Values5_50_std * 100))
+print("NEAT Sequence Classification length 100")
+print("Mean: {:.2f}%".format(Values5_100_mean * 100))
+print("STD: {:.2f}".format(Values5_100_std * 100))
+
+print("=================================")
+print("NEAT Sequence Recall length 50")
+print("Mean: {:.2f}%".format(Values6_50_mean * 100))
+print("STD: {:.2f}".format(Values6_50_std * 100))
+print("NEAT Sequence Recall length 100")
+print("Mean: {:.2f}%".format(Values6_100_mean * 100))
+print("STD: {:.2f}".format(Values6_100_std * 100))
 print("=================================")
