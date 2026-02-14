@@ -155,7 +155,7 @@ if __name__ == "__main__":
     '''
     View Last item as result
     '''
-    print("Copy Task Champions overall performance")
+    print("Sequence Recall Champions overall performance")
     print("Mean: {:.2f}%".format(results_mean * 100))
     print("STD: {:.2f}".format(results_std * 100))
 
