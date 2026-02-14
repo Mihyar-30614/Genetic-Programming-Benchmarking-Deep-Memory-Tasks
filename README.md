@@ -41,14 +41,14 @@ Benchmarking **Genetic Programming (DEAP)** and **NeuroEvolution (NEAT)** on dee
 - Python 3
 - [DEAP](https://github.com/DEAP/deap) (Genetic Programming)
 - [neat-python](https://github.com/CodeReclaimers/neat-python) (NEAT)
-- NumPy
-- scikit-learn
-- matplotlib (for Plotting scripts)
+- NumPy, scikit-learn
+- matplotlib, graphviz (plotting and NEAT topology visualization)
+- pandas, seaborn (Iris / analysis scripts)
 
 Install with pip:
 
 ```bash
-pip install deap neat-python numpy scikit-learn matplotlib
+pip install -r requirements.txt
 ```
 
 ## Running Evolution
